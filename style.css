@@ -1,4 +1,3 @@
-/* Universal Box-Sizing for consistent width calculations */
 *, *::before, *::after {
     box-sizing: border-box;
 }
@@ -687,10 +686,6 @@ body {
         padding: 0 20px;
     }
 
-    .main-nav .nav-links li {
-        width: 100%;
-    }
-
     .main-nav .nav-links a {
         padding: 10px 0;
         display: block;
@@ -958,89 +953,103 @@ body {
         text-align: center;
     }
 }
+
 /* --- Cookiebot Custom Banner CSS --- */
-@media screen and (max-width:720px) {
-  #cookiebanner a.c-button {
-    width:100%;
-    box-sizing:border-box;
-    text-align:center;
-    margin-bottom:20px;}
-  #c-right {
-    float:none;
-  }
-  #c-left {
-    float:none;
-  }
-  #cookiebanner p.c-message {
-    margin-bottom:20px;
-  }
-}
-
-@media screen and (min-width:720px) {
-  #cookiebanner #c-left {
-    float:left;
-    max-width:80%;
-  }
-  #cookiebanner #c-right {
-    float:right;
-  }
-}
-
 #cookiebanner {
-  box-sizing: border-box;
-  background-color:rgb(36,36,39);
-  opacity: 0.9; width:100%;
-  padding:25px 40px;
-  position: fixed;
-  z-index: 2147483645;
-  bottom:-800px; /* This is key for the animation */
+    box-sizing: border-box;
+    background-color:rgb(36,36,39);
+    opacity: 0.9;
+    width:100%;
+    max-width: 900px; /* Limit max width on larger screens */
+    padding:15px 25px; /* Smaller padding for a more compact look */
+    position: fixed;
+    z-index: 2147483645;
+    bottom:-800px; /* Initial hidden position */
+    left: 50%; /* For horizontal centering */
+    transform: translateX(-50%); /* For horizontal centering */
+    transition: bottom 0.5s ease-in-out; /* Smooth animation */
 }
 #cookiebanner p {
-  font-size:14px;
-  line-height:1.4;
+    font-size:12px; /* Smaller font size for general text */
+    line-height:1.4;
 }
 #cookiebanner .c-header {
-  text-transform:uppercase;
-  color:#fff;
-  font-weight:bold;
-  margin-bottom:4px;
+    text-transform:uppercase;
+    color:#fff;
+    font-weight:bold;
+    margin-bottom:4px;
 }
 #cookiebanner p.c-message {
-  font-size:14px;
-  color:#999;
+    font-size:12px; /* Smaller font size for message text */
+    color:#999;
 }
 #cookiebanner a {
-  font-weight:bold;
-  color:#999;
+    font-weight:bold;
+    color:#999;
 }
 #cookiebanner a:hover {
-  color:#fff;
+    color:#fff;
 }
 
 #cookiebanner a.c-button {
-  border-radius: 4px;
-  background-color: rgb(255,255,255);
-  box-shadow: 0 2px 0 0 rgb(221,221,221);
-  border:1px solid rgb(221,221,221);
-  padding:12px 60px;
-  text-decoration:none;
-  display:inline-block;
-  vertical-align:middle;
-  margin-top:10px;
-  color:#666;
-  font-size:16px;
-  -o-transition:.2s;
-  -ms-transition:.2s;
-  -moz-transition:.2s;
-  -webkit-transition:.2s;
-  transition:.2s;
+    border-radius: 4px;
+    background-color: rgb(255,255,255);
+    box-shadow: 0 2px 0 0 rgb(221,221,221);
+    border:1px solid rgb(221,221,221);
+    padding:8px 40px; /* Smaller padding for the button */
+    text-decoration:none;
+    display:inline-block;
+    vertical-align:middle;
+    margin-top:10px;
+    color:#666;
+    font-size:16px;
+    -o-transition:.2s;
+    -ms-transition:.2s;
+    -moz-transition:.2s;
+    -webkit-transition:.2s;
+    transition:.2s;
 }
 
 #cookiebanner a.c-button:hover {
-  box-shadow:none;
-  background-color:#f8f8f8;
+    box-shadow:none;
+    background-color:#f8f8f8;
+}
+
+@media screen and (max-width:720px) {
+    #cookiebanner {
+        max-width: 100%; /* Ensure full width on small screens */
+        left: 0; /* Reset left for full width */
+        transform: translateX(0); /* Reset transform for full width */
+        border-radius: 0; /* Optional: Remove border-radius on mobile for edge-to-edge look */
+    }
+    #cookiebanner a.c-button {
+        width:100%;
+        box-sizing:border-box;
+        text-align:center;
+        margin-bottom:20px;
+    }
+    #c-right {
+        float:none;
+    }
+    #c-left {
+        float:none;
+    }
+    #cookiebanner p.c-message {
+        margin-bottom:20px;
+    }
+}
+
+@media screen and (min-width:720px) {
+    #cookiebanner #c-left {
+        float:left;
+        max-width:80%;
+    }
+    #cookiebanner #c-right {
+        float:right;
+    }
 }
 /* --- End Cookiebot Custom Banner CSS --- */
+
 /* Ad Placement Area Styling */
 .ad-placement-area {
     margin-top: 60px; /* Space above the ad */
