@@ -1041,3 +1041,37 @@ body {
   background-color:#f8f8f8;
 }
 /* --- End Cookiebot Custom Banner CSS --- */
+/* Ad Placement Area Styling */
+.ad-placement-area {
+    margin-top: 60px; /* Space above the ad */
+    margin-bottom: 60px; /* Space below the ad */
+    text-align: center; /* Center the ad if it's smaller than the container */
+}
+
+.ad-label {
+    color: #a0a0a0; /* Lighter text for "Advertisement" */
+    font-size: 0.85em;
+    margin-bottom: 15px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.ad-container {
+    background-color: #1a1a2e; /* A subtle background to define the ad area */
+    border-radius: 8px;
+    border: 1px solid rgba(0, 188, 212, 0.1);
+    padding: 10px; /* Some padding around the ad */
+    min-height: 100px; /* Ensure a minimum height so it doesn't collapse before ad loads */
+    display: flex; /* Helps center ads */
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; /* Important for responsive ads */
+}
+
+/* Ensure the AdSense ins element itself can fill the space */
+.ad-container ins.adsbygoogle {
+    display: block !important; /* Override inline style if necessary */
+    width: 100%; /* Take full width of its parent */
+    height: auto; /* Allow height to adjust */
+    min-height: 100px; /* Or specific minimum for that spot */
+}

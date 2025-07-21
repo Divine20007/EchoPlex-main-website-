@@ -6,25 +6,126 @@
     <meta name="google-adsense-account" content="ca-pub-7958103018937240">
     <title>EchoPlex - Redefining Web3 Creativity</title>
     <link rel="stylesheet" href="style.css">
-    <script id="CookieDeclaration" src="https://consent.cookiebot.com/c9c94981-538d-4efb-ac01-836fea1f6881/cd.js" type="text/javascript" async></script>
     <link rel="icon" href="https://i.supaimg.com/ea0765f1-a228-4d8d-abef-afe3e3f74dd1.png" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <script data-cookieconsent="ignore">
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag("consent", "default", {
+            ad_personalization: "denied",
+            ad_storage: "denied",
+            ad_user_data: "denied",
+            analytics_storage: "denied",
+            functionality_storage: "denied",
+            personalization_storage: "denied",
+            security_storage: "granted",
+            wait_for_update: 500,
+        });
+        gtag("set", "ads_data_redaction", true);
+        gtag("set", "url_passthrough", false);
+    </script>
+
+    <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="c9c94981-538d-4efb-ac01-836fea1f6881" data-blockingmode="auto" type="text/javascript"></script>
+
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7958103018937240" crossorigin="anonymous"></script>
-     <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="c9c94981-538d-4efb-ac01-836fea1f6881" data-blockingmode="auto" type="text/javascript"></script>
-     <script data-cookieconsent="ignore">    window.dataLayer = window.dataLayer || [];    function gtag() {        dataLayer.push(arguments);    }    gtag("consent", "default", {        ad_personalization: "denied",        ad_storage: "denied",        ad_user_data: "denied",        analytics_storage: "denied",        functionality_storage: "denied",        personalization_storage: "denied",        security_storage: "granted",        wait_for_update: 500,    });    gtag("set", "ads_data_redaction", true);    gtag("set", "url_passthrough", false);</script>
+
+    <style>
+        #cookiebanner {
+            box-sizing: border-box;
+            background-color:rgb(36,36,39);
+            opacity: 0.9; width:100%;
+            padding:25px 40px;
+            position: fixed;
+            z-index: 2147483645;
+            bottom:-800px;
+        }
+        #cookiebanner p {
+            font-size:14px;
+            line-height:1.4;
+        }
+        #cookiebanner .c-header {
+            text-transform:uppercase;
+            color:#fff;
+            font-weight:bold;
+            margin-bottom:4px;
+        }
+        #cookiebanner p.c-message {
+            font-size:14px;
+            color:#999;
+        }
+        #cookiebanner a {
+            font-weight:bold;
+            color:#999;
+        }
+        #cookiebanner a:hover {
+            color:#fff;
+        }
+
+        #cookiebanner a.c-button {
+            border-radius: 4px;
+            background-color: rgb(255,255,255);
+            box-shadow: 0 2px 0 0 rgb(221,221,221);
+            border:1px solid rgb(221,221,221);
+            padding:12px 60px;
+            text-decoration:none;
+            display:inline-block;
+            vertical-align:middle;
+            margin-top:10px;
+            color:#666;
+            font-size:16px;
+            -o-transition:.2s;
+            -ms-transition:.2s;
+            -moz-transition:.2s;
+            -webkit-transition:.2s;
+            transition:.2s;
+        }
+
+        #cookiebanner a.c-button:hover {
+            box-shadow:none;
+            background-color:#f8f8f8;
+        }
+        @media screen and (max-width:720px) {
+            #cookiebanner a.c-button {
+                width:100%;
+                box-sizing:border-box;
+                text-align:center;
+                margin-bottom:20px;}
+            #c-right {
+                float:none;
+            }
+            #c-left {
+                float:none;
+            }
+            #cookiebanner p.c-message {
+                margin-bottom:20px;
+            }
+        }
+        @media screen and (min-width:720px) {
+            #cookiebanner #c-left {
+                float:left;
+                max-width:80%;
+            }
+            #cookiebanner #c-right {
+                float:right;
+            }
+        }
+    </style>
 </head>
 <body>
     <div id="cookiebanner" lang="[#LANGUAGE#]" dir="[#TEXTDIRECTION#]" ng-non-bindable>
-  <div id="c-left">
-    <p class="c-header">[#TITLE#]</p>
-    <p class="c-message">[#TEXT#]</p>
-  </div>
-  <div id="c-right">
-    <a href="javascript:void(0)" onclick="Cookiebot.dialog.submitConsent()" class="c-button">OK</a>
-  </div>
-  <div style="clear:both"></div>
-</div>
+        <div id="c-left">
+            <p class="c-header">[#TITLE#]</p>
+            <p class="c-message">[#TEXT#]</p>
+        </div>
+        <div id="c-right">
+            <a href="javascript:void(0)" onclick="Cookiebot.dialog.submitConsent()" class="c-button">OK</a>
+        </div>
+        <div style="clear:both"></div>
+    </div>
     <header class="main-header">
         <div class="container">
             <div class="logo">
@@ -86,6 +187,21 @@
                 </div>
             </div>
         </section>
+
+        <div class="container ad-placement-area">
+            <p class="ad-label">Advertisement</p>
+            <div class="ad-container">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-7958103018937240"
+                     data-ad-slot="9368371865"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>
+                     (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+                </div>
+        </div>
 
         <section id="features" class="features-section section">
             <div class="container">
@@ -153,7 +269,7 @@
                         <li><strong>Community Rewards:</strong> 30%</li>
                         <li><strong>Ecosystem Development:</strong> 20%</li>
                         <li><strong>Team & Advisors:</strong> 15%</li>
-                        <li><strong>Liquidity & Treasury:</strong> 30%</li>
+                        <li><strong>Liquidity & Treasury:</b> 30%</li>
                         <li><strong>Reserve:</strong> 5%</li>
                     </ul>
                     <p class="small-text"><i>(Specific percentages and vesting schedules will be detailed in the token release schedule.)</i></p>
@@ -234,7 +350,7 @@
                 <h2 class="section-title">Our Team</h2>
                 <div class="team-grid">
                     <div class="team-member">
-                        <img src="images/team-michael.png" alt="Divine Godson" class="team-photo">
+                        <img src="https://i.supaimg.com/9663484d-26b4-4c9e-ae07-2a6999fc452b.png" alt="Divine Godson" class="team-photo">
                         <h3>Divine Godson</h3>
                         <p class="role">Founder & Lead Architect</p>
                         <p class="bio">Visionary leader driving the EchoPlex ecosystem from concept to reality, with expertise in blockchain architecture and decentralized systems.</p>
@@ -274,18 +390,20 @@
         <div class="container">
             <p>&copy; 2025 EchoPlex. All rights reserved.</p>
             <div class="donation-section">
-            <h3>Support EchoPlex</h3>
-            <p>If you love what we're building, consider supporting our development:</p>
-            <div class="wallet-addresses">
-                <p><strong>USDT (Bep20):</strong> <span class="wallet-address" data-address="0x3f5bcde5873ef67663557291434fa49557cabbf4">Click to copy</span></p>
-                <p><strong>POL (Polygon):</strong> <span class="wallet-address" data-address="0x3f5bcde5873ef67663557291434fa49557cabbf4">Click to copy</span></p>
+                <h3>Support EchoPlex</h3>
+                <p>If you love what we're building, consider supporting our development:</p>
+                <div class="wallet-addresses">
+                    <p><strong>USDT (Bep20):</strong> <span class="wallet-address" data-address="0x3f5bcde5873ef67663557291434fa49557cabbf4">Click to copy</span></p>
+                    <p><strong>POL (Polygon):</strong> <span class="wallet-address" data-address="0x3f5bcde5873ef67663557291434fa49557cabbf4">Click to copy</span></p>
+                </div>
+            </div>
             <div class="footer-links">
                 <a href="#about">About</a>
                 <a href="#features">Features</a>
                 <a href="#roadmap">Roadmap</a>
                 <a href="https://docs.google.com/document/d/1j_UscRWzZqKkjEub3d70TgvbJq65uLf15JvIW1zkQoo/edit?usp=drivesdk" target="_blank">Whitepaper</a>
                 <a href="eplaunch.netlify.app" target="_blank">Subscribe</a>
-            </div>
+                </div>
         </div>
     </footer>
 
