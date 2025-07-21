@@ -116,11 +116,16 @@
     </style>
 </head>
 <body>
-    <div id="cookiebanner" lang="[#LANGUAGE#]" dir="[#TEXTDIRECTION#]" ng-non-bindable>
-        <div id="c-left">
-            <p class="c-header">[#TITLE#]</p>
-            <p class="c-message">[#TEXT#]</p>
-        </div>
+<div id="cookiebanner" lang="[#LANGUAGE#]" dir="[#TEXTDIRECTION#]" ng-non-bindable>
+  <div id="c-left">
+    <p class="c-header">[#TITLE#]</p>
+    <p class="c-message">[#TEXT#]</p> 
+    </div>
+  <div id="c-right">
+    <a href="javascript:void(0)" onclick="Cookiebot.dialog.submitConsent()" class="c-button">OK</a>
+  </div>
+  <div style="clear:both"></div>
+</div>
         <div id="c-right">
             <a href="javascript:void(0)" onclick="Cookiebot.dialog.submitConsent()" class="c-button">OK</a>
         </div>
@@ -134,6 +139,7 @@
             </div>
             <nav class="main-nav">
                 <ul class="nav-links">
+                    <li><a href="privacy.html">Privacy Policy</a></li>
                     <li><a href="#hero">Home</a></li>
                     <li><a href="#about">About</a></li>
                     <li><a href="#features">Features</a></li>
@@ -398,6 +404,7 @@
                 </div>
             </div>
             <div class="footer-links">
+                <a href="privacy.html">Privacy Policy</a>
                 <a href="#about">About</a>
                 <a href="#features">Features</a>
                 <a href="#roadmap">Roadmap</a>
