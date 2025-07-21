@@ -95,3 +95,38 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('scroll', activateNavLink);
     activateNavLink(); // Call on load to set initial active link
 });
+
+// Crypto Wallet Copy to Clipboard Functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const walletAddresses = document.querySelectorAll('.wallet-address');
+
+    walletAddresses.forEach(addressSpan => {
+        addressSpan.addEventListener('click', function() {
+            const addressToCopy = this.getAttribute('data-address');
+
+            // Create a temporary textarea element
+            const textarea = document.createElement('textarea');
+            textarea.value = addressToCopy;
+            textarea.style.position = 'fixed'; // Prevents scrolling to bottom
+            textarea.style.opacity = 0; // Make it invisible
+            document.body.appendChild(textarea);
+
+            // Select and copy the text
+            textarea.select();
+            document.execCommand('copy');
+
+            // Remove the temporary textarea
+            document.body.removeChild(textarea);
+
+            // Provide visual feedback to the user
+            const originalText = this.textContent;
+            this.textContent = 'Copied!';
+            this.classList.add('copied');
+
+            setTimeout(() => {
+                this.textContent = originalText;
+                this.classList.remove('copied');
+            }, 1500); // Revert text after 1.5 seconds
+        });
+    });
+});

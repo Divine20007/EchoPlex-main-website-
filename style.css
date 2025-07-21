@@ -856,3 +856,105 @@ body {
     border-bottom: 2px solid #00e5ff; /* Subtle underline */
     padding-bottom: 3px;
 }
+
+/* Donation Section Styling */
+.donation-section {
+    margin-top: 30px;
+    margin-bottom: 20px;
+    padding: 20px;
+    background-color: #1a1a2e; /* Darker background for the section */
+    border-radius: 8px;
+    border: 1px solid rgba(0, 188, 212, 0.1);
+    max-width: 400px; /* Limit width */
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.donation-section h3 {
+    font-family: 'Orbitron', sans-serif;
+    color: #00bcd4;
+    font-size: 1.6em;
+    margin-bottom: 15px;
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+}
+
+.donation-section p {
+    color: #c0c0c0;
+    font-size: 0.95em;
+    margin-bottom: 10px;
+}
+
+.wallet-addresses {
+    margin-top: 20px;
+    border-top: 1px dashed rgba(0, 188, 212, 0.2);
+    padding-top: 15px;
+    text-align: left;
+}
+
+.wallet-addresses p {
+    margin-bottom: 8px;
+    display: flex; /* For aligning text and copy button */
+    justify-content: space-between;
+    align-items: center;
+    color: #e0e0e0;
+}
+
+.wallet-addresses strong {
+    color: #00e5ff; /* Lighter cyan for coin name */
+    margin-right: 10px;
+}
+
+.wallet-address {
+    background-color: #0f0a28; /* Dark background for address */
+    padding: 8px 12px;
+    border-radius: 5px;
+    font-family: 'Consolas', monospace; /* Monospaced font for addresses */
+    font-size: 0.85em;
+    cursor: pointer;
+    color: #fff;
+    border: 1px solid #00bcd4;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    user-select: none; /* Prevent selection of text by default */
+    max-width: calc(100% - 100px); /* Adjust width to fit */
+    overflow: hidden; /* Hide overflow */
+    text-overflow: ellipsis; /* Add ellipsis for cut text */
+    white-space: nowrap; /* Prevent wrapping */
+}
+
+.wallet-address:hover {
+    background-color: #1a1a2e;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 188, 212, 0.2);
+}
+
+.wallet-address.copied {
+    background-color: #4CAF50; /* Green when copied */
+    color: #fff;
+}
+
+.donation-section small {
+    color: #a0a0a0;
+    font-size: 0.75em;
+    display: block;
+    margin-top: 15px;
+}
+
+/* Media query for smaller screens */
+@media (max-width: 480px) {
+    .donation-section {
+        padding: 15px;
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+    .wallet-addresses p {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+    .wallet-address {
+        max-width: 100%; /* Allow full width on small screens */
+        font-size: 0.75em; /* Smaller font on very small screens */
+        text-align: center;
+    }
+}
