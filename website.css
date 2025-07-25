@@ -1,3 +1,20 @@
+/* --- Global Variables --- */
+:root {
+    --primary-bg: #0f0a28; /* Your main dark background */
+    --secondary-bg: #120a1f; /* Slightly lighter dark background */
+    --text-light: #e0e0e0; /* Main light grey text */
+    --text-muted: #a0a0a0; /* Muted text for paragraphs */
+
+    --accent-cyan: #00bcd4;
+    --accent-cyan-light: #00e5ff; /* Lighter cyan for highlights/hovers */
+    --accent-purple: #8A2BE2; /* For Nickname Generator button/promo */
+
+    --glow-cyan-light: rgba(0, 255, 255, 0.5); /* Lighter cyan glow */
+    --glow-cyan-strong: rgba(0, 229, 255, 0.7); /* Stronger cyan glow */
+    --hover-primary: #a765e9; /* Lighter purple for hover states */
+}
+
+
 *, *::before, *::after {
     box-sizing: border-box;
 }
@@ -7,8 +24,8 @@ body {
     margin: 0;
     padding: 0;
     font-family: 'Roboto', sans-serif;
-    background: linear-gradient(135deg, #120a1f, #0f0a28, #0b071e); /* Deep, dark, futuristic gradient */
-    color: #e0e0e0; /* Light grey text */
+    background: linear-gradient(135deg, var(--secondary-bg), var(--primary-bg), #0b071e); /* Deep, dark, futuristic gradient */
+    color: var(--text-light); /* Light grey text */
     line-height: 1.6;
     overflow-x: hidden; /* Prevent horizontal scroll */
     font-size: 16px; /* STANDARD BASE FONT SIZE */
@@ -25,7 +42,7 @@ body {
 .section-title {
     font-family: 'Orbitron', sans-serif;
     font-size: 3em;
-    color: #00bcd4; /* Cyan accent */
+    color: var(--accent-cyan); /* Cyan accent */
     margin-bottom: 60px;
     text-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
     position: relative;
@@ -37,7 +54,7 @@ body {
     display: block;
     width: 80px;
     height: 4px;
-    background: #00bcd4;
+    background: var(--accent-cyan);
     margin: 15px auto 0;
     border-radius: 2px;
 }
@@ -64,21 +81,21 @@ body {
 }
 
 .btn-primary {
-    background-color: #00bcd4; /* Cyan */
-    color: #0f0a28; /* Dark background color */
+    background-color: var(--accent-cyan); /* Cyan */
+    color: var(--primary-bg); /* Dark background color */
     box-shadow: 0 5px 15px rgba(0, 188, 212, 0.4);
 }
 
 .btn-primary:hover {
-    background-color: #00e5ff; /* Lighter cyan */
+    background-color: var(--accent-cyan-light); /* Lighter cyan */
     transform: translateY(-3px);
     box-shadow: 0 8px 20px rgba(0, 229, 255, 0.6);
 }
 
 .btn-secondary {
     background-color: transparent;
-    color: #00bcd4;
-    border: 2px solid #00bcd4;
+    color: var(--accent-cyan);
+    border: 2px solid var(--accent-cyan);
     box-shadow: 0 5px 15px rgba(0, 188, 212, 0.2);
 }
 
@@ -136,7 +153,7 @@ body {
 .main-header .logo h1 {
     font-family: 'Orbitron', sans-serif;
     font-size: 2em;
-    color: #00bcd4;
+    color: var(--accent-cyan);
     margin: 0;
     text-shadow: 0 0 8px rgba(0, 255, 255, 0.5);
 }
@@ -150,7 +167,7 @@ body {
 }
 
 .main-nav .nav-links a {
-    color: #e0e0e0;
+    color: var(--text-light);
     text-decoration: none;
     font-size: 1.05em;
     font-weight: 500;
@@ -159,13 +176,13 @@ body {
 
 .main-nav .nav-links a:hover,
 .main-nav .nav-links a.active-nav-link { /* Added active-nav-link styling */
-    color: #00e5ff;
+    color: var(--accent-cyan-light);
     text-shadow: 0 0 8px rgba(0, 229, 255, 0.7);
 }
 
 .main-nav .nav-links .whitepaper-link {
-    background-color: #0f0a28; /* Dark background */
-    border: 1px solid #00bcd4;
+    background-color: var(--primary-bg); /* Dark background */
+    border: 1px solid var(--accent-cyan);
     padding: 8px 15px;
     border-radius: 20px;
     font-size: 0.95em;
@@ -174,7 +191,7 @@ body {
 
 .main-nav .nav-links .whitepaper-link:hover {
     background-color: rgba(0, 188, 212, 0.1);
-    color: #00e5ff;
+    color: var(--accent-cyan-light);
     text-shadow: none;
 }
 
@@ -184,22 +201,62 @@ body {
     margin-left: 30px;
 }
 
+/* Styling for the Nickname Generator link in the nav */
+.nav-generator-button {
+    color: white; /* White text for contrast */
+    border: 1px solid var(--accent-purple); /* Matching border */
+    padding: 8px 15px; /* Similar padding to whitepaper-link */
+    border-radius: 20px; /* Rounded corners */
+    font-size: 0.95em; /* Consistent font size */
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+    display: inline-block; /* Ensure padding and border are applied correctly */
+    text-align: center; /* Center text if button is wider */
+    box-shadow: 0 4px 12px rgba(138, 43, 226, 0.4); /* Subtle purple shadow */
+    animation: pulsateButtonGlow 0.2s infinite;
+}
+
+.nav-generator-button:hover {
+    background-color: var(--hover-primary); /* Lighter purple on hover */
+    border-color: var(--hover-primary);
+    color: white; /* Keep text white on hover */
+    box-shadow: 0 6px 15px rgba(138, 43, 226, 0.6); /* Enhanced shadow on hover */
+    transform: translateY(-2px); /* Slight lift on hover */
+}
+
+/* If you want it to behave like other nav links for active state (optional, if you track active page) */
+.main-nav .nav-links .nav-generator-button.active-nav-link {
+    background-color: var(--hover-primary);
+    border-color: var(--accent-cyan-light); /* Or keep purple, depends on desired active look */
+    color: white;
+    text-shadow: none; /* Remove text shadow if background is solid */
+    border-bottom: none; /* Remove bottom border from general active-nav-link rule */
+}
+
+/* Adjustments for mobile menu if needed (assuming nav-generator-button is within .nav-buttons or .nav-links) */
+@media (max-width: 768px) {
+    .main-nav .nav-links .nav-generator-button {
+        width: 100%; /* Make it full width like other hamburger menu buttons */
+        margin-top: 10px; /* Add some space if it's directly below whitepaper-link */
+    }
+}
+
+
 .hamburger-menu {
     display: none; /* Hidden on desktop */
     font-size: 1.8em;
-    color: #00bcd4;
+    color: var(--accent-cyan);
     cursor: pointer;
 }
 
-/* Hero Section */
+/* --- Common Hero Section Styles --- */
 .hero-section {
-    background: url('../images/hero-bg.jpg') no-repeat center center/cover; /* Placeholder background */
     min-height: 80vh;
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
     text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    padding: 80px 20px; /* Ensure consistent padding */
 }
 
 .hero-section::before {
@@ -209,7 +266,7 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.5); /* Dark overlay */
+    background: rgba(0, 0, 0, 0.5); /* Default overlay */
     z-index: 1;
 }
 
@@ -218,11 +275,12 @@ body {
     z-index: 2;
     max-width: 900px;
     padding: 20px;
+    text-align: center; /* Ensure content is centered */
 }
 
-.hero-content h2 {
+.hero-content h2,
+.hero-content h1 { /* Apply to both h1 and h2 within hero content */
     font-family: 'Orbitron', sans-serif;
-    font-size: 4.5em;
     color: #fff;
     margin-bottom: 25px;
     line-height: 1.2;
@@ -231,7 +289,7 @@ body {
 
 .hero-content p {
     font-size: 1.4em;
-    color: #c0c0c0;
+    color: var(--text-muted);
     margin-bottom: 40px;
 }
 
@@ -240,6 +298,94 @@ body {
     justify-content: center;
     gap: 30px;
     flex-wrap: wrap;
+}
+
+/* --- Specific Styles for the First Hero Section (Home) --- */
+#hero {
+    /* Background Image for the Main Hero Section */
+    background: url('https://i.supaimg.com/f25a9437-12b2-4d05-ac1f-c9ff7a1c5d3d.jpg') no-repeat center center/cover;
+    /* This URL is a placeholder. Replace it with your actual image path (e.g., ../images/hero-bg.jpg) */
+
+    /* Add this for the glow effect */
+    border: 2px solid var(--accent-cyan-light); /* A visible border to glow */
+    box-shadow: 0 0 30px var(--glow-cyan-strong); /* Initial glow effect */
+    animation: pulseBorderGlow 3s infinite alternate; /* Apply the animation */
+}
+
+#hero .hero-content h2 {
+    font-size: 4.5em; /* Larger font size for the main hero heading */
+    text-shadow: 0 0 25px var(--accent-cyan-light); /* Stronger glow for main title */
+}
+
+#hero .hero-content p {
+    font-size: 1.5em; /* Slightly larger text for main hero paragraph */
+    max-width: 700px; /* Control width for better readability */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* --- Specific Styles for the Second Hero Section (Nickname Generator Promo) --- */
+#nickname-generator-promo {
+    /* Distinct background for the promo section */
+    background: linear-gradient(135deg, var(--secondary-bg) 0%, var(--accent-purple) 100%);
+    /* Modify/Enhance these lines for the glow */
+    border: 3px solid var(--accent-cyan-light); /* Make border slightly thicker and brighter */
+    box-shadow: 0 0 40px rgba(0, 255, 255, 0.7), /* Strong cyan glow */
+                0 0 20px rgba(138, 43, 226, 0.8); /* Added a purple internal glow from the button's color */
+    animation: neonBorderPulse 0.8s infinite alternate; /* New animation for this section */
+    min-height: auto; /* Allow height to adjust to content */
+    padding: 100px 20px; /* More vertical padding for prominence */
+    margin-top: 60px; /* Spacing from previous section */
+    margin-bottom: 60px; /* Spacing from next section */
+    overflow: hidden; /* Important for background effects */
+}
+
+/* Remove default overlay for this specific section if you want the gradient to show clearly */
+#nickname-generator-promo::before {
+    content: none; /* No dark overlay on this section */
+}
+
+#nickname-generator-promo .hero-content {
+    max-width: 800px; /* Adjust max width for promo content */
+}
+
+#nickname-generator-promo .hero-content h1 {
+    font-size: 3.8em; /* Adjusted font size for promo heading */
+    color: var(--text-light); /* White text for contrast */
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+    margin-bottom: 30px;
+}
+
+#nickname-generator-promo .hero-content p {
+    font-size: 1.2em; /* Smaller paragraph for promo section */
+    color: var(--text-light); /* White text for contrast */
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 50px; /* More space before the button */
+}
+
+/* Specific button styles for the generator CTA (inherits from .primary-button) */
+.generator-cta-button {
+    font-size: 0.8em;
+    padding: 18px 30px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    background-color: var(--accent-purple); /* Defined in :root as purple */
+    color: white; /* Changed from floralwhite to white for consistency */
+    border-radius: 50px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 8px 25px rgba(138, 43, 226, 0.6); /* Purple shadow */
+    animation: pulsateButtonGlow 0.2s infinite alternate; /* Pulsating glow */
+}
+
+.generator-cta-button:hover {
+    background-color: var(--hover-primary); /* Lighter purple on hover */
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(138, 43, 226, 0.8);
 }
 
 /* About Section */
@@ -270,14 +416,14 @@ body {
 
 .about-item h3 {
     font-family: 'Orbitron', sans-serif;
-    color: #00bcd4;
+    color: var(--accent-cyan);
     font-size: 1.8em;
     margin-bottom: 15px;
 }
 
 /* Features Section */
 .features-section {
-    background: linear-gradient(135deg, #120a1f, #0f0a28, #0b071e);
+    background: linear-gradient(135deg, var(--secondary-bg), var(--primary-bg), #0b071e);
 }
 
 .features-grid {
@@ -302,7 +448,7 @@ body {
 
 .feature-item .feature-icon {
     font-size: 3.5em;
-    color: #00bcd4;
+    color: var(--accent-cyan);
     margin-bottom: 20px;
 }
 
@@ -347,7 +493,7 @@ body {
 
 .token-overview ul li::before, .token-utilities ul li::before, .token-distribution ul li::before {
     content: '\2022'; /* Bullet point */
-    color: #00bcd4;
+    color: var(--accent-cyan);
     font-size: 1.5em;
     line-height: 1;
     position: absolute;
@@ -364,13 +510,13 @@ body {
 
 .token-distribution .small-text {
     font-size: 0.9em;
-    color: #a0a0a0;
+    color: var(--text-muted);
     margin-top: 20px;
 }
 
 /* Roadmap Section */
 .roadmap-section {
-    background: linear-gradient(135deg, #120a1f, #0f0a28, #0b071e);
+    background: linear-gradient(135deg, var(--secondary-bg), var(--primary-bg), #0b071e);
 }
 
 .roadmap-timeline {
@@ -386,7 +532,7 @@ body {
     left: 50%;
     top: 0;
     width: 4px;
-    background: #00bcd4;
+    background: var(--accent-cyan);
     height: 100%;
     transform: translateX(-50%);
     z-index: 1;
@@ -420,9 +566,9 @@ body {
     top: 30px;
     width: 20px;
     height: 20px;
-    background-color: #00bcd4;
+    background-color: var(--accent-cyan);
     border-radius: 50%;
-    border: 4px solid #0f0a28;
+    border: 4px solid var(--primary-bg);
     z-index: 3;
 }
 
@@ -493,7 +639,7 @@ body {
     border-radius: 50%;
     object-fit: cover;
     margin-bottom: 20px;
-    border: 4px solid #00bcd4;
+    border: 4px solid var(--accent-cyan);
     box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
 }
 
@@ -505,7 +651,7 @@ body {
 }
 
 .team-member .role {
-    color: #a0a0a0;
+    color: var(--text-muted);
     font-size: 1.1em;
     margin-bottom: 15px;
 }
@@ -516,7 +662,7 @@ body {
 }
 
 .social-links-team a {
-    color: #00bcd4;
+    color: var(--accent-cyan);
     font-size: 1.5em; /* Adjusted icon size */
     margin: 0 10px;
     transition: color 0.3s ease, transform 0.2s ease;
@@ -524,13 +670,13 @@ body {
 }
 
 .social-links-team a:hover {
-    color: #00e5ff;
+    color: var(--accent-cyan-light);
     transform: translateY(-3px);
 }
 
 /* Community Section */
 .community-section {
-    background: linear-gradient(135deg, #120a1f, #0f0a28, #0b071e);
+    background: linear-gradient(135deg, var(--secondary-bg), var(--primary-bg), #0b071e);
 }
 
 .community-section p {
@@ -548,8 +694,8 @@ body {
 }
 
 .community-links .btn-social {
-    background-color: #00bcd4;
-    color: #0f0a28;
+    background-color: var(--accent-cyan);
+    color: var(--primary-bg);
     padding: 12px 25px;
     border-radius: 50px;
     text-decoration: none;
@@ -563,7 +709,7 @@ body {
 }
 
 .community-links .btn-social:hover {
-    background-color: #00e5ff;
+    background-color: var(--accent-cyan-light);
     transform: translateY(-3px);
     box-shadow: 0 8px 20px rgba(0, 229, 255, 0.6);
 }
@@ -593,20 +739,20 @@ body {
 
 /* Footer */
 .main-footer {
-    background-color: #0f0a28;
+    background-color: var(--primary-bg);
     padding: 40px 0;
     text-align: center;
     border-top: 1px solid rgba(0, 188, 212, 0.1);
 }
 
 .main-footer p {
-    color: #a0a0a0;
+    color: var(--text-muted);
     font-size: 0.9em;
     margin-bottom: 20px;
 }
 
 .footer-links a {
-    color: #e0e0e0;
+    color: var(--text-light);
     text-decoration: none;
     margin: 0 15px;
     font-size: 1em;
@@ -614,7 +760,7 @@ body {
 }
 
 .footer-links a:hover {
-    color: #00bcd4;
+    color: var(--accent-cyan);
 }
 
 /* Scroll to Top Button (Placeholder - will be handled by JS) */
@@ -626,7 +772,7 @@ body {
     z-index: 99; /* Make sure it does not overlap */
     border: none; /* Remove borders */
     outline: none; /* Remove outline */
-    background-color: #00bcd4; /* Set a background color */
+    background-color: var(--accent-cyan); /* Set a background color */
     color: white; /* Text color */
     cursor: pointer; /* Add a mouse pointer on hover */
     padding: 15px; /* Some padding */
@@ -637,7 +783,7 @@ body {
 }
 
 #scrollToTopBtn:hover {
-    background-color: #00e5ff;
+    background-color: var(--accent-cyan-light);
     transform: translateY(-3px);
     box-shadow: 0 8px 20px rgba(0, 229, 255, 0.8);
 }
@@ -648,7 +794,7 @@ body {
     .main-nav .nav-links {
         gap: 20px;
     }
-    .hero-content h2 {
+    #hero .hero-content h2 { /* Specific to #hero */
         font-size: 3.5em;
     }
     .hero-content p {
@@ -712,7 +858,7 @@ body {
     }
 
     /* Ensure these are adjusted for 768px and below */
-    .hero-content h2 {
+    #hero .hero-content h2 { /* Specific to #hero */
         font-size: 2.8em; /* Adjusted slightly down */
     }
 
@@ -785,7 +931,7 @@ body {
     .hero-section {
         min-height: 70vh; /* Shorter hero section */
     }
-    .hero-content h2 {
+    #hero .hero-content h2 { /* Specific to #hero */
         font-size: 2.1em; /* Significantly smaller headline */
         margin-bottom: 15px;
     }
@@ -846,9 +992,9 @@ body {
 
 /* Styling for active navigation link (from script.js) */
 .main-nav .nav-links a.active-nav-link {
-    color: #00e5ff; /* Lighter cyan for active link */
+    color: var(--accent-cyan-light); /* Lighter cyan for active link */
     text-shadow: 0 0 10px rgba(0, 229, 255, 1); /* More prominent glow */
-    border-bottom: 2px solid #00e5ff; /* Subtle underline */
+    border-bottom: 2px solid var(--accent-cyan-light); /* Subtle underline */
     padding-bottom: 3px;
 }
 
@@ -868,7 +1014,7 @@ body {
 
 .donation-section h3 {
     font-family: 'Orbitron', sans-serif;
-    color: #00bcd4;
+    color: var(--accent-cyan);
     font-size: 1.6em;
     margin-bottom: 15px;
     text-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
@@ -892,23 +1038,23 @@ body {
     display: flex; /* For aligning text and copy button */
     justify-content: space-between;
     align-items: center;
-    color: #e0e0e0;
+    color: var(--text-light);
 }
 
 .wallet-addresses strong {
-    color: #00e5ff; /* Lighter cyan for coin name */
+    color: var(--accent-cyan-light); /* Lighter cyan for coin name */
     margin-right: 10px;
 }
 
 .wallet-address {
-    background-color: #0f0a28; /* Dark background for address */
+    background-color: var(--primary-bg); /* Dark background for address */
     padding: 8px 12px;
     border-radius: 5px;
     font-family: 'Consolas', monospace; /* Monospaced font for addresses */
     font-size: 0.85em;
     cursor: pointer;
     color: #fff;
-    border: 1px solid #00bcd4;
+    border: 1px solid var(--accent-cyan);
     transition: background-color 0.2s ease, transform 0.1s ease;
     user-select: none; /* Prevent selection of text by default */
     max-width: calc(100% - 100px); /* Adjust width to fit */
@@ -929,7 +1075,7 @@ body {
 }
 
 .donation-section small {
-    color: #a0a0a0;
+    color: var(--text-muted);
     font-size: 0.75em;
     display: block;
     margin-top: 15px;
@@ -1048,63 +1194,16 @@ body {
         float:right;
     }
 }
-/* --- End Cookiebot Custom Banner CSS --- */
 
-/* Ad Placement Area Styling */
-.ad-placement-area {
-    margin-top: 60px; /* Space above the ad */
-    margin-bottom: 60px; /* Space below the ad */
-    text-align: center; /* Center the ad if it's smaller than the container */
-}
+/* --- Animations --- */
 
-.ad-label {
-    color: #a0a0a0; /* Lighter text for "Advertisement" */
-    font-size: 0.85em;
-    margin-bottom: 15px;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-}
-
-.ad-container {
-    background-color: #1a1a2e; /* A subtle background to define the ad area */
-    border-radius: 8px;
-    border: 1px solid rgba(0, 188, 212, 0.1);
-    padding: 10px; /* Some padding around the ad */
-    min-height: 100px; /* Ensure a minimum height so it doesn't collapse before ad loads */
-    display: flex; /* Helps center ads */
-    justify-content: center;
-    align-items: center;
-    overflow: hidden; /* Important for responsive ads */
-}
-
-/* Ensure the AdSense ins element itself can fill the space */
-.ad-container ins.adsbygoogle {
-    display: block !important; /* Override inline style if necessary */
-    width: 100%; /* Take full width of its parent */
-    height: auto; /* Allow height to adjust */
-    min-height: 100px; /* Or specific minimum for that spot */
-}
-/* Styling for the specific Call-to-Action button to the generator */
-.generator-cta-button {
-    /* Inherits general styles from .primary-button like background, color, padding etc. */
-    
-    font-size: 1.5em; /* Make the text larger */
-    padding: 18px 40px; /* Increase padding for a bigger button */
-    margin-top: 30px; /* Add some space above it */
-    margin-bottom: 30px; /* Add some space below it */
-    display: inline-block; /* Essential for padding and margins to work correctly on 'a' tag */
-    text-decoration: none; /* Remove underline from the link */
-    text-align: center; /* Ensure text is centered within the button */
-
-    /* Add a stronger shadow and perhaps a subtle glow animation */
-    box-shadow: 0 8px 25px rgba(138, 43, 226, 0.6); /* Stronger initial shadow */
-    animation: pulsateButtonGlow 2s infinite alternate; /* New animation */
-}
-
-.generator-cta-button:hover {
-    background-color: var(--hover-primary);
-    transform: translateY(-5px); /* Lift it more on hover */
-    box-shadow: 0 12px 30px rgba(138, 43, 226, 0.8); /* Even stronger shadow on hover */
+@keyframes pulseBorderGlow {
+    0% {
+        box-shadow: 0 0 20px var(--glow-cyan-light);
+    }
+    100% {
+        box-shadow: 0 0 40px var(--glow-cyan-strong);
+    }
 }
 
 @keyframes pulsateButtonGlow {
@@ -1116,203 +1215,17 @@ body {
     }
 }
 
-/* Optional: Basic styling for hero/tools sections to center content */
-.hero-section, .tools-section {
-    text-align: center;
-    padding: 60px 20px;
-    background-color: var(--card-bg); /* Use a card background for sections */
-    margin-top: 50px;
-    margin-bottom: 50px;
-    border-radius: 15px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.3), 0 0 25px rgba(138, 43, 226, 0.5); /* Added initial glow */
-    border: 1px solid var(--accent-purple);
-    max-width: 800px;
-    width: 90%;
-    margin-left: auto;
-    margin-right: auto;
-    color: var(--text-light);
-    animation: pulsateSectionGlow 3s infinite alternate;
-}
-
-@keyframes pulsateSectionGlow {
+@keyframes neonBorderPulse {
     0% {
-        box-shadow: 0 5px 20px rgba(0,0,0,0.3), 0 0 15px rgba(138, 43, 226, 0.3);
+        box-shadow: 0 0 20px rgba(0, 255, 255, 0.5), 0 0 10px rgba(138, 43, 226, 0.6);
+        border-color: var(--accent-cyan);
+    }
+    50% {
+        box-shadow: 0 0 50px rgba(0, 255, 255, 0.9), 0 0 30px rgba(138, 43, 226, 0.9);
+        border-color: var(--accent-cyan-light);
     }
     100% {
-        box-shadow: 0 5px 25px rgba(0,0,0,0.5), 0 0 35px rgba(138, 43, 226, 0.8);
-    }
-}
-
-.hero-section h1 {
-    font-size: 3em;
-    color: var(--accent-cyan);
-    margin-bottom: 20px;
-}
-
-.hero-section p {
-    font-size: 1.2em;
-    margin-bottom: 30px;
-    color: var(--text-muted);
-}
-
-.tool-card {
-    background-color: var(--bg-dark);
-    padding: 25px;
-    border-radius: 10px;
-    margin: 20px auto;
-    max-width: 400px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    border: 1px solid var(--border-glow);
-}
-
-.tool-card h3 {
-    color: var(--accent-cyan);
-    font-size: 1.8em;
-    margin-bottom: 15px;
-}
-
-.tool-card p {
-    color: var(--text-muted);
-    margin-bottom: 25px;
-}
-
-/* Responsive adjustments for the new button */
-@media (max-width: 768px) {
-    .generator-cta-button {
-        font-size: 1.2em;
-        padding: 15px 30px;
-    }
-    .hero-section h1 {
-        font-size: 2.5em;
-    }
-    .hero-section p {
-        font-size: 1em;
-    }
-}
-
-@media (max-width: 480px) {
-    .generator-cta-button {
-        font-size: 1em;
-        padding: 12px 25px;
-        width: calc(100% - 40px); /* Make it fill width on small screens */
-    }
-    .hero-section h1 {
-        font-size: 2em;
-    }
-}
-.nav-generator-button {
-    background-color: var(--accent-purple); /* Use your primary accent color */
-    color: white; /* Ensure text is white for contrast */
-    padding: 8px 15px; /* Add padding to make it look like a button */
-    border-radius: 20px; /* Rounded corners, similar to your radio buttons */
-    text-decoration: none; /* Remove underline */
-    font-weight: bold; /* Make the text bold */
-    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-    display: inline-block; /* Essential for padding to work */
-    margin-top: 10px; /* Add some space above it if it's the only one */
-    margin-bottom: 5px; /* Add some space below it */
-    box-shadow: 0 2px 8px rgba(138, 43, 226, 0.4); /* Subtle glow */
-}
-.nav-generator-button:hover {
-    background-color: var(--hover-primary); /* Use your hover color */
-    transform: translateY(-2px); /* Slight lift effect */
-    box-shadow: 0 4px 12px rgba(138, 43, 226, 0.6); /* More pronounced shadow on hover */
-}
-.nav-links li {
-    text-align: center; /* Center the button if the li is wide */
-}
-@media (max-width: 768px) { /* Adjust breakpoint to match your menu's breakpoint */
-    .nav-generator-button {
-        width: calc(100% - 30px); /* Make it full width minus padding if menu items are full width */
-        box-sizing: border-box; /* Ensure padding is included in width */
-        margin-left: 15px; /* Center if width is set */
-        margin-right: 15px;
-    }
-}
-/* --- Hamburger Icon Styles --- */
-.hamburger {
-    display: none; /* Hidden by default, show on mobile */
-    cursor: pointer;
-    flex-direction: column;
-    justify-content: space-around;
-    width: 30px;
-    height: 25px;
-    position: absolute; /* Position it relative to the nav or body */
-    right: 20px; /* Adjust as needed */
-    top: 20px; /* Adjust as needed */
-    z-index: 1001; /* Ensure it's above other content */
-}
-
-.hamburger .bar {
-    width: 100%;
-    height: 3px;
-    background-color: #333; /* Or your preferred color */
-    border-radius: 5px;
-    transition: all 0.3s ease-in-out; /* Smooth transition for bar animation */
-}
-
-/* --- Navigation Links (Mobile/Sliding Menu) --- */
-.nav-links {
-    list-style: none;
-    display: flex; /* Keep for desktop layout */
-    /* ... your existing desktop styles ... */
-
-    /* Mobile specific styles for sliding */
-    position: fixed; /* Fix it to the viewport */
-    top: 0;
-    right: -100%; /* Start off-screen to the right */
-    height: 100vh; /* Full viewport height */
-    width: 250px; /* Width of the sliding menu */
-    background-color: #f8f8f8; /* Background for your mobile menu */
-    flex-direction: column; /* Stack links vertically */
-    padding-top: 60px; /* Space for the top, adjust as needed */
-    box-shadow: -2px 0 5px rgba(0,0,0,0.2);
-    transition: right 0.4s ease-in-out; /* Smooth slide transition */
-    z-index: 1000; /* Behind hamburger, above content */
-    align-items: flex-start; /* Align text to the left */
-}
-
-.nav-links li {
-    margin: 15px 20px; /* Spacing for mobile links */
-}
-
-.nav-links a {
-    color: #333; /* Link color for mobile menu */
-    text-decoration: none;
-    font-size: 18px;
-}
-
-/* --- When the menu is active/open --- */
-.nav-links.active {
-    right: 0; /* Slide into view */
-}
-
-/* --- Hamburger Icon Animation (to an 'X') --- */
-.hamburger.active .bar:nth-child(1) {
-    transform: translateY(11px) rotate(45deg);
-}
-
-.hamburger.active .bar:nth-child(2) {
-    opacity: 0; /* Fade out middle bar */
-}
-
-.hamburger.active .bar:nth-child(3) {
-    transform: translateY(-11px) rotate(-45deg);
-}
-
-/* --- Media Query for Mobile Display --- */
-@media (max-width: 768px) { /* Adjust breakpoint as needed */
-    .hamburger {
-        display: flex; /* Show hamburger on mobile */
-    }
-
-    .nav-links {
-        /* On mobile, override desktop display */
-        display: flex; /* Re-enable flex for the column layout when active */
-    }
-
-    /* Hide desktop nav buttons on mobile */
-    .main-nav .nav-buttons {
-        display: none;
+        box-shadow: 0 0 20px rgba(0, 255, 255, 0.5), 0 0 10px rgba(138, 43, 226, 0.6);
+        border-color: var(--accent-cyan);
     }
 }
