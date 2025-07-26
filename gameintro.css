@@ -1,0 +1,292 @@
+/* --- Variables (from Nickname Generator Site, adjusted --bg-dark for better visibility) --- */
+:root {
+    --bg-dark: #0f0030; /* A slightly darker, richer blue-purple for the background */
+    --card-bg: #1a1a2e;
+    --accent-purple: #8a2be2;
+    --accent-cyan: #64ffda;
+    --text-light: #e0e0e0;
+    --text-muted: #b0b0b0;
+    --border-glow: #64ffda;
+    --button-primary: #8a2be2;
+    --button-secondary: #4a4a6b;
+    --hover-primary: #a040f0;
+    --hover-secondary: #5a5a7d;
+}
+
+/* --- General Body & Base Styles (from Nickname Generator Site) --- */
+body {
+    font-family: 'Oxanium', sans-serif; /* Adopted font */
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-dark); /* Uses the updated variable */
+    color: var(--text-light);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+    box-sizing: border-box;
+}
+
+/* Background grid effect (from Nickname Generator Site) */
+.background-grid {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:
+        linear-gradient(to right, rgba(100, 255, 218, 0.08) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(100, 255, 218, 0.08) 1px, transparent 1px);
+    background-size: 50px 50px;
+    opacity: 0.2;
+    z-index: -1;
+    animation: grid-pan 60s linear infinite;
+}
+
+@keyframes grid-pan {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: -500px -500px;
+    }
+}
+
+/* --- Main Header Styling (Adapted from .container) --- */
+.main-header {
+    background-color: var(--card-bg);
+    padding: 30px 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 20px var(--accent-purple);
+    text-align: center;
+    max-width: 900px;
+    width: calc(100% - 40px);
+    border: 1px solid var(--accent-purple);
+    position: relative;
+    z-index: 1;
+    margin: 40px auto 20px auto;
+    box-sizing: border-box;
+}
+
+.main-header h1 {
+    font-family: 'Orbitron', sans-serif;
+    color: var(--accent-cyan);
+    margin-bottom: 15px;
+    font-size: 3.5em;
+    text-shadow: 0 0 15px var(--accent-cyan), 0 0 25px rgba(100, 255, 218, 0.4);
+    animation: pulsateGlow 2s infinite alternate;
+}
+
+@keyframes pulsateGlow {
+    0% {
+        text-shadow: 0 0 10px var(--accent-cyan), 0 0 15px rgba(100, 255, 218, 0.2);
+    }
+    100% {
+        text-shadow: 0 0 15px var(--accent-cyan), 0 0 25px rgba(100, 255, 218, 0.4);
+    }
+}
+
+.main-header p {
+    font-size: 1.3em;
+    color: var(--text-light);
+    opacity: 0.9;
+}
+
+/* --- Game Showcase Layout --- */
+.game-showcase {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    padding: 20px 40px;
+    max-width: 1300px;
+    margin: 20px auto 40px auto;
+    flex-grow: 1;
+}
+
+/* --- Individual Game Card Styling (Adapted from .container) --- */
+.game-card {
+    background-color: var(--card-bg);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 20px var(--accent-purple);
+    border: 1px solid var(--accent-purple);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.game-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7), 0 0 30px var(--border-glow);
+}
+
+.game-card img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    border-bottom: 1px solid var(--border-glow);
+}
+
+.game-card h2 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2em;
+    margin: 1.5rem 0.5rem 0.8rem;
+    color: var(--accent-cyan);
+    text-shadow: 0 0 10px var(--accent-cyan);
+}
+
+.game-card p {
+    font-size: 1em;
+    padding: 0 1.5rem 1rem;
+    color: var(--text-muted);
+    flex-grow: 1;
+}
+
+/* --- Button Styling (from Nickname Generator Site) --- */
+.action-button {
+    border: none;
+    padding: 14px 30px;
+    border-radius: 8px;
+    font-size: 1.15em;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    text-decoration: none;
+    display: inline-block;
+    margin-bottom: 25px;
+    font-family: 'Oxanium', sans-serif;
+}
+
+.primary-button {
+    background-color: var(--button-primary);
+    color: white;
+    box-shadow: 0 5px 15px rgba(138, 43, 226, 0.4);
+}
+
+.primary-button:hover {
+    background-color: var(--hover-primary);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(138, 43, 226, 0.6);
+}
+
+.secondary-button {
+    background-color: var(--button-secondary);
+    color: var(--text-light);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+.secondary-button:hover {
+    background-color: var(--hover-secondary);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.3);
+}
+
+
+/* --- Footer Styling --- */
+.main-footer {
+    background-color: var(--card-bg);
+    color: var(--text-muted);
+    text-align: center;
+    padding: 1.5rem 0;
+    margin-top: auto;
+    border-top: 1px solid var(--accent-purple);
+    width: 100%;
+}
+
+/* --- Responsive Adjustments (Adapted from Nickname Generator Site) --- */
+@media (max-width: 900px) {
+    .main-header {
+        padding: 25px 30px;
+        margin: 30px auto 20px auto;
+    }
+    .main-header h1 {
+        font-size: 3em;
+    }
+    .main-header p {
+        font-size: 1.1em;
+    }
+    .game-showcase {
+        padding: 20px 20px;
+        gap: 25px;
+    }
+    .game-card h2 {
+        font-size: 1.8em;
+    }
+    .game-card img {
+        height: 200px;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-header {
+        padding: 20px 25px;
+        margin: 20px auto 15px auto;
+        max-width: 90%;
+    }
+    .main-header h1 {
+        font-size: 2.5em;
+    }
+    .main-header p {
+        font-size: 1em;
+    }
+    .game-showcase {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        padding: 15px;
+        gap: 20px;
+    }
+    .game-card h2 {
+        font-size: 1.6em;
+    }
+    .game-card p {
+        font-size: 0.9em;
+        padding: 0 1rem 0.8rem;
+    }
+    .action-button {
+        padding: 12px 25px;
+        font-size: 1em;
+    }
+}
+
+@media (max-width: 580px) {
+    .main-header {
+        padding: 15px 20px;
+        margin: 15px auto 10px auto;
+        width: calc(100% - 30px);
+    }
+    .main-header h1 {
+        font-size: 2em;
+    }
+    .main-header p {
+        font-size: 0.9em;
+    }
+    .game-showcase {
+        grid-template-columns: 1fr;
+        padding: 10px;
+        gap: 15px;
+        margin: 10px auto 20px auto;
+        width: calc(100% - 20px);
+    }
+    .game-card {
+        margin: 0;
+    }
+    .game-card img {
+        height: 180px;
+    }
+    .game-card h2 {
+        font-size: 1.4em;
+    }
+    .action-button {
+        padding: 10px 20px;
+        font-size: 0.9em;
+    }
+    .main-footer {
+        padding: 1rem 10px;
+    }
+}
