@@ -732,7 +732,7 @@ const ECP_REWARDS = {
 const ECP_COSTS = {
     HINT: 50,
     REVEAL: 100,
-    TIMEOUT_PENALTY: 2
+    TIMEOUT_PENALTY: 5
 };
 
 const TIMER_DURATION_PER_QUESTION = 15; // seconds
@@ -757,7 +757,6 @@ const startGameFromMenuBtn = document.getElementById('start-game-from-menu-btn')
 
 // Level Selection Screen Elements
 const ecpDisplayLevel = document.getElementById('ecp-display-level');
-const achievementsBtnLevel = document.getElementById('achievements-btn-level');
 const prevLevelBtn = document.getElementById('prev-level-btn');
 const currentLevelDisplay = document.getElementById('current-level-display');
 const nextLevelBtn = document.getElementById('next-level-btn');
@@ -787,7 +786,7 @@ const themeOptions = document.getElementById('theme-options');
 
 
 // --- 4. Game State Variables (Initial / Default Values) ---
-let userECP = 0;
+let userECP = 200;
 let currentLevel = 1;
 let currentQuestionIndex = 0; // 0-indexed, so 0 to 29 for 30 questions
 let timer;
@@ -827,7 +826,6 @@ function showScreen(screenToShow) {
     });
     screenToShow.classList.remove('hidden');
     screenToShow.classList.add('active');
-    stopTimer(); // Stop timer when changing screens
     // Reset feedback message when changing screens from game play
     feedbackMessage.textContent = '';
     feedbackMessage.classList.remove('correct', 'wrong', 'hint');
@@ -992,7 +990,7 @@ function loadGame() {
         }
     } else {
         // If no saved game, set initial ECP and default theme
-        userECP = 0; // Starting ECP
+        userECP = 200; // Starting ECP
         currentLevel = 1;
         completedPuzzles = {};
         achievements.forEach(ach => ach.unlocked = false); // Reset all achievements
@@ -1115,7 +1113,6 @@ function loadQuestion(levelNum, questionId) {
  * Checks the user's guess against the correct answer.
  */
 function checkAnswer() {
-    stopTimer(); // Stop timer immediately after guess
     const guess = parseFloat(guessInput.value);
     const currentLevelData = gameQuestions[currentLevel - 1];
     const question = currentLevelData.questions[currentQuestionIndex];
@@ -1124,8 +1121,7 @@ function checkAnswer() {
         feedbackMessage.textContent = 'Please enter a valid number!';
         feedbackMessage.classList.remove('correct', 'hint');
         feedbackMessage.classList.add('wrong');
-        startTimer(); // Restart timer if input is invalid
-        return;
+        startTimer();
     }
 
     if (guess === question.answer) {
@@ -1154,7 +1150,6 @@ function checkAnswer() {
         feedbackMessage.classList.remove('correct', 'hint');
         feedbackMessage.classList.add('wrong');
         currentCorrectStreak = 0; // Reset streak on incorrect answer
-        startTimer(); // Restart timer for another attempt
     }
     saveGame();
 }
@@ -1369,7 +1364,6 @@ function revealAnswer() {
     revealBtn.disabled = true;
     prevQuestionBtn.disabled = true; // Disable previous question after revealing
 
-    stopTimer(); // Stop the timer
 
     setTimeout(() => {
         moveToNextPuzzle();
@@ -1460,10 +1454,6 @@ themeOptions.addEventListener('click', (event) => {
 
 
 // Level Selection Screen
-achievementsBtnLevel.addEventListener('click', () => {
-    renderAchievements(); // Ensure achievements are up-to-date
-    achievementsModal.classList.add('active');
-});
 
 prevLevelBtn.addEventListener('click', goToPrevLevel);
 nextLevelBtn.addEventListener('click', goToNextLevel);

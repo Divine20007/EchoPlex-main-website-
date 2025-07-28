@@ -1,0 +1,888 @@
+/* --- Global Variables (Define your color palette here) --- */
+:root {
+    /* Base Colors */
+    --bg-dark: #1a1a2e; /* Deep dark space blue/purple */
+    --card-bg: #2a2a4a; /* Slightly lighter dark for cards */
+    --text-light: #e0e0e0; /* Light grey for primary text */
+    --text-muted: #a0a0b0; /* Muted grey for secondary text */
+
+    /* Accent Colors (for neon glow/highlights) */
+    --accent-cyan: #00ffff; /* Bright cyan */
+    --accent-purple: #8a2be2; /* Electric purple */
+    --accent-green: #00ff00; /* Bright green for success */
+    --accent-red: #ff3333; /* Bright red for errors/loss */
+
+    /* Button Colors */
+    --button-primary: var(--accent-purple);
+    --hover-primary: #a040e0; /* Slightly lighter purple on hover */
+    --button-secondary: #444466; /* Darker grey-blue for secondary */
+    --hover-secondary: #666688; /* Lighter grey-blue on hover */
+
+    /* Border & Shadow */
+    --border-glow: var(--accent-cyan); /* Default glow border color */
+}
+
+/* --- Base Styles --- */
+body {
+    margin: 0;
+    font-family: 'Oxanium', sans-serif;
+    color: var(--text-light);
+    background-color: var(--bg-dark); /* Ensures entire page background is dark */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    box-sizing: border-box;
+    overflow-x: hidden; /* Prevent horizontal scroll */
+    transition: background-color 0.5s ease; /* Smooth theme transition */
+}
+
+/* Specific theme classes (body will switch these) */
+/* Sci-Fi Dark (default) variables are in :root */
+
+.retro-green-theme {
+    --bg-dark: #0f1c0f;
+    --card-bg: #1a321a;
+    --text-light: #e0ffee;
+    --text-muted: #aaddaa;
+    --accent-cyan: #00ff00; /* Green highlight */
+    --accent-purple: #00ee00; /* Another green */
+    --button-primary: #00cc00;
+    --hover-primary: #00ee00;
+    --border-glow: #00ff00;
+}
+
+.cyber-punk-theme {
+    --bg-dark: #0a0a0a;
+    --card-bg: #150515;
+    --accent-cyan: #ff00ff; /* Magenta */
+    --accent-purple: #00ffff; /* Cyan */
+    --button-primary: #ff00ff;
+    --hover-primary: #ee00ee;
+    --border-glow: #00ffff;
+    --text-light: #ffe0ff;
+    --text-muted: #a080a0;
+}
+
+.galactic-blue-theme {
+    --bg-dark: #080820; /* Very dark blue for main background */
+    --card-bg: #101030; /* Darker blue for cards/sections */
+    --text-light: #d0e0ff; /* Light, slightly desaturated blue-white text */
+    --text-muted: #a0b0d0; /* Muted blue-grey text */
+    --accent-cyan: #3399ff; /* Bright blue accent */
+    --accent-purple: #6633ff; /* Deep blue/purple accent */
+    --button-primary: #3399ff; /* Primary button matches bright blue accent */
+    --hover-primary: #55bbff; /* Lighter blue on hover */
+    --button-secondary: #1a1a40; /* Dark blue for secondary buttons */
+    --hover-secondary: #303060; /* Slightly lighter dark blue on hover */
+    --border-glow: #3399ff; /* Border glow matches bright blue accent */
+}
+
+.lava-red-theme {
+    --bg-dark: #200505; /* Very dark red/brown for main background */
+    --card-bg: #300a0a; /* Darker red/brown for cards/sections */
+    --text-light: #fff0e0; /* Off-white, slightly warm text */
+    --text-muted: #e0c0a0; /* Muted orange/brown text */
+    --accent-cyan: #ff6600; /* Bright orange accent (simulating lava) */
+    --accent-purple: #ff0000; /* Pure red accent */
+    --button-primary: #ff6600; /* Primary button matches orange accent */
+    --hover-primary: #ff8800; /* Lighter orange on hover */
+    --button-secondary: #401010; /* Dark red for secondary buttons */
+    --hover-secondary: #602020; /* Slightly lighter dark red on hover */
+    --border-glow: #ff6600; /* Border glow matches orange accent */
+}
+
+
+/* --- Game Container & Layout --- */
+.game-container {
+    width: 95%;
+    max-width: 900px;
+    margin: 20px auto;
+    background-color: var(--bg-dark); /* Primary container background */
+    border-radius: 20px;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.7);
+    padding: 30px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: calc(100vh - 40px); /* Fill screen height minus margin */
+    position: relative; /* For footer positioning if needed */
+}
+
+.game-header {
+    text-align: center;
+    margin-bottom: 30px;
+    width: 100%;
+}
+
+.game-header h1 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 4em;
+    color: var(--accent-cyan);
+    text-shadow: 0 0 30px var(--accent-cyan), 0 0 50px rgba(0, 255, 255, 0.5);
+    margin-bottom: 0.5rem;
+    line-height: 1.1;
+}
+
+.game-header p {
+    font-size: 1.2em;
+    color: var(--text-muted);
+    margin-top: 0;
+}
+
+.top-game-info {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+    padding-right: 10px;
+    box-sizing: border-box;
+}
+
+.ecp-display {
+    background-color: var(--button-secondary);
+    padding: 8px 15px;
+    border-radius: 20px;
+    color: var(--text-light);
+    font-size: 1.2em;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border-glow);
+}
+
+.ecp-display .coin-icon {
+    color: var(--accent-cyan);
+    text-shadow: 0 0 5px var(--accent-cyan);
+}
+
+.bottom-controls {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    width: 100%;
+    margin-top: auto; /* Push to bottom of flex container */
+    padding-top: 30px;
+}
+
+.game-footer {
+    width: 100%;
+    text-align: center;
+    padding-top: 20px;
+    border-top: 1px dashed var(--text-muted);
+    margin-top: 40px; /* Space from content above */
+    font-size: 0.85em;
+    color: var(--text-muted);
+}
+
+
+/* --- General Button Styling --- */
+.action-button {
+    border: none;
+    padding: 14px 30px;
+    border-radius: 8px;
+    font-size: 1.15em;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    text-decoration: none;
+    display: inline-flex; /* Use flex for icon alignment */
+    align-items: center;
+    justify-content: center;
+    gap: 10px; /* Space between text and icon */
+    font-family: 'Oxanium', sans-serif;
+    min-width: 150px; /* Ensure buttons have a minimum width */
+}
+
+.primary-button {
+    background-color: var(--button-primary);
+    color: white;
+    box-shadow: 0 5px 15px rgba(138, 43, 226, 0.4);
+}
+
+.primary-button:hover {
+    background-color: var(--hover-primary);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(138, 43, 226, 0.6), 0 0 15px var(--hover-primary);
+}
+
+.secondary-button {
+    background-color: var(--button-secondary);
+    color: var(--text-light);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+.secondary-button:hover {
+    background-color: var(--hover-secondary);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.3), 0 0 8px var(--border-glow);
+}
+
+.back-button {
+    /* Inherits from secondary-button */
+}
+
+/* --- Disabled Button Style --- */
+.action-button.disabled-button {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: var(--button-secondary) !important; /* Override primary/secondary styles */
+    box-shadow: none !important;
+    transform: none !important;
+}
+
+
+/* --- Game Intro Page Specific Styles --- */
+.game-card {
+    background-color: var(--card-bg);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 20px var(--accent-purple);
+    border: 3px solid var(--accent-purple);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    animation: neonBorderPulse 1s infinite alternate;
+}
+
+.game-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7), 0 0 30px var(--border-glow);
+}
+
+.game-card img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    border-bottom: 1px solid var(--border-glow);
+}
+
+.game-card h2 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2em;
+    margin: 1.5rem 0.5rem 0.8rem;
+    color: var(--accent-cyan);
+    text-shadow: 0 0 10px var(--accent-cyan);
+}
+
+.game-card p {
+    font-size: 1em;
+    padding: 0 1.5rem 1rem;
+    color: var(--text-muted);
+    flex-grow: 1;
+}
+
+/* --- Roll & Flip Game Specific Styles --- */
+
+/* Screen management */
+.game-screen {
+    display: none; /* Hide all game screens by default */
+    width: 100%;
+    max-width: 800px; /* Adjust as needed for intro content */
+    margin: 0 auto; /* Center the screen content */
+    flex-direction: column; /* Ensure content stacks vertically */
+    align-items: center; /* Center items horizontally */
+    gap: 20px; /* Space between major elements */
+    padding: 20px;
+    box-sizing: border-box; /* Include padding in width */
+}
+
+.game-screen.active-screen {
+    display: flex; /* Show the active screen */
+}
+
+.hidden-screen {
+    display: none; /* Explicitly hide screens that are not active */
+}
+
+/* Intro Screen specific adjustments */
+#gameIntroScreen {
+    background-color: var(--card-bg); /* Use card background for intro */
+    border-radius: 15px;
+    border: 2px solid var(--accent-purple);
+    box-shadow: 0 0 40px rgba(138, 43, 226, 0.4), 0 0 20px rgba(0, 255, 255, 0.2); /* Purple/Cyan glow */
+    padding: 40px 20px;
+}
+
+#gameIntroScreen .game-header h1 {
+    font-size: 3.5em;
+    text-shadow: 0 0 25px var(--accent-cyan);
+    margin-bottom: 10px;
+}
+
+#gameIntroScreen .game-subtitle {
+    font-family: 'Oxanium', sans-serif;
+    font-size: 1.4em;
+    color: var(--text-muted);
+    margin-top: -10px;
+    margin-bottom: 30px;
+}
+
+.game-description {
+    background-color: var(--bg-dark); /* Dark background for description card */
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+    text-align: left;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 30px;
+}
+
+.game-description .card-title {
+    font-size: 1.8em;
+    color: var(--accent-purple);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
+}
+
+.game-description p {
+    font-size: 1.1em;
+    line-height: 1.6;
+    color: var(--text-light);
+    margin-bottom: 15px;
+}
+
+.game-features {
+    list-style: none;
+    padding: 0;
+    margin-top: 25px;
+}
+
+.game-features li {
+    font-size: 1.1em;
+    color: var(--text-light);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.game-features li i {
+    color: var(--accent-cyan);
+    font-size: 1.3em;
+}
+
+.game-controls-group {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+    margin-bottom: 40px;
+}
+
+/* Play Screen adjustments */
+#gamePlayScreen {
+    max-width: 700px;
+    padding-top: 20px;
+}
+
+#gamePlayScreen .game-header h2 {
+    font-size: 2.5em;
+    color: var(--accent-cyan);
+    text-shadow: 0 0 15px var(--accent-cyan);
+    margin-bottom: 10px;
+}
+
+/* Staking Input Area */
+.stake-input-area,
+.guess-input-area {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    width: 100%;
+    background-color: var(--card-bg); /* Card background for input areas */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    margin-bottom: 25px;
+    border: 1px solid var(--border-glow);
+}
+
+.stake-input-area .input-label,
+.guess-input-area .input-label {
+    font-size: 1.1em;
+    color: var(--accent-purple);
+    font-family: 'Oxanium', sans-serif;
+    min-width: 80px;
+    text-align: right;
+}
+
+.stake-input-area .text-input {
+    background-color: var(--bg-dark); /* Dark background for input fields */
+    border: 2px solid var(--accent-cyan);
+    border-radius: 8px;
+    color: var(--text-light);
+    font-family: 'Oxanium', sans-serif;
+    font-size: 1.1em;
+    padding: 10px 15px;
+    width: 100px;
+    box-shadow: 0 0 8px rgba(0, 255, 255, 0.3);
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+    text-align: center;
+}
+
+.stake-input-area .text-input:focus {
+    outline: none;
+    border-color: var(--accent-purple);
+    box-shadow: 0 0 12px rgba(138, 43, 226, 0.5);
+}
+
+#leverage, #playerChoice {
+    background-color: var(--bg-dark); /* Dark background for dropdowns */
+    border: 2px solid var(--accent-purple);
+    border-radius: 10px;
+    color: var(--text-light);
+    font-family: 'Oxanium', sans-serif;
+    font-size: 1.1em;
+    padding: 10px 15px;
+    width: 180px;
+    box-shadow: 0 0 10px var(--accent-purple);
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+    text-align: center;
+    text-align-last: center;
+}
+
+#leverage:focus, #playerChoice:focus {
+    outline: none;
+    border-color: var(--accent-cyan);
+    box-shadow: 0 0 15px var(--accent-cyan);
+}
+
+#leverage option, #playerChoice option {
+    background-color: var(--card-bg); /* Dark background for dropdown options */
+    color: var(--text-light);
+}
+
+#leverage optgroup, #playerChoice optgroup {
+    background-color: var(--bg-dark); /* Dark background for optgroup labels */
+    color: var(--accent-cyan);
+    font-weight: bold;
+    padding: 5px 0;
+}
+
+/* Common game play screen elements */
+.game-main-content {
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.roll-flip-display {
+    min-height: 120px;
+    font-size: 2.2em;
+    font-family: 'Orbitron', sans-serif;
+    color: var(--accent-cyan);
+    text-shadow: 0 0 10px var(--accent-cyan);
+    border-color: var(--border-glow);
+    animation: pulsateGlow 2s infinite alternate;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+    width: 100%;
+    margin-top: 25px;
+    background-color: var(--bg-dark); /* Dark background for the display area */
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+}
+
+.roll-flip-controls {
+    margin-top: 30px;
+    margin-bottom: 30px;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.feedback-message {
+    font-size: 1.2em;
+    margin-top: 20px;
+    min-height: 1.5em;
+    color: var(--accent-cyan); /* Default success/info color */
+    text-align: center;
+}
+
+.feedback-message.error {
+    color: var(--accent-red); /* Red for error messages */
+}
+
+.feedback-message.success {
+    color: var(--accent-green); /* Green for success messages */
+}
+
+.ecp-change-message {
+    font-size: 1.4em;
+    font-weight: bold;
+    margin-top: 10px;
+    min-height: 1.5em;
+    text-shadow: 0 0 5px; /* Will inherit color from positive/negative class */
+    text-align: center;
+}
+.ecp-change-message.positive {
+    color: var(--accent-green);
+}
+.ecp-change-message.negative {
+    color: var(--accent-red);
+}
+
+/* Bottom controls on game play screen */
+.game-play-bottom-controls {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 40px;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+/* --- Theme Screen Styles --- */
+#themeScreen .game-header h2 {
+    font-size: 2.5em;
+    color: var(--accent-purple);
+    text-shadow: 0 0 15px var(--accent-purple);
+}
+
+.theme-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+    width: 100%;
+    background-color: var(--bg-dark); /* Darker background for the grid container */
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+}
+
+.theme-option {
+    background-color: var(--card-bg); /* Card background for each theme option */
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+    border: 2px solid var(--border-glow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    text-align: center;
+    padding-bottom: 20px;
+}
+
+.theme-option:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6), 0 0 15px var(--accent-cyan);
+}
+
+/* Style for the currently selected theme */
+.theme-option.active-theme-selected {
+    border-color: var(--accent-green); /* A clear indicator */
+    box-shadow: 0 0 25px var(--accent-green), 0 0 10px rgba(0, 255, 0, 0.5);
+    transform: scale(1.02);
+    position: relative;
+    z-index: 1; /* Bring to front slightly */
+}
+.theme-option.active-theme-selected h3 {
+    color: var(--accent-green); /* Change text color for selected theme */
+}
+
+
+.theme-option img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-bottom: 1px solid var(--border-glow);
+    margin-bottom: 15px;
+}
+
+.theme-option h3 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.5em;
+    color: var(--accent-cyan);
+    text-shadow: 0 0 8px var(--accent-cyan);
+    margin-bottom: 15px;
+}
+
+.theme-option .apply-theme-button {
+    margin-top: 10px;
+}
+
+
+/* --- Achievements Screen Styles --- */
+#achievementsScreen .game-header h2 {
+    font-size: 2.5em;
+    color: var(--accent-green);
+    text-shadow: 0 0 15px var(--accent-green);
+}
+
+.achievements-list {
+    width: 100%;
+    background-color: var(--bg-dark); /* Darker background for the list container */
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.2); /* Green glow */
+}
+
+.achievement-item {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background-color: var(--card-bg); /* Card background for each item */
+    border-radius: 10px;
+    padding: 15px 20px;
+    margin-bottom: 15px;
+    border: 1px solid var(--border-glow);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    transition: box-shadow 0.3s ease;
+}
+
+.achievement-item:last-child {
+    margin-bottom: 0;
+}
+
+.achievement-item:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5), 0 0 10px var(--accent-green);
+}
+
+.achievement-icon {
+    font-size: 3em;
+    min-width: 50px;
+    text-align: center;
+}
+
+/* Styles for locked/unlocked achievement icons */
+.achievement-icon.locked {
+    color: var(--text-muted);
+    filter: grayscale(100%);
+    opacity: 0.6;
+}
+
+.achievement-icon.unlocked {
+    color: var(--accent-green); /* Green for unlocked */
+    filter: grayscale(0%);
+    opacity: 1;
+    text-shadow: 0 0 10px var(--accent-green);
+}
+
+/* --- Earning History Screen Styles --- */
+#historyScreen .game-header h2 {
+    font-size: 2.5em;
+    color: var(--accent-purple); /* Or choose another accent color */
+    text-shadow: 0 0 15px var(--accent-purple);
+}
+
+.history-table-container {
+    width: 100%;
+    background-color: var(--bg-dark); /* Darker background for the table container */
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(138, 43, 226, 0.2); /* Purple glow */
+    overflow-x: auto; /* Enable horizontal scrolling for smaller screens */
+}
+
+#earningHistoryTable {
+    width: 100%;
+    border-collapse: collapse; /* Collapse borders for a clean look */
+    margin-top: 20px;
+    font-size: 0.9em;
+    color: var(--text-light);
+}
+
+#earningHistoryTable thead th {
+    background-color: var(--button-secondary);
+    color: var(--accent-cyan);
+    padding: 12px 10px;
+    text-align: left;
+    border-bottom: 2px solid var(--accent-purple);
+    font-family: 'Orbitron', sans-serif;
+    font-weight: bold;
+    text-transform: uppercase;
+    white-space: nowrap; /* Prevent headers from wrapping */
+}
+
+#earningHistoryTable tbody tr {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    transition: background-color 0.2s ease;
+}
+
+#earningHistoryTable tbody tr:nth-child(even) {
+    background-color: rgba(0, 0, 0, 0.1); /* Slightly darker stripe */
+}
+
+#earningHistoryTable tbody tr:hover {
+    background-color: rgba(var(--accent-cyan-rgb), 0.1); /* Subtle highlight on hover */
+}
+
+#earningHistoryTable tbody td {
+    padding: 10px;
+    text-align: left;
+    white-space: nowrap; /* Prevent content from wrapping too much */
+}
+
+/* Specific styling for the 'Change' column based on win/loss */
+#earningHistoryTable tbody td.positive {
+    color: var(--accent-green);
+    font-weight: bold;
+}
+
+#earningHistoryTable tbody td.negative {
+    color: var(--accent-red);
+    font-weight: bold;
+}
+
+#earningHistoryTable tbody td.outcome-win {
+    color: var(--accent-green);
+}
+
+#earningHistoryTable tbody td.outcome-loss {
+    color: var(--accent-red);
+}
+
+#noHistoryMessage {
+    text-align: center;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-top: 30px;
+    font-size: 1.1em;
+}
+
+/* Responsive adjustments for table */
+@media (max-width: 768px) {
+    #earningHistoryTable {
+        font-size: 0.8em; /* Shrink font for very small screens */
+    }
+    #earningHistoryTable thead th,
+    #earningHistoryTable tbody td {
+        padding: 8px 5px; /* Reduce padding */
+    }
+}
+
+/* --- Keyframe Animations --- */
+@keyframes neonBorderPulse {
+    0% {
+        box-shadow: 0 0 15px var(--accent-cyan), 0 0 8px var(--accent-purple);
+        border-color: var(--accent-cyan);
+    }
+    100% {
+        box-shadow: 0 0 25px var(--accent-cyan), 0 0 12px var(--accent-purple);
+        border-color: var(--accent-purple);
+    }
+}
+
+@keyframes pulsateGlow {
+    0% {
+        box-shadow: 0 0 10px var(--border-glow), 0 0 15px rgba(0, 255, 255, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 20px var(--border-glow), 0 0 30px rgba(0, 255, 255, 0.6);
+    }
+    100% {
+        box-shadow: 0 0 10px var(--border-glow), 0 0 15px rgba(0, 255, 255, 0.3);
+    }
+}
+
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 768px) {
+    .game-container {
+        padding: 20px 10px; /* Reduce padding on smaller screens */
+    }
+    .game-header h1 {
+        font-size: 3em;
+    }
+    .game-screen {
+        padding: 15px;
+    }
+    #gameIntroScreen .game-header h1 {
+        font-size: 2.8em;
+    }
+    #gameIntroScreen .game-subtitle {
+        font-size: 1.2em;
+    }
+    .game-description .card-title {
+        font-size: 1.5em;
+    }
+    .game-description p, .game-features li {
+        font-size: 1em;
+    }
+    .game-controls-group button {
+        width: calc(50% - 10px); /* Two buttons per row */
+        max-width: none;
+    }
+    .stake-input-area,
+    .guess-input-area {
+        flex-direction: column; /* Stack inputs vertically */
+        gap: 10px;
+        padding: 15px;
+    }
+    .stake-input-area .input-label,
+    .guess-input-area .input-label {
+        width: 100%;
+        text-align: center;
+    }
+    .stake-input-area .text-input,
+    #leverage, #playerChoice {
+        width: calc(100% - 30px); /* Full width minus padding */
+        max-width: 250px; /* Max width to prevent stretching too much */
+    }
+    .roll-flip-display {
+        font-size: 1.8em;
+        min-height: 100px;
+    }
+    .roll-flip-controls button {
+        width: calc(50% - 10px);
+    }
+    .game-play-bottom-controls button {
+        width: calc(50% - 10px);
+    }
+    .theme-grid {
+        grid-template-columns: 1fr; /* Single column on small screens */
+    }
+    .achievement-item {
+        flex-direction: column; /* Stack icon and details */
+        text-align: center;
+        gap: 10px;
+    }
+    .achievement-icon {
+        min-width: auto;
+    }
+    .achievement-details {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .game-header h1 {
+        font-size: 2.5em;
+    }
+    #gameIntroScreen .game-header h1 {
+        font-size: 2.2em;
+    }
+    .roll-flip-display {
+        font-size: 1.5em;
+        min-height: 80px;
+    }
+    .game-controls-group button,
+    .roll-flip-controls button,
+    .game-play-bottom-controls button {
+        width: 100%; /* Full width buttons */
+    }
+}

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Echoplex - Roll & Flip</title>
+    <link rel="stylesheet" href="rollgame.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Oxanium:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body class="sci-fi-dark-theme">
+    <div class="game-container">
+        <div class="top-game-info">
+            <div class="ecp-display">
+                <i class="fas fa-coins coin-icon"></i> ECP: <span id="currentEcp">0</span>
+            </div>
+        </div>
+
+        <section id="gameIntroScreen" class="game-screen active-screen">
+            <div class="game-header">
+                <h1>Roll & Flip</h1>
+                <p class="game-subtitle">Test Your Luck & Strategy!</p>
+            </div>
+
+            <div class="game-description content-card">
+                <h2 class="card-title"><i class="fas fa-dice-d6"></i> About This Game</h2>
+                <p>Welcome to Roll & Flip, where strategy meets chance! Choose to flip a coin or roll the dice, then place your bet. Pick your leverage wisely: higher multipliers mean bigger rewards but steeper odds. Can you master the art of calculated risk?</p>
+                <ul class="game-features">
+                    <li><i class="fas fa-hand-pointer"></i> Simple & Engaging Gameplay</li>
+                    <li><i class="fas fa-chart-line"></i> Strategic Staking & Multiplier</li>
+                    <li><i class="fas fa-coins"></i> Earn Big ECP Rewards</li>
+                    <li><i class="fas fa-redo"></i> Instantly Replayable Rounds</li>
+                </ul>
+            </div>
+
+            <div class="game-controls-group">
+                <button class="action-button primary-button game-start-button" id="startGameButton">
+                    <i class="fas fa-play-circle"></i> Start Game
+                </button>
+                <button class="action-button secondary-button" id="themeButton">
+                    <i class="fas fa-palette"></i> Theme
+                </button>
+                <button class="action-button secondary-button" id="achievementsButton">
+                    <i class="fas fa-trophy"></i> Achievements
+                </button>
+                <button class="action-button secondary-button" id="historyButton">
+                    <i class="fas fa-history"></i>
+                    History
+                </button>
+            </div>
+            
+            <div class="bottom-controls">
+                <button class="action-button secondary-button back-button" onclick="window.location.href='gameintro.html'">
+                    <i class="fas fa-arrow-left"></i> Back to Games
+                </button>
+            </div>
+        </section>
+
+        <section id="gamePlayScreen" class="game-screen hidden-screen">
+            <div class="game-header">
+                <h2>Roll & Flip Challenge</h2>
+                <p>Place your bet, make your guess, and let fate decide!</p>
+            </div>
+
+            <div class="game-main-content">
+                <div class="stake-input-area input-area">
+                    <label for="stakeAmount" class="input-label">Stake ECP:</label>
+                    <input type="number" id="stakeAmount" class="text-input" value="20" min="1" step="5">
+                    
+                    <label for="leverage" class="input-label">Leverage:</label>
+                    <input type="number" id="leverage" class="text-input" value="2" min="1" max="40" step="1">
+                </div>
+
+                <div class="guess-input-area input-area">
+                    <label for="playerChoice" class="input-label">Your Guess:</label>
+                    <select id="playerChoice" class="action-button secondary-button">
+                        <option value="">Choose your guess</option>
+                        <optgroup label="Coin">
+                            <option value="heads">Heads</option>
+                            <option value="tails">Tails</option>
+                        </optgroup>
+                        <optgroup label="Dice">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                        </optgroup>
+                    </select>
+                </div>
+                
+                <div class="roll-flip-controls bottom-game-controls">
+                    <button class="action-button primary-button" id="coinFlipButton">
+                        <i class="fas fa-coins"></i> Flip Coin
+                    </button>
+                    <button class="action-button primary-button" id="diceRollButton">
+                        <i class="fas fa-dice"></i> Roll Dice
+                    </button>
+                </div>
+
+                <div class="roll-flip-display puzzle-display">
+                    <p id="resultDisplay" class="sentence-text">Place your stake and guess!</p>
+                </div>
+
+                <p id="feedbackMessage" class="feedback-message"></p>
+                <p id="ecpChangeDisplay" class="ecp-change-message"></p>
+
+            </div>
+
+            <div class="bottom-controls game-play-bottom-controls">
+                <button class="action-button secondary-button back-button" id="backToIntroButton">
+                    <i class="fas fa-arrow-left"></i> Back to Intro
+                </button>
+                <button class="action-button secondary-button" id="shareButton">
+                    <i class="fas fa-share-alt"></i> Share
+                </button>
+            </div>
+        </section>
+
+        <section id="themeScreen" class="game-screen hidden-screen">
+            <div class="game-header">
+                <h2>Choose Your Theme</h2>
+                <p>Customize your EchoPlex experience!</p>
+            </div>
+
+            <div class="theme-grid content-card">
+                </div>
+
+            <div class="bottom-controls">
+                <button class="action-button secondary-button back-button" id="backToIntroFromThemeButton">
+                    <i class="fas fa-arrow-left"></i> Back to Intro
+                </button>
+            </div>
+        </section>
+
+        <section id="achievementsScreen" class="game-screen hidden-screen">
+            <div class="game-header">
+                <h2>Your Achievements</h2>
+                <p>Track your progress and mastery!</p>
+            </div>
+
+            <div class="achievements-list content-card">
+                </div>
+
+            <div class="bottom-controls">
+                <button class="action-button secondary-button back-button" id="backToIntroFromAchievementsButton">
+                    <i class="fas fa-arrow-left"></i> Back to Intro
+                </button>
+            </div>
+        </section>
+        
+        <section id="historyScreen" class="game-screen hidden-screen">
+            <div class="game-header">
+                <h2>Your Earning History</h2>
+                <p>Review your past game outcomes.</p>
+            </div>
+
+            <div class="history-table-container content-card">
+                <table id="earningHistoryTable">
+                    <thead>
+                        <tr>
+                            <th>Date/Time</th>
+                            <th>Game</th>
+                            <th>Guess</th>
+                            <th>Outcome</th>
+                            <th>Stake</th>
+                            <th>Leverage</th>
+                            <th>Change</th>
+                            <th>Result</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        </tbody>
+                </table>
+                <p id="noHistoryMessage" class="feedback-message">No history yet. Play some games!</p>
+            </div>
+
+            <div class="bottom-controls">
+                <button class="action-button secondary-button back-button" id="backToIntroFromHistoryButton">
+                    <i class="fas fa-arrow-left"></i> Back to Intro
+                </button>
+            </div>
+        </section>
+
+        <div class="game-footer">
+            <p>&copy; 2025 ECHOPLEX GAMES. All rights reserved.</p>
+        </div>
+    </div>
+
+    <script src="rollgame.js"></script>
+</body>
+</html>
