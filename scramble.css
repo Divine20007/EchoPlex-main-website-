@@ -1,0 +1,814 @@
+/* Basic Reset & Root Styling */
+:root {
+    --primary-bg-color: #1a0a2e; /* Dark Purplish */
+    --secondary-bg-color: #2e1a4e; /* Slightly lighter purple for elements */
+    --text-color: #e0e0e0; /* Light gray for general text */
+    --highlight-color: #00bcd4; /* Cyan highlight */
+    --button-bg-color: #4a2e7c; /* Muted purple for buttons */
+    --button-hover-color: #6a4e9c; /* Lighter purple on hover */
+    --success-color: #4CAF50; /* Green for success */
+    --failure-color: #F44336; /* Red for failure */
+    --border-color: #5a3c8a; /* Border color */
+    --input-bg-color: #3a225c; /* Darker input background */
+    --timer-color: #ffeb3b; /* Yellow for timer */
+    --ecp-color: #FFC107; /* Amber for ECP */
+    --locked-level-bg: #3a225c; /* Darker background for locked levels */
+    --locked-level-text: #888; /* Gray text for locked levels */
+    --locked-level-border: #2a1540; /* Darker border for locked levels */
+
+    /* NEW: Neon glow colors for animations */
+    --neon-glow-primary: rgba(0, 188, 212, 0.7); /* Cyan for main glow */
+    --neon-glow-secondary: rgba(0, 188, 212, 0.3); /* Lighter cyan for wider spread */
+}
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--primary-bg-color);
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden; /* Hide scrollbars if content is larger than viewport */
+    position: relative; /* For potential background effects */
+}
+
+/* Optional: Add a subtle gradient or pattern to the body/root for more depth */
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, rgba(46, 26, 78, 0.5) 0%, transparent 70%);
+    z-index: -1;
+}
+
+/* Screen Management */
+.screen {
+    background-color: var(--secondary-bg-color);
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+    padding: 30px;
+    width: 90%;
+    max-width: 500px;
+    text-align: center;
+    display: none; /* Hidden by default, JavaScript will make one active */
+    animation: fadeIn 0.5s ease-out forwards;
+    border: 2px solid var(--border-color);
+    position: absolute; /* Position screens on top of each other */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-sizing: border-box; /* Include padding in width/height */
+
+    /* NEW: Box shadow for screens, with pulse animation */
+    box-shadow: 0 0 10px var(--neon-glow-secondary),
+                0 0 20px var(--neon-glow-primary),
+                0 0 30px var(--neon-glow-secondary);
+    animation: fadeIn 0.5s ease-out forwards, neonBorderPulse 2.5s infinite alternate ease-in-out;
+}
+
+.screen.active {
+    display: block; /* Show the active screen */
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translate(-50%, -45%) scale(0.9); }
+    to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    to { opacity: 0; transform: translate(-50%, -55%) scale(0.9); }
+}
+
+/* NEW: Neon Border Pulse Animation */
+@keyframes neonBorderPulse {
+    from {
+        box-shadow: 0 0 5px var(--neon-glow-secondary),
+                    0 0 10px var(--neon-glow-primary);
+    }
+    to {
+        box-shadow: 0 0 15px var(--neon-glow-primary),
+                    0 0 25px var(--neon-glow-secondary),
+                    0 0 35px var(--neon-glow-primary);
+    }
+}
+
+
+/* Headings */
+h1 {
+    color: var(--highlight-color);
+    margin-bottom: 20px;
+    font-size: 2.2em;
+    /* text-shadow: 0 0 8px rgba(0, 188, 212, 0.5); /* Cyan glow */
+    /* MODIFIED: More intense text shadow for neon effect */
+    text-shadow: 0 0 5px var(--neon-glow-primary),
+                 0 0 10px var(--neon-glow-primary),
+                 0 0 15px var(--neon-glow-secondary);
+}
+
+h2 {
+    color: var(--text-color);
+    margin-bottom: 25px;
+    font-size: 1.8em;
+    /* NEW: Text shadow for H2 */
+    text-shadow: 0 0 3px var(--highlight-color);
+}
+
+h3 {
+    color: var(--highlight-color);
+    margin-top: 25px;
+    margin-bottom: 15px;
+    font-size: 1.4em;
+    /* NEW: Text shadow for H3 */
+    text-shadow: 0 0 3px var(--highlight-color);
+}
+
+/* Paragraphs */
+p {
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+/* Buttons */
+.btn {
+    background-color: var(--button-bg-color);
+    color: var(--text-color);
+    border: none;
+    border-radius: 8px;
+    padding: 12px 25px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    margin: 8px;
+    outline: none;
+    /* box-shadow: 0 4px 8px rgba(333, 222, 0, 0.3); */
+    /* MODIFIED: More subtle initial shadow for buttons, with glow on hover */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    text-shadow: 0 0 3px rgba(255, 255, 255, 0.5); /* Subtle white text shadow */
+}
+
+.btn:hover:not(:disabled) { /* Exclude disabled buttons from hover effect */
+    background-color: var(--button-hover-color);
+    transform: translateY(-2px);
+    /* MODIFIED: Neon glow on button hover */
+    box-shadow: 0 0 10px var(--highlight-color),
+                0 0 20px var(--highlight-color),
+                0 4px 12px rgba(0, 0, 0, 0.6);
+    filter: brightness(1.1);
+}
+
+.btn:active:not(:disabled) { /* Exclude disabled buttons from active effect */
+    transform: translateY(0);
+    /* MODIFIED: Active state shadow */
+    box-shadow: 0 0 5px var(--highlight-color),
+                0 2px 4px rgba(0, 0, 0, 0.5);
+    filter: brightness(0.9);
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    box-shadow: none;
+    text-shadow: none; /* Remove text shadow for disabled */
+}
+
+/* Top Buttons Positioning */
+.top-buttons {
+    position: absolute;
+    top: 10px; /* Adjusted to 10px as discussed for slight shift up */
+    left: 15px;
+    width: calc(100% - 3px); /* Keep this as it sets overall padding */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 10;
+}
+
+.back-btn {
+    padding: 8px 15px;
+    font-size: 0.9em;
+    margin: 0; /* Override default margin */
+    background-color: rgba(0, 0, 0, 0.3); /* Slightly transparent */
+    border: 3px solid var(--border-color);
+    /* Add transition for all properties here too for consistency */
+    transition: all 0.3s ease-in-out;
+    text-shadow: 0 0 3px rgba(255, 255, 255, 0.5); /* Subtle white text shadow */
+}
+
+.back-btn:hover:not(:disabled) {
+    background-color: rgba(0, 0, 0, 0.5);
+    transform: translateX(-5px); /* Slide slightly to the left */
+    box-shadow: 0 0 10px var(--highlight-color); /* Subtle glow on hover */
+    filter: brightness(1.1);
+}
+
+.back-btn:active:not(:disabled) {
+    transform: scale(0.95) translateX(-5px); /* Shrink slightly and maintain left slide */
+    background-color: rgba(0, 0, 0, 0.6); /* Darker when pressed */
+    filter: brightness(0.9);
+    box-shadow: 0 0 5px var(--highlight-color); /* Smaller glow when pressed */
+}
+
+
+/* Input Field */
+input[type="text"] {
+    background-color: var(--input-bg-color);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 12px 15px;
+    font-size: 1.1em;
+    width: calc(100% - 30px); /* Adjust for padding */
+    max-width: 300px;
+    margin-bottom: 20px;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    /* NEW: Text shadow for input text */
+    text-shadow: 0 0 2px rgba(255, 255, 255, 0.5);
+}
+
+input[type="text"]::placeholder {
+    color: rgba(224, 224, 224, 0.6);
+}
+
+input[type="text"]:focus {
+    border-color: var(--highlight-color);
+    /* MODIFIED: Neon glow on focus */
+    box-shadow: 0 0 10px var(--highlight-color),
+                0 0 20px var(--highlight-color);
+}
+
+/* Game Specific Elements */
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    font-size: 1.3em;
+    background-color: rgba(0,0,0,0.2);
+    padding: 10px 15px;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    /* NEW: Box shadow for game-header */
+    box-shadow: 0 0 5px var(--highlight-color),
+                0 0 10px var(--highlight-color);
+    text-shadow: 0 0 3px rgba(255, 255, 255, 0.5); /* Subtle white text shadow */
+}
+
+#timer span {
+    color: var(--timer-color);
+    font-weight: bold;
+    /* NEW: Text shadow for timer number */
+    text-shadow: 0 0 5px var(--timer-color);
+}
+
+/* ECP Display on main game screen */
+#ecp-display {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    /* Text shadow for "ECP:" text (if not a span) */
+    text-shadow: 0 0 3px rgba(255, 255, 255, 0.5);
+}
+
+#ecp-display span {
+    /* MODIFIED: ECP Number permanently white */
+    color: white;
+    font-weight: bold;
+    /* NEW: Text shadow for ECP number */
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+}
+
+/* MODIFIED: Target icon for color change with theme */
+#ecp-display .fas,
+#ecp-display .fa-coins { /* Added .fa-coins for specificity */
+    color: var(--ecp-color); /* This will change with theme */
+    font-size: 0.9em;
+    transform: translateY(-1px);
+    /* NEW: Text shadow for ECP icon */
+    text-shadow: 0 0 5px var(--ecp-color);
+}
+
+/* ECP Displays on intro and level selection screens */
+.screen-ecp-display {
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 8px 15px;
+    border-radius: 8px;
+    color: var(--text-color); /* "ECP:" text color */
+    font-size: 1.1em;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    border: 1px solid var(--border-color);
+    /* text-shadow: White; (This was incorrect, removed) */
+    /* NEW: Text shadow for "ECP:" text */
+    text-shadow: 0 0 3px rgba(255, 255, 255, 0.5);
+}
+
+.screen-ecp-display span {
+    /* MODIFIED: ECP Number permanently white */
+    color: white;
+    /* NEW: Text shadow for ECP number */
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+}
+
+/* MODIFIED: Target icon for color change with theme */
+.screen-ecp-display .fas {
+    color: var(--ecp-color); /* This will change with theme */
+    font-size: 0.8em;
+    transform: translateY(-1px);
+    /* NEW: Text shadow for ECP icon */
+    text-shadow: 0 0 5px var(--ecp-color);
+}
+
+@media (max-width: 600px) {
+    .screen-ecp-display {
+        font-size: 0.9em;
+        padding: 6px 12px;
+    }
+    .screen-ecp-display .fas {
+        font-size: 0.7em;
+    }
+}
+
+@media (max-width: 400px) {
+    .top-buttons {
+        flex-direction: column; /* Stack buttons and ECP display */
+        align-items: flex-start; /* Align to the left when stacked */
+        gap: 8px;
+        position: relative; /* Change to relative or remove absolute if it causes issues on small screens */
+        width: 100%; /* Take full width for stacking */
+        left: 0;
+        top: 0;
+        padding: 10px; /* Add some padding if relative */
+        box-sizing: border-box; /* Ensure padding is included in width */
+    }
+    .screen { /* Adjust screen padding for stacked top-buttons */
+        padding-top: 80px; /* Make space for top buttons when stacked */
+    }
+}
+.word-display {
+    background-color: var(--input-bg-color);
+    border: 2px dashed var(--highlight-color);
+    border-radius: 12px;
+    padding: 30px 20px;
+    margin-bottom: 30px;
+    min-height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* NEW: Box shadow for word-display */
+    box-shadow: 0 0 10px var(--neon-glow-primary),
+                0 0 20px var(--neon-glow-secondary);
+}
+
+#scrambled-word {
+    font-size: 2.5em;
+    font-weight: bold;
+    letter-spacing: 2px;
+    color: var(--highlight-color);
+    /* text-shadow: 0 0 10px rgba(0, 188, 212, 0.7); */
+    /* MODIFIED: More intense text shadow for scrambled word */
+    text-shadow: 0 0 5px var(--neon-glow-primary),
+                 0 0 15px var(--neon-glow-primary),
+                 0 0 25px var(--neon-glow-secondary);
+    word-break: break-all;
+}
+
+.input-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    /* NEW: Box shadow for input-area */
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.5); /* Subtle shadow for the area itself */
+}
+
+/* MODIFIED: Game Controls Layout */
+.game-controls {
+    display: flex;
+    flex-wrap: wrap; /* Allow buttons to wrap to next line */
+    justify-content: center; /* Center buttons horizontally */
+    gap: 15px; /* Increased gap for better spacing */
+    margin-bottom: 25px;
+    padding: 10px; /* Add some padding around controls */
+    background-color: rgba(0,0,0,0.15); /* Subtle background for the controls section */
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.1); /* Light border */
+}
+
+.game-info {
+    margin-top: 20px;
+    font-size: 0.95em;
+    min-height: 40px; /* Reserve space for messages */
+    /* NEW: Text shadow for game info messages */
+    text-shadow: 0 0 2px rgba(255, 255, 255, 0.5);
+}
+
+#message-display {
+    font-weight: bold;
+    /* Added here for overall message text shadow */
+    text-shadow: 0 0 3px rgba(255, 255, 255, 0.5);
+}
+#message-display.success {
+    color: var(--success-color);
+    text-shadow: 0 0 5px var(--success-color);
+}
+#message-display.failure {
+    color: var(--failure-color);
+    text-shadow: 0 0 5px var(--failure-color);
+}
+#message-display.info { /* For hints/reveals */
+    color: var(--highlight-color);
+    text-shadow: 0 0 5px var(--highlight-color);
+}
+
+#current-level-info {
+    color: var(--text-color);
+    margin-bottom: 10px;
+}
+
+/* Level Grid */
+#level-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    gap: 10px;
+    max-height: 400px; /* Limit height and allow scrolling */
+    overflow-y: auto;
+    padding-right: 5px; /* Space for scrollbar */
+    margin-bottom: 25px;
+}
+
+#level-grid::-webkit-scrollbar {
+    width: 8px;
+}
+
+#level-grid::-webkit-scrollbar-track {
+    background: var(--input-bg-color);
+    border-radius: 10px;
+}
+
+#level-grid::-webkit-scrollbar-thumb {
+    background: var(--button-hover-color);
+    border-radius: 10px;
+}
+
+.level-btn {
+    background-color: var(--button-bg-color);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 15px 5px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 60px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    position: relative;
+    /* NEW: Text shadow for level button text */
+    text-shadow: 0 0 3px rgba(255, 255, 255, 0.5);
+}
+
+.level-btn:hover:not(:disabled) {
+    background-color: var(--button-hover-color);
+    transform: translateY(-2px);
+    /* MODIFIED: Neon glow on level button hover */
+    box-shadow: 0 0 10px var(--highlight-color),
+                0 0 20px var(--highlight-color);
+}
+
+.level-btn.completed {
+    background-color: var(--success-color);
+    border-color: var(--success-color);
+    color: white;
+    /* NEW: Glow for completed levels */
+    box-shadow: 0 0 10px var(--success-color),
+                0 0 20px rgba(76, 175, 80, 0.5); /* Lighter green glow */
+    text-shadow: 0 0 5px white;
+}
+
+/* Locked Level Styles */
+.level-btn.locked {
+    background-color: var(--locked-level-bg);
+    color: var(--locked-level-text);
+    border-color: var(--locked-level-border);
+    cursor: not-allowed;
+    opacity: 0.7;
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
+    text-shadow: none; /* Remove text shadow for locked */
+}
+
+.level-btn.locked .lock-icon {
+    font-size: 1.5em;
+    margin-bottom: 5px;
+    color: var(--locked-level-text);
+}
+
+
+.level-selection-controls {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+
+/* History Screen & Achievements */
+#history-content {
+    background-color: var(--input-bg-color);
+    border-radius: 10px;
+    padding: 20px;
+    max-height: 400px;
+    overflow-y: auto;
+    text-align: left;
+    margin-bottom: 20px;
+    border: 1px solid var(--border-color);
+    /* NEW: Box shadow for history content */
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+}
+
+#achievements-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#achievements-list li {
+    background-color: var(--button-bg-color);
+    padding: 10px 15px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.95em;
+    border: 1px solid var(--border-color);
+    /* NEW: Text shadow for achievement list items */
+    text-shadow: 0 0 2px rgba(255, 255, 255, 0.4);
+}
+
+#achievements-list li.completed-achievement {
+    background-color: var(--success-color);
+    color: white;
+    /* NEW: Glow for completed achievement items */
+    box-shadow: 0 0 10px var(--success-color);
+    text-shadow: 0 0 3px white;
+}
+
+#achievements-list li span {
+    font-weight: bold;
+    color: var(--highlight-color);
+    text-shadow: 0 0 3px var(--highlight-color);
+}
+#achievements-list li.completed-achievement span {
+    color: white;
+    text-shadow: 0 0 3px white;
+}
+
+#stats-unscrambled, #stats-failures, #stats-highest-ecp {
+    color: var(--highlight-color);
+    font-weight: bold;
+    text-shadow: 0 0 3px var(--highlight-color);
+}
+
+
+/* Theme Selection Screen */
+#theme-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+    margin-bottom: 25px;
+}
+
+.theme-btn {
+    background-color: var(--button-bg-color);
+    color: var(--text-color);
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    padding: 20px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    /* NEW: Text shadow for theme button text */
+    text-shadow: 0 0 3px rgba(255, 255, 255, 0.5);
+}
+
+.theme-btn:hover {
+    background-color: var(--button-hover-color);
+    border-color: var(--highlight-color);
+    transform: translateY(-3px);
+    /* MODIFIED: Neon glow on theme button hover */
+    box-shadow: 0 0 10px var(--highlight-color),
+                0 0 20px var(--highlight-color),
+                0 6px 12px rgba(0, 0, 0, 0.5);
+}
+
+.theme-btn.active-theme {
+    border-color: var(--highlight-color);
+    /* MODIFIED: Persistent neon glow for active theme */
+    box-shadow: 0 0 15px var(--neon-glow-primary),
+                0 0 25px var(--neon-glow-secondary);
+    transform: scale(1.05);
+}
+
+/* --- THEME-SPECIFIC STYLES --- */
+
+.theme-ocean {
+    --primary-bg-color: #0d1b2a; /* Deep Blue */
+    --secondary-bg-color: #1b263b; /* Slightly lighter blue */
+    --text-color: #e0f2f7; /* Light cyan text */
+    --highlight-color: #00e5ff; /* Vibrant electric blue */
+    --button-bg-color: #415a77;
+    --button-hover-color: #778da9;
+    --input-bg-color: #2b3a4e;
+    --border-color: #6d8ba9;
+    --locked-level-bg: #2b3a4e;
+    --locked-level-text: #8899aa;
+    --locked-level-border: #1a2330;
+    --timer-color: #ade8f4; /* Light blue timer */
+    --ecp-color: #00bcd4; /* Cyan ECP for ocean */
+    --neon-glow-primary: rgba(0, 229, 255, 0.7); /* Electric blue glow */
+    --neon-glow-secondary: rgba(0, 229, 255, 0.3);
+}
+
+.theme-forest {
+    --primary-bg-color: #0a1e12; /* Dark Forest Green */
+    --secondary-bg-color: #1a361c; /* Lighter forest green */
+    --text-color: #e8f5e9; /* Off-white green text */
+    --highlight-color: #8bc34a; /* Lime green */
+    --button-bg-color: #388e3c;
+    --button-hover-color: #66bb6a;
+    --input-bg-color: #254a2a;
+    --border-color: #5b8a5d;
+    --locked-level-bg: #254a2a;
+    --locked-level-text: #99aa99;
+    --locked-level-border: #1a2e1c;
+    --timer-color: #cddc39; /* Lime timer */
+    --ecp-color: #aed581; /* Light green ECP */
+    --neon-glow-primary: rgba(139, 195, 74, 0.7); /* Lime green glow */
+    --neon-glow-secondary: rgba(139, 195, 74, 0.3);
+}
+
+.theme-desert {
+    --primary-bg-color: #3e2723; /* Dark Brown/Terra Cotta */
+    --secondary-bg-color: #5d4037; /* Lighter brown */
+    --text-color: #ffe0b2; /* Creamy orange text */
+    --highlight-color: #ff9800; /* Deep Orange */
+    --button-bg-color: #8d6e63;
+    --button-hover-color: #a1887f;
+    --input-bg-color: #4e342e;
+    --border-color: #795548;
+    --locked-level-bg: #4e342e;
+    --locked-level-text: #bbaaaa;
+    --locked-level-border: #3a2520;
+    --timer-color: #ffc107; /* Amber timer */
+    --ecp-color: #ffb74d; /* Light orange ECP */
+    --neon-glow-primary: rgba(255, 152, 0, 0.7); /* Deep orange glow */
+    --neon-glow-secondary: rgba(255, 152, 0, 0.3);
+}
+
+.theme-cyberpunk {
+    --primary-bg-color: #0f0a1c; /* Very Dark Purple/Black */
+    --secondary-bg-color: #210d32; /* Darker purple */
+    --text-color: #e0e0e0;
+    --highlight-color: #ff00ff; /* Neon Pink/Magenta */
+    --button-bg-color: #6a008a;
+    --button-hover-color: #9c27b0;
+    --input-bg-color: #340e4f;
+    --border-color: #8c00b3;
+    --timer-color: #00ffff; /* Cyber Blue for timer */
+    --ecp-color: #ffff00; /* Neon Yellow for ECP */
+    --locked-level-bg: #340e4f;
+    --locked-level-text: #aa88bb;
+    --locked-level-border: #1f0a2e;
+    --neon-glow-primary: rgba(255, 0, 255, 0.7); /* Neon pink glow */
+    --neon-glow-secondary: rgba(255, 0, 255, 0.3);
+}
+
+.theme-monochrome {
+    --primary-bg-color: #212121; /* Dark Gray */
+    --secondary-bg-color: #424242; /* Medium Gray */
+    --text-color: #f5f5f5; /* Light Gray */
+    --highlight-color: #9e9e9e; /* Muted Gray Highlight */
+    --button-bg-color: #616161;
+    --button-hover-color: #757575;
+    --input-bg-color: #313131;
+    --border-color: #505050;
+    --timer-color: #bbbbbb;
+    --ecp-color: #cccccc;
+    --locked-level-bg: #313131;
+    --locked-level-text: #aaaaaa;
+    --locked-level-border: #212121;
+    --neon-glow-primary: rgba(158, 158, 158, 0.7); /* Muted gray glow */
+    --neon-glow-secondary: rgba(158, 158, 158, 0.3);
+}
+
+.theme-sunset {
+    --primary-bg-color: #2c0b0b; /* Dark Reddish-Brown */
+    --secondary-bg-color: #4a1c1c; /* Medium Reddish-Brown */
+    --text-color: #ffebee; /* Very Light Pink/Orange */
+    --highlight-color: #ff5722; /* Deep Orange/Red */
+    --button-bg-color: #b71c1c;
+    --button-hover-color: #d32f2f;
+    --input-bg-color: #3a1515;
+    --border-color: #8a2b2b;
+    --timer-color: #ffab40; /* Orange-Yellow */
+    --ecp-color: #ffd180; /* Lighter Orange-Yellow */
+    --locked-level-bg: #3a1515;
+    --locked-level-text: #cc9999;
+    --locked-level-border: #2a0b0b;
+    --neon-glow-primary: rgba(255, 87, 34, 0.7); /* Deep orange glow */
+    --neon-glow-secondary: rgba(255, 87, 34, 0.3);
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 600px) {
+    .screen {
+        width: 95%;
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 1.8em;
+    }
+
+    h2 {
+        font-size: 1.5em;
+    }
+
+    .btn {
+        padding: 10px 10px;
+        font-size: 0.8em;
+    }
+
+    input[type="text"] {
+        font-size: 1em;
+        padding: 10px 12px;
+    }
+
+    #scrambled-word {
+        font-size: 2em;
+        margin-top: 10px;
+    }
+
+    .game-header, .game-controls {
+        font-size: 1.1em;
+    }
+
+    #level-grid {
+        grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+    }
+    .level-btn {
+        min-height: 50px;
+        font-size: 0.9em;
+    }
+
+    #history-content, #theme-grid {
+        max-height: 300px;
+    }
+
+    .top-buttons {
+        top: 1px;
+        left: 1px;
+    }
+    .back-btn {
+        padding: 6px 10px;
+        font-size: 0.8em;
+    }
+}
+
+@media (max-width: 400px) {
+    .screen {
+        border-radius: 10px;
+        padding-top: 60px; /* Make space for top buttons */
+    }
+    .game-header {
+        flex-direction: column;
+        gap: 10px;
+    }
+    /* MODIFIED: Game Controls for small screens */
+    .game-controls {
+        flex-direction: column; /* Stack buttons vertically */
+        gap: 10px; /* Adjust gap for stacking */
+        padding: 15px; /* More padding when stacked */
+    }
+    .game-controls .btn {
+        width: calc(100% - 16px); /* Make buttons fill width (accounting for margin) */
+        margin: 0; /* Remove horizontal margin */
+    }
+}

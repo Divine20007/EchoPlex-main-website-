@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Scramble Game</title>
+    <link rel="stylesheet" href="scramble.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+    <!-- Game Intro Screen -->
+    <div id="game-intro-screen" class="screen active">
+        <div class="top-buttons">
+            <button id="back-to-games-button" class="btn back-btn">Back to Games</button> <!-- NEW BUTTON -->
+        <div id="ecp-display-intro" class="screen-ecp-display"><i class="fas fa-coins"></i>   ECP: <span>0</span></div>
+        </div>
+        <h1>Word Scramble!</h1>
+        <p>Challenge your mind, unscramble words, and earn ECP!</p>
+        <p>
+            Unscramble words to earn points, but be quick! You have limited time for each attempt.
+            Use hints wisely or reveal the word if you're stuck.
+        </p>
+        <button id="start-game-button" class="btn">START GAME</button>
+        <button id="view-history-intro-button" class="btn">History & Achievements</button>
+    </div>
+
+    <!-- Level Selection Screen -->
+    <div id="level-selection-screen" class="screen">
+        <div class="top-buttons">
+            <button id="back-to-intro-button" class="btn back-btn">Back to Intro</button> <!-- NEW BUTTON -->
+                    <div id="ecp-display-levels" class="screen-ecp-display"><i class="fas fa-coins"></i>   ECP: <span>0</span></div>
+        </div>
+        <h2>Choose Your Challenge</h2>
+        <div id="level-grid">
+            <!-- Levels will be dynamically loaded here by JavaScript -->
+        </div>
+        <div class="level-selection-controls">
+            <button id="select-theme-button" class="btn">Select Theme</button>
+            <button id="view-history-levels-button" class="btn">History & Achievements</button>
+        </div>
+    </div>
+
+    <!-- Main Game Screen -->
+    <div id="main-game-screen" class="screen">
+        <div class="game-header">
+            <div id="timer">Time: <span>20</span>s</div>
+            <div id="ecp-display"><i class="fas fa-coins"></i>   ECP: <span>200</span></div>
+        </div>
+
+        <div class="word-display">
+            <p id="scrambled-word"></p>
+        </div>
+
+        <div class="input-area">
+            <input type="text" id="user-input" placeholder="Your answer here..." autocomplete="off">
+            <button id="submit-answer-button" class="btn">Submit</button>
+        </div>
+
+        <div class="game-controls">
+            <button id="shuffle-button" class="btn">Shuffle</button>
+            <button id="hint-button" class="btn">Hint (20 ECP)</button>
+            <button id="reveal-button" class="btn">Reveal (40 ECP)</button>
+            <button id="share-button" class="btn">Share</button>
+        </div>
+
+        <div class="game-info">
+            <p id="current-level-info">Level 1 - Word 1 of 2</p>
+            <p id="message-display"></p> <!-- For success/failure messages -->
+        </div>
+        <button id="back-to-levels-from-game" class="btn">Back to Levels</button>
+    </div>
+
+    <!-- History Screen -->
+    <div id="history-screen" class="screen">
+        <div class="top-buttons">
+            <button id="back-to-levels-from-history" class="btn back-btn">Back to Levels</button>
+        </div>
+        <h2>Game History & Achievements</h2>
+        <div id="history-content">
+            <h3>Achievements</h3>
+            <ul id="achievements-list">
+                <!-- Achievements will be dynamically loaded here -->
+            </ul>
+            <h3>Game Stats</h3>
+            <p>Total Words Unscrambled: <span id="stats-unscrambled">0</span></p>
+            <p>Total Failures: <span id="stats-failures">0</span></p>
+            <p>Highest ECP: <span id="stats-highest-ecp">0</span></p>
+        </div>
+    </div>
+
+    <!-- Theme Selection Screen -->
+    <div id="theme-selection-screen" class="screen">
+        <div class="top-buttons">
+            <button id="back-to-levels-from-theme" class="btn back-btn">Back to Levels</button>
+        </div>
+        <h2>Select a Theme</h2>
+        <div id="theme-grid">
+            <!-- Themes will be dynamically loaded here by JavaScript -->
+        </div>
+    </div>
+
+    <script src="scramble.js"></script> <!-- Link to your JavaScript file -->
+</body>
+</html>

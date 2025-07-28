@@ -1,24 +1,36 @@
-/* --- Variables (from Nickname Generator Site, adjusted --bg-dark for better visibility) --- */
+/* --- Variables - Refined for Deeper Neon & More Contrast --- */
 :root {
-    --bg-dark: #0f0030; /* A slightly darker, richer blue-purple for the background */
-    --card-bg: #1a1a2e;
-    --accent-purple: #8a2be2;
-    --accent-cyan: #64ffda;
-    --text-light: #e0e0e0;
-    --text-muted: #b0b0b0;
-    --border-glow: #64ffda;
-    --button-primary: #8a2be2;
-    --button-secondary: #4a4a6b;
-    --hover-primary: #a040f0;
-    --hover-secondary: #5a5a7d;
+    --bg-dark: #07001C; /* Very dark blue-purple, almost black for depth */
+    --card-bg: #150A2E; /* Darker purple for main elements */
+    --accent-purple: #9B30FF; /* Brighter, more vibrant purple for accents */
+    --accent-cyan: #00E5FF; /* Electric cyan, very bright */
+    --text-light: #F0F0F0; /* Brighter general text */
+    --text-muted: #BDBDBD; /* Slightly lighter muted text */
+
+    /* NEW: Dedicated Neon Glow Colors - High Contrast */
+    --neon-glow-primary: rgba(0, 229, 255, 0.9); /* Strongest cyan glow */
+    --neon-glow-secondary: rgba(155, 48, 255, 0.7); /* Strongest purple glow */
+    --neon-glow-tertiary: rgba(0, 229, 255, 0.4); /* Fainter cyan for wider spread */
+    --neon-glow-quaternary: rgba(155, 48, 255, 0.3); /* Fainter purple for wider spread */
+
+    --button-primary-bg: var(--accent-purple);
+    --button-primary-hover-bg: #AE50FF; /* Lighter purple on hover */
+    --button-secondary-bg: #3A2A5E; /* Darker, subtle button */
+    --button-secondary-hover-bg: #4A3A70;
+
+    --border-color: rgba(255, 255, 255, 0.1); /* Subtle internal border for depth */
+
+    /* ECP Icon Color - Matches primary neon for consistency */
+    --ecp-icon-color: var(--accent-cyan);
+    --ecp-icon-color-rgb: 0, 229, 255; /* RGB for shadow */
 }
 
-/* --- General Body & Base Styles (from Nickname Generator Site) --- */
+/* --- General Body & Base Styles --- */
 body {
-    font-family: 'Oxanium', sans-serif; /* Adopted font */
+    font-family: 'Oxanium', sans-serif;
     margin: 0;
     padding: 0;
-    background-color: var(--bg-dark); /* Uses the updated variable */
+    background-color: var(--bg-dark);
     color: var(--text-light);
     display: flex;
     flex-direction: column;
@@ -28,9 +40,11 @@ body {
     overflow-x: hidden;
     position: relative;
     box-sizing: border-box;
+    /* NEW: Subtle radial gradient on body for depth */
+    background: radial-gradient(circle at center, rgba(15, 0, 48, 0.6) 0%, var(--bg-dark) 70%);
 }
 
-/* Background grid effect (from Nickname Generator Site) */
+/* NEW: Pulsing background grid */
 .background-grid {
     position: absolute;
     top: 0;
@@ -38,396 +52,426 @@ body {
     width: 100%;
     height: 100%;
     background-image:
-        linear-gradient(to right, rgba(100, 255, 218, 0.08) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(100, 255, 218, 0.08) 1px, transparent 1px);
+        linear-gradient(to right, rgba(0, 229, 255, 0.05) 1px, transparent 1px), /* More subtle cyan grid */
+        linear-gradient(to bottom, rgba(0, 229, 255, 0.05) 1px, transparent 1px);
     background-size: 50px 50px;
-    opacity: 0.2;
+    opacity: 0.15; /* Slightly less opaque */
     z-index: -1;
-    animation: grid-pan 60s linear infinite;
+    animation: grid-pan 60s linear infinite, grid-fade 5s infinite alternate; /* Added fade animation */
 }
 
 @keyframes grid-pan {
+    0% { background-position: 0 0; }
+    100% { background-position: -500px -500px; }
+}
+
+/* NEW: Grid subtle fade/pulse */
+@keyframes grid-fade {
+    0% { opacity: 0.15; }
+    100% { opacity: 0.25; }
+}
+
+/* --- "Under Development" Warning --- */
+body > p { /* Target the direct child p element for the warning */
+    position: fixed; /* Keep it visible regardless of scroll */
+    top: 10px;
+    left: 48%;
+    transform: translateX(-50%);
+    background-color: rgba(255, 165, 0, 0.8); /* Orange warning */
+    color: #333;
+    padding: 8px 55px;
+    border-radius: 5px;
+    font-weight: 900;
+    font-size: 0.9em;
+    z-index: 1000; /* Ensure it's on top */
+    box-shadow: 0 0 10px rgba(255, 165, 0, 0.6);
+    animation: warningPulse 1.5s infinite alternate;
+}
+
+@keyframes warningPulse {
+    0% { box-shadow: 0 0 10px rgba(255, 165, 0, 0.6); }
+    100% { box-shadow: 0 0 15px rgba(255, 165, 0, 0.9), 0 0 25px rgba(255, 165, 0, 0.4); }
+}
+
+
+/* --- Go Home Button --- */
+.Go-home-div {
+    position: fixed; /* Fixed position relative to viewport */
+    top: 20px;
+    left: 20px;
+    background-color: transparent; /* Make background transparent */
+    border: 2px solid var(--accent-purple); /* Border from purple accent */
+    border-radius: 8px;
+    padding: 8px 15px;
+    z-index: 999; /* High z-index */
+    transition: all 0.3s ease;
+    /* Removed animation from Go-home-div to apply to link for text glow */
+    box-shadow: 0 0 10px rgba(155, 48, 255, 0.4); /* Subtle initial glow */
+}
+
+.Go-home-div:hover {
+    box-shadow: 0 0 15px var(--neon-glow-secondary), 0 0 25px rgba(155, 48, 255, 0.5); /* Stronger glow on hover */
+    transform: translateY(-2px);
+    border-color: var(--accent-cyan); /* Cyan border on hover */
+}
+.Go-home {
+    color: var(--text-light);
+    text-decoration: none;
+    font-weight: 700; /* This won't affect the icon's weight much, but keep it */
+    font-size: 1.8em; /* <--- INCREASE THIS FOR ICON SIZE (e.g., 1.8em for a good size) */
+    text-shadow: none; /* <--- REMOVE OR SET TO NONE, as text-shadow doesn't look right on icons */
+    transition: all 0.3s ease; /* <--- Changed to 'all' for smoother transitions on icon */
+    animation: pulsateGoHome 2s infinite alternate ease-in-out; /* Still applies color/shadow */
+    display: flex; /* <--- NEW: Use flexbox to center the icon if padding is added to Go-home-div */
+    align-items: center; /* <--- NEW: Center icon vertically */
+    justify-content: center; /* <--- NEW: Center icon horizontally */
+}
+
+/* Redefine pulsateGoHome if you want the icon's glow to be different from text */
+/* Otherwise, the existing pulsateGoHome for text-shadow will apply to the icon's color/shadow,
+   which might still look cool, so you might not need to change this specific @keyframes
+   unless the default text-shadow causes issues on the icon. */
+@keyframes pulsateGoHome {
     0% {
-        background-position: 0 0;
+        color: var(--text-light);
+        text-shadow: 0 0 5px var(--text-light), 0 0 10px rgba(240, 240, 240, 0.2);
     }
     100% {
-        background-position: -500px -500px;
+        color: var(--accent-cyan); /* Icon glows to cyan */
+        text-shadow: 0 0 8px var(--accent-cyan), 0 0 15px rgba(0, 229, 255, 0.4);
     }
 }
 
-.Go-home {
-    color: var(--border-glow);
-    margin-left: 6px;
-    text-shadow: 0 -2px 10px whitesmoke;
-    animation: pulsateGlow 1s infinite;
-    font: Bold;
+
+.Go-home:hover {
+    color: var(--accent-cyan); /* Icon color changes to cyan on hover */
+    /* Remove text-shadow here if you set it to none above, or adjust for icon glow */
+    text-shadow: 0 0 15px var(--accent-cyan), 0 0 25px rgba(0, 229, 255, 0.5); /* Icon glow on hover */
 }
 
+/* Also, adjust .Go-home-div padding if the icon looks too small/big within it */
 .Go-home-div {
-    background-color: var(--accent-purple);
-    position: center;
-    margin-left: 170px;
-    margin-right: 180px;
-    border: 2px double Cyan;
-    animation: neonBorderPulse 0.4s infinite;
+    /* ... existing styles ... */
+    padding: 10px 18px; /* <--- Adjust padding here to fit the new icon size better */
 }
 
-/* --- Main Header Styling (Adapted from .container) --- */
+
+/* --- Main Header Styling --- */
 .main-header {
     background-color: var(--card-bg);
     padding: 30px 40px;
     border-radius: 15px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 20px var(--accent-purple);
+    box-shadow:
+        0 0 20px var(--neon-glow-secondary), /* Purple inner glow */
+        0 0 40px var(--neon-glow-primary),   /* Cyan outer glow */
+        0 10px 40px rgba(0, 0, 0, 0.6);      /* Standard shadow for depth */
     text-align: center;
     max-width: 900px;
     width: calc(100% - 40px);
-    border: 1px solid var(--accent-purple);
+    border: 2px solid var(--accent-purple); /* Thicker, more prominent border */
     position: relative;
     z-index: 1;
-    margin: 40px auto 20px auto;
+    margin: 80px auto 40px auto; /* More top margin to accommodate fixed warning/home btn */
     box-sizing: border-box;
+    /* NEW: Entrance animation for the header */
+    animation: fadeInSlideDown 1s ease-out forwards;
+}
+
+/* NEW: Header entrance animation */
+@keyframes fadeInSlideDown {
+    from { opacity: 0; transform: translateY(-50px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .main-header h1 {
     font-family: 'Orbitron', sans-serif;
     color: var(--accent-cyan);
     margin-bottom: 15px;
-    font-size: 3.5em;
-    text-shadow: 0 0 15px var(--accent-cyan), 0 0 25px rgba(100, 255, 218, 0.4);
-    animation: pulsateGlow 2s infinite alternate;
+    font-size: 2.5em; /* Larger title */
+    text-shadow:
+        0 0 20px var(--neon-glow-primary),
+        0 0 40px var(--neon-glow-primary),
+        0 0 60px var(--neon-glow-tertiary),
+        0 0 80px var(--neon-glow-tertiary); /* Intense, layered cyan glow */
+    animation: pulsateGlow 2s infinite alternate; /* Existing pulsate animation */
 }
 
+/* Redefined pulsateGlow for the main H1 to use new variables */
 @keyframes pulsateGlow {
     0% {
-        text-shadow: 0 0 10px var(--accent-cyan), 0 0 15px rgba(100, 255, 218, 0.2);
+        text-shadow: 0 0 15px var(--neon-glow-primary), 0 0 25px var(--neon-glow-tertiary);
     }
     100% {
-        text-shadow: 0 0 15px var(--accent-cyan), 0 0 25px rgba(100, 255, 218, 0.4);
+        text-shadow: 0 0 20px var(--neon-glow-primary), 0 0 35px var(--neon-glow-primary), 0 0 50px var(--neon-glow-tertiary);
     }
 }
 
 .main-header p {
-    font-size: 1.3em;
+    font-size: 1.4em; /* Slightly larger paragraph */
     color: var(--text-light);
     opacity: 0.9;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.3); /* Subtle text shadow */
 }
 
 /* --- Game Showcase Layout --- */
 .game-showcase {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 30px;
-    padding: 20px 40px;
-    max-width: 1300px;
-    margin: 20px auto 40px auto;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* Slightly larger min-width for cards */
+    gap: 40px; /* Increased gap between cards */
+    padding: 30px 40px; /* More padding */
+    max-width: 1400px; /* Wider showcase */
+    margin: 40px auto 60px auto; /* More vertical margin */
     flex-grow: 1;
 }
 
-/* --- Individual Game Card Styling (Adapted from .container) --- */
+/* --- Individual Game Card Styling --- */
 .game-card {
     background-color: var(--card-bg);
-    border-radius: 15px;
+    border-radius: 18px; /* Slightly more rounded */
     overflow: hidden;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 20px var(--accent-purple);
-    border: 3px solid var(--accent-purple);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow:
+        0 0 15px var(--neon-glow-quaternary), /* Subtle purple glow */
+        0 0 30px var(--neon-glow-tertiary),   /* Subtle cyan glow */
+        0 10px 40px rgba(0, 0, 0, 0.6);      /* Standard depth shadow */
+    border: 3px solid var(--accent-purple); /* Thicker, defined border */
+    transition: transform 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease; /* Longer transition */
     text-align: center;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    animation: neonBorderPulse 1s infinite ;
+    animation: cardEntrance 0.8s ease-out forwards; /* NEW: Card entrance animation */
+    /* Removed default neonBorderPulse from cards as it was too much. Replaced with hover effect. */
 }
 
-#roll-flip-intro-promo p {
-    font-size: 1.2em; /* Smaller paragraph for promo section */
-    color: var(--text-light); /* White text for contrast */
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 50px; /* More space before the button */
+/* NEW: Card entrance animation (staggered if JS is used, otherwise all at once) */
+@keyframes cardEntrance {
+    from { opacity: 0; transform: translateY(50px) scale(0.9); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
 }
-
-/* Ensure your neonBorderPulse @keyframes is defined in style.css */
-@keyframes neonBorderPulse {
-    0% {
-        box-shadow: 0 0 40px var(--accent-cyan), 0 0 20px var(--accent-purple);
-        border-color: var(--accent-cyan);
-    }
-    100% {
-        box-shadow: 0 0 50px var(--accent-cyan), 0 0 25px var(--accent-purple);
-        border-color: var(--accent-purple);
-    }
-}
-
-/* General button styling (ensure these are present and correctly using your variables) */
-.action-button {
-    /* ... your existing action-button styles ... */
-}
-.primary-button {
-    /* ... your existing primary-button styles ... */
-}
-.game-cta-button {
-    /* Specific styles for game promo buttons if needed, otherwise primary-button covers it */
-}
-
 
 .game-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7), 0 0 30px var(--border-glow);
+    transform: translateY(-12px) scale(1.02); /* More pronounced lift and slight scale */
+    box-shadow:
+        0 0 25px var(--neon-glow-primary),    /* Intense cyan glow */
+        0 0 50px var(--neon-glow-primary),
+        0 0 80px var(--neon-glow-tertiary),
+        0 18px 60px rgba(0, 0, 0, 0.8);       /* Deeper shadow for elevation */
+    border-color: var(--accent-cyan); /* Border changes to cyan on hover */
+    z-index: 2; /* Bring hovered card slightly above others */
 }
 
 .game-card img {
     width: 100%;
-    height: 220px;
+    height: 250px; /* Slightly taller images */
     object-fit: cover;
-    border-bottom: 1px solid var(--border-glow);
+    border-bottom: 2px solid var(--border-color); /* More visible border */
+    transition: transform 0.3s ease;
+}
+
+.game-card:hover img {
+    transform: scale(1.03); /* Subtle image zoom on card hover */
 }
 
 .game-card h2 {
     font-family: 'Orbitron', sans-serif;
-    font-size: 2em;
-    margin: 1.5rem 0.5rem 0.8rem;
+    font-size: 2.2em; /* Larger heading */
+    margin: 1.8rem 0.5rem 1rem; /* Adjusted margins */
     color: var(--accent-cyan);
-    text-shadow: 0 0 10px var(--accent-cyan);
+    text-shadow: 0 0 12px var(--neon-glow-primary), 0 0 20px var(--neon-glow-tertiary); /* Stronger text glow */
 }
 
 .game-card p {
-    font-size: 1em;
-    padding: 0 1.5rem 1rem;
+    font-size: 1.1em; /* Slightly larger paragraph text */
+    padding: 0 1.8rem 1.2rem; /* More padding */
     color: var(--text-muted);
     flex-grow: 1;
+    line-height: 1.6;
+    text-shadow: 0 0 3px rgba(255, 255, 255, 0.1); /* Very subtle text shadow */
 }
 
 /* --- Button Styling (from Nickname Generator Site) --- */
 .action-button {
     border: none;
-    padding: 14px 30px;
-    border-radius: 8px;
-    font-size: 1.15em;
+    padding: 15px 35px; /* More padding */
+    border-radius: 10px; /* Slightly more rounded */
+    font-size: 1.2em; /* Larger text */
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    transition: background-color 0.4s ease, transform 0.3s ease, box-shadow 0.4s ease, color 0.4s ease; /* All properties transition */
     font-weight: 700;
-    letter-spacing: 0.5px;
+    letter-spacing: 1px; /* Tighter letter spacing for impact */
     text-transform: uppercase;
     text-decoration: none;
     display: inline-block;
-    margin-bottom: 25px;
+    margin-bottom: 30px; /* More space below button */
     font-family: 'Oxanium', sans-serif;
+    outline: none; /* Remove default outline */
+    text-shadow: 0 0 5px rgba(255,255,255,0.4); /* Initial text shadow */
 }
 
 .primary-button {
-    background-color: var(--button-primary);
-    color: white;
-    box-shadow: 0 5px 15px rgba(138, 43, 226, 0.4);
+    background-color: var(--button-primary-bg);
+    color: var(--text-light); /* Button text color */
+    box-shadow: 0 0 15px var(--neon-glow-secondary), 0 0 25px var(--neon-glow-quaternary); /* Initial subtle purple glow */
+    border: 2px solid var(--button-primary-bg); /* Match border to bg */
 }
 
 .primary-button:hover {
-    background-color: var(--hover-primary);
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(138, 43, 226, 0.6);
+    background-color: var(--button-primary-hover-bg);
+    transform: translateY(-5px); /* More pronounced lift */
+    box-shadow:
+        0 0 20px var(--neon-glow-primary),    /* Intense cyan glow */
+        0 0 40px var(--neon-glow-primary),
+        0 0 60px var(--neon-glow-tertiary);
+    border-color: var(--accent-cyan); /* Border changes to cyan on hover */
+    filter: brightness(1.2); /* Brighter on hover */
+    text-shadow: 0 0 8px var(--text-light), 0 0 15px var(--accent-cyan); /* Stronger text shadow on hover */
 }
 
-.secondary-button {
-    background-color: var(--button-secondary);
+.primary-button:active {
+    transform: translateY(-2px); /* Slight push back */
+    box-shadow: 0 0 10px var(--neon-glow-primary);
+    filter: brightness(0.9);
+}
+
+.secondary-button { /* General secondary button (not used in HTML, but styled) */
+    background-color: var(--button-secondary-bg);
     color: var(--text-light);
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--button-secondary-bg);
 }
 
 .secondary-button:hover {
-    background-color: var(--hover-secondary);
-    transform: translateY(-2px);
-    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.3);
+    background-color: var(--button-secondary-hover-bg);
+    transform: translateY(-3px);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 255, 255, 0.1);
 }
-
 
 /* --- Footer Styling --- */
 .main-footer {
     background-color: var(--card-bg);
     color: var(--text-muted);
     text-align: center;
-    padding: 1.5rem 0;
-    margin-top: auto;
-    border-top: 1px solid var(--accent-purple);
+    padding: 1.8rem 0; /* More padding */
+    margin-top: 80px; /* More margin from content */
+    border-top: 2px solid var(--accent-purple); /* Thicker border */
     width: 100%;
+    box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.3), 0 0 15px var(--neon-glow-quaternary); /* Subtle glow on footer */
+    font-size: 0.95em;
 }
 
-/* --- Responsive Adjustments (Adapted from Nickname Generator Site) --- */
-@media (max-width: 900px) {
-    .main-header {
-        padding: 25px 30px;
-        margin: 30px auto 20px auto;
-    }
-    .main-header h1 {
-        font-size: 3em;
-    }
-    .main-header p {
-        font-size: 1.1em;
-    }
-    .game-showcase {
-        padding: 20px 20px;
-        gap: 25px;
-    }
-    .game-card h2 {
-        font-size: 1.8em;
-    }
-    .game-card img {
-        height: 200px;
-    }
-}
 
-@media (max-width: 768px) {
-    .main-header {
-        padding: 20px 25px;
-        margin: 20px auto 15px auto;
-        max-width: 90%;
-    }
-    .main-header h1 {
-        font-size: 2.5em;
-    }
-    .main-header p {
-        font-size: 1em;
-    }
-    .game-showcase {
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        padding: 15px;
-        gap: 20px;
-    }
-    .game-card h2 {
-        font-size: 1.6em;
-    }
-    .game-card p {
-        font-size: 0.9em;
-        padding: 0 1rem 0.8rem;
-    }
-    .action-button {
-        padding: 12px 25px;
-        font-size: 1em;
-    }
-}
+/* --- NEW STYLES FOR AUTHENTICATION AND LAYOUT TOGGLING (Refined) --- */
 
-@media (max-width: 580px) {
-    .main-header {
-        padding: 15px 20px;
-        margin: 15px auto 10px auto;
-        width: calc(100% - 30px);
-    }
-    .main-header h1 {
-        font-size: 2em;
-    }
-    .main-header p {
-        font-size: 0.9em;
-    }
-    .game-showcase {
-        grid-template-columns: 1fr;
-        padding: 10px;
-        gap: 15px;
-        margin: 10px auto 20px auto;
-        width: calc(100% - 20px);
-    }
-    .game-card {
-        margin: 0;
-    }
-    .game-card img {
-        height: 180px;
-    }
-    .game-card h2 {
-        font-size: 1.4em;
-    }
-    .action-button {
-        padding: 10px 20px;
-        font-size: 0.9em;
-    }
-    .main-footer {
-        padding: 1rem 10px;
-    }
-}
-/* --- NEW STYLES FOR AUTHENTICATION AND LAYOUT TOGGLING --- */
-
-/* Top Game Info (ECP and User Info) */
+/* Top Game Info (ECP and User Info) - Assume these will be present if logged in */
 .top-game-info {
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    max-width: 1300px; /* Match game-showcase max-width for alignment */
-    margin: 20px auto 10px auto; /* Adjust top margin as needed */
-    padding: 10px 20px; /* Match body padding if desired */
+    max-width: 1400px; /* Match game-showcase max-width for alignment */
+    margin: 30px auto 10px auto; /* Adjust top margin as needed */
+    padding: 12px 25px; /* More padding */
     box-sizing: border-box;
-    background-color: var(--card-bg); /* Optional: give it a background */
-    border-radius: 10px;
-    border: 1px solid var(--accent-purple);
-    box-shadow: 0 0 15px rgba(138, 43, 226, 0.2);
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    border: 2px solid var(--accent-purple);
+    box-shadow: 0 0 15px var(--neon-glow-secondary), 0 0 25px var(--neon-glow-quaternary); /* Enhanced glow */
+    animation: fadeInSlideDown 0.8s ease-out forwards; /* Entrance animation */
 }
 
 .ecp-display {
     color: var(--accent-cyan);
-    font-size: 1.5em;
+    font-size: 1.6em; /* Larger ECP display */
     font-family: 'Orbitron', sans-serif;
     display: flex;
     align-items: center;
-    gap: 8px;
-    text-shadow: 0 0 8px var(--accent-cyan);
+    gap: 10px;
+    text-shadow: 0 0 10px var(--accent-cyan), 0 0 20px var(--neon-glow-tertiary); /* Stronger glow */
 }
 
 .coin-icon {
-    color: gold;
-    text-shadow: 0 0 5px gold;
+    color: var(--ecp-icon-color); /* Uses new variable */
+    text-shadow: 0 0 8px var(--ecp-icon-color), 0 0 15px rgba(var(--ecp-icon-color-rgb), 0.5); /* Stronger glow based on color */
+    font-size: 1.1em; /* Slightly larger icon */
 }
 
 .user-info {
     color: var(--text-light);
-    font-size: 1.1em;
+    font-size: 1.2em; /* Larger user info */
     display: flex;
     align-items: center;
-    gap: 10px;
-    background-color: var(--button-secondary);
-    padding: 8px 15px;
-    border-radius: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    border: 1px solid var(--border-glow);
+    gap: 12px;
+    background-color: var(--button-secondary-bg);
+    padding: 10px 20px; /* More padding */
+    border-radius: 25px; /* More rounded */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.4), 0 0 10px var(--neon-glow-quaternary); /* Subtle shadow/glow */
+    border: 1px solid var(--accent-cyan); /* Cyan border */
 }
 
 #loggedInUserEmail {
     font-weight: bold;
     color: var(--accent-cyan);
-    white-space: nowrap; /* Prevent email from wrapping oddly */
+    white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis; /* Add ellipsis for long emails */
-    max-width: 150px; /* Limit width */
+    text-overflow: ellipsis;
+    max-width: 180px; /* Increased max-width for email */
+    text-shadow: 0 0 5px var(--accent-cyan);
 }
 
 #logoutButton {
-    padding: 5px 12px;
-    font-size: 0.9em;
-    margin-left: 5px;
+    padding: 8px 18px; /* More padding */
+    font-size: 1em; /* Larger font */
+    margin-left: 10px; /* More margin */
+    /* Inherits action-button styles, then primary/secondary specific styles can apply */
+    background-color: var(--button-secondary-bg); /* Use secondary button style */
+    color: var(--text-light);
+    border: 1px solid var(--accent-purple);
+    box-shadow: 0 0 8px rgba(0,0,0,0.3);
+}
+
+#logoutButton:hover {
+    background-color: var(--button-secondary-hover-bg);
+    border-color: var(--accent-cyan);
+    box-shadow: 0 0 15px var(--neon-glow-quaternary);
 }
 
 /* Auth Section Styling */
 .auth-form {
     background-color: var(--card-bg);
-    padding: 40px 30px;
-    border-radius: 15px;
-    box-shadow: 0 0 30px rgba(138, 43, 226, 0.4), 0 0 15px rgba(0, 255, 255, 0.2);
-    border: 2px solid var(--accent-purple);
+    padding: 50px 40px; /* More padding */
+    border-radius: 20px; /* More rounded */
+    box-shadow:
+        0 0 30px var(--neon-glow-secondary), /* Purple glow */
+        0 0 60px var(--neon-glow-quaternary), /* Wider purple glow */
+        0 0 15px var(--neon-glow-tertiary); /* Cyan accent glow */
+    border: 3px solid var(--accent-purple); /* Thicker border */
     width: 100%;
-    max-width: 450px;
+    max-width: 500px; /* Slightly wider form */
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 25px; /* More space between elements */
     align-items: center;
-    margin-top: 20px; /* Adjust margin as needed */
-    margin-bottom: 40px;
+    margin-top: 50px; /* Adjust margin as needed */
+    margin-bottom: 60px;
+    animation: fadeInScale 0.8s ease-out forwards; /* Entrance animation */
 }
 
+/* NEW: Auth form entrance animation */
+@keyframes fadeInScale {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+
 .auth-form .card-title {
-    font-size: 2em;
+    font-size: 2.5em; /* Larger title */
     color: var(--accent-cyan);
-    margin-bottom: 25px;
+    margin-bottom: 30px; /* More space */
     display: flex;
     align-items: center;
-    gap: 10px;
-    text-shadow: 0 0 12px var(--accent-cyan);
+    gap: 15px;
+    text-shadow: 0 0 15px var(--neon-glow-primary), 0 0 25px var(--neon-glow-tertiary); /* Stronger glow */
 }
 
 .auth-form .input-area {
@@ -435,82 +479,91 @@ body {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 8px;
+    gap: 10px; /* More space */
 }
 
 .auth-form .input-label {
-    font-size: 1.1em;
+    font-size: 1.2em; /* Larger label */
     color: var(--accent-purple);
     font-family: 'Oxanium', sans-serif;
+    text-shadow: 0 0 5px var(--accent-purple); /* Subtle glow */
 }
 
 .auth-form .text-input {
     width: 100%;
-    padding: 12px 15px;
-    background-color: var(--bg-dark);
-    border: 2px solid var(--accent-cyan);
-    border-radius: 8px;
+    padding: 15px 20px; /* More padding */
+    background-color: var(--bg-dark); /* Darker input background */
+    border: 2px solid var(--accent-cyan); /* Cyan border */
+    border-radius: 10px; /* More rounded */
     color: var(--text-light);
     font-family: 'Oxanium', sans-serif;
-    font-size: 1.1em;
-    box-shadow: 0 0 8px rgba(0, 255, 255, 0.3);
+    font-size: 1.2em; /* Larger font */
+    box-shadow: 0 0 10px rgba(0, 229, 255, 0.4); /* Cyan glow */
     transition: box-shadow 0.3s ease, border-color 0.3s ease;
     box-sizing: border-box;
 }
 
 .auth-form .text-input::placeholder {
     color: var(--text-muted);
-    opacity: 0.7;
+    opacity: 0.8; /* Slightly more visible placeholder */
 }
 
 .auth-form .text-input:focus {
     outline: none;
-    border-color: var(--accent-purple);
-    box-shadow: 0 0 12px rgba(138, 43, 226, 0.5);
+    border-color: var(--accent-purple); /* Purple border on focus */
+    box-shadow: 0 0 15px var(--neon-glow-secondary), 0 0 25px var(--neon-glow-quaternary); /* Stronger purple glow on focus */
 }
 
 .auth-controls {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 15px;
+    gap: 20px; /* More space between buttons */
     width: 100%;
-    margin-top: 20px;
+    margin-top: 30px; /* More top margin */
+}
+
+/* Auth buttons get primary-button styles, if they have the class */
+.auth-controls .action-button {
+    /* These will automatically inherit from .action-button and .primary-button */
 }
 
 .feedback-message {
-    margin-top: 15px;
-    font-size: 1em;
-    font-weight: 500;
+    margin-top: 20px; /* More margin */
+    font-size: 1.1em; /* Larger font */
+    font-weight: 600; /* Slightly bolder */
     text-align: center;
-    padding: 8px 15px;
-    border-radius: 5px;
+    padding: 10px 20px; /* More padding */
+    border-radius: 8px; /* More rounded */
     width: 100%;
     box-sizing: border-box;
-    display: none; /* Hidden by default, shown by JS */
+    display: none;
+    animation: fadeIn 0.5s ease-out forwards; /* Fade in animation */
 }
 
 .feedback-message.error {
-    color: #ff4d4d;
-    background-color: rgba(255, 77, 77, 0.2);
-    border: 1px solid #ff4d4d;
+    color: #FF6B6B; /* Brighter red */
+    background-color: rgba(255, 107, 107, 0.2);
+    border: 1px solid #FF6B6B;
+    box-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
     display: block;
 }
 
 .feedback-message.success {
-    color: #4CAF50;
-    background-color: rgba(76, 175, 80, 0.2);
-    border: 1px solid #4CAF50;
+    color: #6BFF6B; /* Brighter green */
+    background-color: rgba(107, 255, 107, 0.2);
+    border: 1px solid #6BFF6B;
+    box-shadow: 0 0 10px rgba(107, 255, 107, 0.5);
     display: block;
 }
 
 .feedback-message.info {
-    color: #64ffda;
-    background-color: rgba(100, 255, 218, 0.2);
-    border: 1px solid #64ffda;
+    color: var(--accent-cyan);
+    background-color: rgba(0, 229, 255, 0.2);
+    border: 1px solid var(--accent-cyan);
+    box-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
     display: block;
 }
-
 
 /* General Styles for hidden/active screens (important for toggling visibility) */
 .game-screen {
@@ -528,8 +581,7 @@ body {
     opacity: 0;
     pointer-events: none;
     visibility: hidden;
-    /* position: absolute; */ /* Removed to allow content to flow naturally when hidden */
-    height: 0; /* Collapse height when hidden */
+    height: 0;
     overflow: hidden;
     margin: 0;
     padding: 0;
@@ -541,18 +593,16 @@ body {
     pointer-events: auto;
     visibility: visible;
     position: relative;
-    height: auto; /* Allow content to dictate height when active */
-    margin: auto; /* Center active section */
-    padding: 20px; /* Restore padding */
+    height: auto;
+    margin: auto;
+    padding: 20px;
 }
 
-/* Ensure body can accommodate dynamic content */
 body {
-    display: block; /* Change from flex column to block for simpler layout of changing sections */
+    display: block;
     min-height: 100vh;
 }
 
-/* Ensure main content takes up available space when active */
 #authSection, #gamesContentSection {
     flex-grow: 1;
     display: flex;
@@ -560,79 +610,190 @@ body {
     align-items: center;
 }
 
-/* Adjustments for headers within the new sections */
 #authSection .main-header,
 #gamesContentSection .main-header {
-    margin-top: 0; /* Reset header margin as sections now control overall spacing */
+    margin-top: 0;
 }
 
-/* Adjustments for footers within the new sections */
 #gamesContentSection .main-footer {
-    margin-top: auto; /* Ensure footer pushes to bottom of game content section */
+    margin-top: auto;
 }
 
+/* --- Responsive Adjustments (Adapted & Enhanced) --- */
+@media (max-width: 1024px) {
+    .game-showcase {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        padding: 25px 30px;
+        max-width: 1200px;
+    }
+    .game-card img {
+        height: 220px;
+    }
+}
 
-/* Responsive for Auth Form */
-@media (max-width: 480px) {
-    .auth-form {
-        padding: 30px 20px;
+@media (max-width: 900px) {
+    .main-header {
+        padding: 25px 30px;
+        margin: 70px auto 30px auto;
     }
-    .auth-form .card-title {
-        font-size: 1.6em;
+    .main-header h1 {
+        font-size: 2.5em;
     }
-    .auth-controls button {
-        width: 100%;
+    .main-header p {
+        font-size: 1.2em;
+    }
+    .game-showcase {
+        padding: 20px 20px;
+        gap: 25px;
+    }
+    .game-card h2 {
+        font-size: 2em;
+    }
+    .game-card img {
+        height: 200px;
+    }
+    .action-button {
+        padding: 13px 30px;
+        font-size: 1.1em;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-header {
+        padding: 20px 25px;
+        margin: 60px auto 25px auto;
+        max-width: 90%;
+    }
+    .main-header h1 {
+        font-size: 2.5em;
+    }
+    .main-header p {
+        font-size: 1.1em;
+    }
+    .game-showcase {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        padding: 15px;
+        gap: 20px;
+    }
+    .game-card h2 {
+        font-size: 1.8em;
+    }
+    .game-card p {
+        font-size: 1em;
+        padding: 0 1.2rem 1rem;
+    }
+    .action-button {
+        padding: 11px 25px;
+        font-size: 1em;
     }
     .top-game-info {
         flex-direction: column;
-        gap: 10px;
-        padding: 10px 15px;
-        margin: 15px auto 5px auto;
+        gap: 15px;
+        padding: 15px 20px;
+        margin: 20px auto 10px auto;
+    }
+    .ecp-display {
+        font-size: 1.4em;
     }
     .user-info {
-        font-size: 0.9em;
+        font-size: 1.1em;
         width: 100%;
         justify-content: center;
     }
     #loggedInUserEmail {
-        max-width: 100px;
+        max-width: 150px;
     }
     #logoutButton {
-        margin-left: 0; /* Remove left margin on small screens */
+        margin-left: 0;
     }
-    .ecp-display {
-        font-size: 1.3em;
+    .auth-form {
+        padding: 40px 30px;
+        max-width: 450px;
+        margin-top: 30px;
     }
 }
-/* Add these styles to the bottom of your gameintro.css for debugging */
-#authFeedback {
-    display: block !important; /* Ensure it's not hidden by other rules */
-    visibility: visible !important; /* Ensure it's visible */
-    opacity: 1 !important; /* Ensure it's not transparent */
-    background-color: rgba(255, 255, 0, 0.8); /* Make it clearly visible with a background */
-    color: black !important; /* Ensure text is visible */
-    padding: 10px;
-    margin-top: 15px;
-    border-radius: 5px;
-    font-weight: bold;
-    text-align: center;
-    /* Ensure it has a position that makes it appear within the flow */
-    position: relative;
-    z-index: 1000; /* Ensure it's above other elements */
-}
 
-/* Also check the .feedback-message, .error-message, .success-message classes */
-.feedback-message.error-message {
-    background-color: rgba(255, 0, 0, 0.8) !important;
-    color: white !important;
-}
-
-.feedback-message.success-message {
-    background-color: rgba(0, 255, 0, 0.8) !important;
-    color: black !important;
-}
-
-.feedback-message.info-message {
-    background-color: rgba(0, 0, 255, 0.8) !important;
-    color: white !important;
+@media (max-width: 580px) {
+    .Go-home-div {
+        top: 50px;
+        left: 21px;
+        padding: 6px 22px;
+    }
+    .Go-home {
+        font-size: 0.9em;
+    }
+    body > p {
+        top: 50px; /* Adjust if home button causes overlap */
+        font-size: 0.4em;
+    }
+    .main-header {
+        padding: 15px 20px;
+        margin: 50px auto 20px auto;
+        width: calc(100% - 30px);
+    }
+    .main-header h1 {
+        font-size: 2.2em;
+        margin-bottom: 10px;
+    }
+    .main-header p {
+        font-size: 0.8em;
+    }
+    .game-showcase {
+        grid-template-columns: 1fr;
+        padding: 10px;
+        gap: 15px;
+        margin: 20px auto 40px auto;
+        width: calc(100% - 20px);
+    }
+    .game-card {
+        margin: 0;
+        border-radius: 12px;
+    }
+    .game-card img {
+        height: 180px;
+    }
+    .game-card h2 {
+        font-size: 1.6em;
+        margin: 1.2rem 0.5rem 0.6rem;
+    }
+    .game-card p {
+        font-size: 0.9em;
+        padding: 0 1rem 0.8rem;
+    }
+    .action-button {
+        padding: 10px 20px;
+        font-size: 0.9em;
+        margin-bottom: 20px;
+    }
+    .main-footer {
+        padding: 1.2rem 10px;
+        margin-top: 50px;
+        font-size: 0.85em;
+    }
+    .auth-form {
+        padding: 30px 20px;
+        max-width: 95%;
+        margin-top: 20px;
+    }
+    .auth-form .card-title {
+        font-size: 2em;
+        margin-bottom: 20px;
+    }
+    .auth-form .input-label {
+        font-size: 1em;
+    }
+    .auth-form .text-input {
+        padding: 12px 15px;
+        font-size: 1.1em;
+    }
+    .auth-controls {
+        gap: 15px;
+        margin-top: 20px;
+    }
+    .feedback-message {
+        font-size: 0.9em;
+        padding: 8px 15px;
+        margin-top: 15px;
+    }
 }
