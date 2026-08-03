@@ -1,691 +1,1090 @@
-document.addEventListener('DOMContentLoaded', () => {
-    // --- DOM Element References ---
-    const currentEcpDisplay = document.getElementById('currentEcp');
-    const gameIntroScreen = document.getElementById('gameIntroScreen');
-    const gamePlayScreen = document.getElementById('gamePlayScreen');
-    const themeScreen = document.getElementById('themeScreen');
-    const achievementsScreen = document.getElementById('achievementsScreen');
-    // NEW: History Screen DOM references
-    const historyScreen = document.getElementById('historyScreen');
-    const earningHistoryTableBody = document.querySelector('#earningHistoryTable tbody');
+/* ==========================================================================
+   Roll & Flip — Complete JavaScript (FINAL)
+   ========================================================================== */
+
+(function() {
+    'use strict';
+
+    // ============================================================
+    // 1. DOM REFS
+    // ============================================================
+
+    const introScreen = document.getElementById('introScreen');
+    const menuScreen = document.getElementById('menuScreen');
+    const gameScreen = document.getElementById('gameScreen');
+
+    const achievementsModal = document.getElementById('achievementsModal');
+    const themeModal = document.getElementById('themeModal');
+    const historyModal = document.getElementById('historyModal');
+
+    const playBtn = document.getElementById('playBtn');
+    const achievementsBtn = document.getElementById('achievementsBtn');
+    const themeBtn = document.getElementById('themeBtn');
+    const historyBtn = document.getElementById('historyBtn');
+    const startGameBtn = document.getElementById('startGameBtn');
+    const backToMenuFromGameBtn = document.getElementById('backToMenuFromGameBtn');
+    const backToIntroFromMenuBtn = document.getElementById('backToIntroFromMenuBtn');
+
+    const diceModeBtn = document.getElementById('diceModeBtn');
+    const coinModeBtn = document.getElementById('coinModeBtn');
+
+    const diceControls = document.getElementById('diceControls');
+    const coinControls = document.getElementById('coinControls');
+
+    // Dice inputs
+    const stakeInput = document.getElementById('stakeInput');
+    const leverageInput = document.getElementById('leverageInput');
+    const diceCount = document.getElementById('diceCount');
+    const diceGuess = document.getElementById('diceGuess');
+    const diceBetType = document.getElementById('diceBetType');
+    const rollDiceBtn = document.getElementById('rollDiceBtn');
+
+    // Coin inputs
+    const coinStakeInput = document.getElementById('coinStakeInput');
+    const coinLeverageInput = document.getElementById('coinLeverageInput');
+    const coinCount = document.getElementById('coinCount');
+    const coinBetType = document.getElementById('coinBetType');
+    const coinGuess = document.getElementById('coinGuess');
+    const flipCoinBtn = document.getElementById('flipCoinBtn');
+
+    const resultEmoji = document.getElementById('resultEmoji');
+    const resultText = document.getElementById('resultText');
+    const ecpChangeDisplay = document.getElementById('ecpChangeDisplay');
+    const feedbackMessage = document.getElementById('feedbackMessage');
+
+    const ecpDisplay = document.getElementById('ecpDisplay');
+    const ecpGameDisplay = document.getElementById('ecpGameDisplay');
+
+    const achievementsList = document.getElementById('achievementsList');
+    const themeGrid = document.getElementById('themeGrid');
+    const statWins = document.getElementById('statWins');
+    const statLosses = document.getElementById('statLosses');
+    const statHighestEcp = document.getElementById('statHighestEcp');
+    const historyBody = document.getElementById('historyBody');
     const noHistoryMessage = document.getElementById('noHistoryMessage');
 
-    const startGameButton = document.getElementById('startGameButton');
-    const themeButton = document.getElementById('themeButton');
-    const achievementsButton = document.getElementById('achievementsButton');
-    // NEW: History Button DOM reference
-    const historyButton = document.getElementById('historyButton');
+    const achievementsClose = document.getElementById('achievementsClose');
+    const themeClose = document.getElementById('themeClose');
+    const historyClose = document.getElementById('historyClose');
 
-    const backToIntroButton = document.getElementById('backToIntroButton');
-    const backToIntroFromThemeButton = document.getElementById('backToIntroFromThemeButton');
-    const backToIntroFromAchievementsButton = document.getElementById('backToIntroFromAchievementsButton');
-    // NEW: Back button from History screen
-    const backToIntroFromHistoryButton = document.getElementById('backToIntroFromHistoryButton');
+    const shareGameBtn = document.getElementById('shareGameBtn');
+    const progressBar = document.getElementById('scrollProgress');
 
-    const stakeAmountInput = document.getElementById('stakeAmount');
-    const leverageInput = document.getElementById('leverage');
-    const playerChoiceSelect = document.getElementById('playerChoice');
-    const coinFlipButton = document.getElementById('coinFlipButton');
-    const diceRollButton = document.getElementById('diceRollButton');
-    const resultDisplay = document.getElementById('resultDisplay');
-    const feedbackMessage = document.getElementById('feedbackMessage');
-    const ecpChangeDisplay = document.getElementById('ecpChangeDisplay');
-    const themeGrid = document.querySelector('.theme-grid');
-    const achievementsList = document.querySelector('.achievements-list');
-    const shareButton = document.getElementById('shareButton');
+    // ============================================================
+    // 2. GAME STATE
+    // ============================================================
 
-    // --- Game State Variables (Persisted to Local Storage) ---
-    let currentEcp = 200; // Starting ECP
-    const MAX_LEVERAGE = 40; // Maximum multiplier
-
-    // Game statistics to track progress for achievements
-    let gameStats = {
-        totalCoinFlips: 0,
-        totalDiceRolls: 0,
-        consecutiveWins: 0,
-        maxConsecutiveWins: 0,
-        totalEcpEarned: 0,
-        totalEcpLost: 0,
-        highLeverageWins: 0, // Wins with 10x leverage or higher
-        highLeverageLosses: 0, // Losses with 10x leverage or higher
-        screensVisited: new Set(['gameIntroScreen']), // Use Set for unique visits, convert to array for storage
+    let gameState = {
         totalWins: 0,
         totalLosses: 0,
-        firstTryWinThisSession: true, // For 'Golden Guess' achievement
+        highestEcp: 200,
+        currentTheme: 'default',
+        achievements: {},
+        history: [],
+        totalCoinFlips: 0,
+        totalDiceRolls: 0
     };
 
-    // NEW: Earning History Array
-    let earningHistory = []; // Array to store history of game rounds
+    let currentStreak = 0;
+    let currentMode = 'dice';
 
-    // Achievement Data - CRITICAL FIX: Added 'reward' property and correct icons
-    const achievementsData = [
-        { id: 'firstFlip', name: 'First Flip!', description: 'Complete your very first coin flip.', threshold: 1, current: 0, unlocked: false, icon: 'fas fa-star', type: 'coin', reward: 50 },
-        { id: 'diceRookie', name: 'Dice Rookie', description: 'Roll the dice 10 times.', threshold: 10, current: 0, unlocked: false, icon: 'fas fa-dice-three', type: 'dice', reward: 50 },
-        { id: 'luckyStreak', name: 'Lucky Streak', description: 'Achieve 3 consecutive correct guesses.', threshold: 3, current: 0, unlocked: false, icon: 'fas fa-fire', type: 'stat', reward: 50 },
-        { id: 'ecpTycoon', name: 'ECP Tycoon', description: 'Accumulate 1000 ECP.', threshold: 1000, current: 0, unlocked: false, icon: 'fas fa-money-bill-wave', type: 'stat', reward: 50 },
-        { id: 'highRoller', name: 'High Roller', description: 'Win a bet with 40x leverage.', threshold: 1, current: 0, unlocked: false, icon: 'fas fa-hand-holding-usd', type: 'stat', reward: 50 },
-        { id: 'pathfinder', name: 'Pathfinder', description: 'Visit all 4 game screens.', threshold: 4, current: 0, unlocked: false, icon: 'fas fa-compass', type: 'stat', reward: 50 }, // MODIFIED: now 5 screens
-        { id: 'riskTaker', name: 'Risk Taker', description: 'Lose 5 bets with 10x leverage or higher.', threshold: 5, current: 0, unlocked: false, icon: 'fas fa-skull-crossbones', type: 'stat', reward: 50 },
-        { id: 'echoKingQueen', name: 'Echo King/Queen', description: 'Win 50 total bets.', threshold: 50, current: 0, unlocked: false, icon: 'fas fa-crown', type: 'stat', reward: 50 },
-        { id: 'goldenGuess', name: 'Golden Guess', description: 'Win your very first game try in a new session.', threshold: 1, current: 0, unlocked: false, icon: 'fas fa-award', type: 'stat', reward: 50 },
-        { id: 'completionist', name: 'Completionist', description: 'Unlock all other 9 achievements.', threshold: 9, current: 0, unlocked: false, icon: 'fas fa-star-of-david', type: 'stat', reward: 100 } // Higher reward for completionist
-    ];
+    // ============================================================
+    // 3. ECP FUNCTIONS
+    // ============================================================
 
-    // Theme Data - CRITICAL FIX: Ensure 'id' matches HTML body class suffix
+    function getECP() {
+        return ECP.get();
+    }
+
+    function addEcp(amount, reason) {
+        const newBalance = ECP.add(amount, reason || 'Roll & Flip reward');
+        updateAllEcp();
+        return newBalance;
+    }
+
+    function deductEcp(amount, reason) {
+        const newBalance = ECP.spend(amount, reason || 'Roll & Flip cost');
+        if (newBalance === -1) {
+            feedbackMessage.textContent = 'Not enough ECP!';
+            feedbackMessage.className = 'feedback-message error';
+            return false;
+        }
+        updateAllEcp();
+        return true;
+    }
+
+    function updateAllEcp() {
+        const val = getECP();
+        if (ecpDisplay) ecpDisplay.textContent = val;
+        if (ecpGameDisplay) ecpGameDisplay.textContent = val;
+        if (val > gameState.highestEcp) {
+            gameState.highestEcp = val;
+            saveGame();
+        }
+    }
+
+    // ============================================================
+    // 4. THEMES & ACHIEVEMENTS
+    // ============================================================
+
     const themes = [
-        { id: 'sci-fi-dark', name: 'Sci-Fi Dark', preview: 'https://i.supaimg.com/f6335090-37be-4cf8-a2f1-40f564f041f8.jpg' }, // Replace with actual image paths
-        { id: 'retro-green', name: 'Retro Green', preview: 'https://i.supaimg.com/cbaaf0f2-7ee9-4159-ad03-f038055054b7.jpg' },
-        { id: 'cyber-punk', name: 'Cyber Punk', preview: 'https://i.supaimg.com/a387c0cc-febe-4018-8b43-fad589e7a40f.jpg' },
-        { id: 'galactic-blue', name: 'Galactic Blue', preview: 'https://i.supaimg.com/ac5b4b65-54ed-4056-a19a-ce3d24eef933.jpg' },
-        { id: 'lava-red', name: 'Lava Red', preview: 'https://i.supaimg.com/4b8cb28f-dfbc-412c-800a-270e2fee390c.jpg' }
+        { id: 'default', name: 'Cosmic' },
+        { id: 'ocean', name: 'Ocean' },
+        { id: 'forest', name: 'Forest' },
+        { id: 'cyberpunk', name: 'Cyberpunk' },
+        { id: 'sunset', name: 'Sunset' }
     ];
-    let activeThemeId = 'sci-fi-dark'; // Default theme
 
-    // --- Utility Functions ---
+    const achievementsData = [
+        { id: 'first_flip', name: 'First Flip!', unlocked: false },
+        { id: 'first_roll', name: 'First Roll!', unlocked: false },
+        { id: 'lucky_streak_3', name: 'Lucky Streak (3 wins)', unlocked: false },
+        { id: 'lucky_streak_5', name: 'Lucky Streak (5 wins)', unlocked: false },
+        { id: 'lucky_streak_10', name: 'Lucky Streak (10 wins)', unlocked: false },
+        { id: 'high_roller', name: 'High Roller (40x win)', unlocked: false },
+        { id: 'ecp_100', name: 'ECP Novice (100 ECP)', unlocked: false },
+        { id: 'ecp_500', name: 'ECP Apprentice (500 ECP)', unlocked: false },
+        { id: 'ecp_1000', name: 'ECP Master (1000 ECP)', unlocked: false },
+        { id: 'win_10', name: '10 Wins', unlocked: false },
+        { id: 'win_50', name: '50 Wins', unlocked: false },
+        { id: 'win_100', name: '100 Wins', unlocked: false },
+        { id: 'share_roll', name: 'Share the Luck', unlocked: false }
+    ];
 
-    /**
-     * Shows a message to the user for a brief period.
-     * @param {string} message - The message to display.
-     * @param {string} type - 'success', 'error', or empty for general info.
-     * @param {number} duration - How long to display the message in ms.
-     */
-    function showFeedback(message, type = '', duration = 3000) {
-        feedbackMessage.textContent = message;
-        feedbackMessage.className = 'feedback-message'; // Reset classes
-        if (type) {
-            feedbackMessage.classList.add(type);
+    // ============================================================
+    // 5. SAVE / LOAD
+    // ============================================================
+
+    function saveGame() {
+        localStorage.setItem('rollFlipGame', JSON.stringify(gameState));
+        localStorage.setItem('rollFlipAchievements', JSON.stringify(achievementsData));
+    }
+
+    function loadGame() {
+        const saved = localStorage.getItem('rollFlipGame');
+        if (saved) {
+            const parsed = JSON.parse(saved);
+            gameState = { ...gameState, ...parsed };
         }
-        clearTimeout(feedbackMessage.timeoutId);
-        feedbackMessage.timeoutId = setTimeout(() => {
-            feedbackMessage.textContent = '';
-            feedbackMessage.className = 'feedback-message'; // Clear type class
-        }, duration);
-    }
-
-    /**
-     * Displays ECP change with color coding.
-     * @param {number} amount - The amount of ECP changed.
-     */
-    function showEcpChange(amount) {
-        ecpChangeDisplay.textContent = `${amount > 0 ? '+' : ''}${amount} ECP`;
-        ecpChangeDisplay.className = 'ecp-change-message'; // Reset classes
-        if (amount > 0) {
-            ecpChangeDisplay.classList.add('positive');
-        } else if (amount < 0) {
-            ecpChangeDisplay.classList.add('negative');
-        }
-        clearTimeout(ecpChangeDisplay.timeoutId);
-        ecpChangeDisplay.timeoutId = setTimeout(() => {
-            ecpChangeDisplay.textContent = '';
-            ecpChangeDisplay.className = 'ecp-change-message';
-        }, 3000);
-    }
-
-    /**
-     * Updates the displayed ECP balance.
-     */
-    function updateEcpDisplay() {
-        currentEcpDisplay.textContent = currentEcp;
-    }
-
-    /**
-     * Adds ECP to the player's balance and updates display.
-     * @param {number} amount - Amount of ECP to add.
-     */
-    function addEcp(amount) {
-        currentEcp += amount;
-        gameStats.totalEcpEarned += amount;
-        updateEcpDisplay();
-        saveGameStats();
-        checkAchievements('ecpTycoon'); // Check ECP related achievement
-    }
-
-    /**
-     * Subtracts ECP from the player's balance and updates display.
-     * @param {number} amount - Amount of ECP to subtract.
-     */
-    function subtractEcp(amount) {
-        currentEcp -= amount;
-        gameStats.totalEcpLost += amount;
-        updateEcpDisplay();
-        saveGameStats();
-    }
-
-    /**
-     * Switches the active game screen.
-     * @param {HTMLElement} screenToShow - The screen element to make active.
-     */
-    function switchScreen(screenToShow) {
-        const allScreens = document.querySelectorAll('.game-screen');
-        allScreens.forEach(screen => {
-            screen.classList.remove('active-screen');
-            screen.classList.add('hidden-screen'); // Ensure it's explicitly hidden
-        });
-        screenToShow.classList.remove('hidden-screen');
-        screenToShow.classList.add('active-screen');
-        gameStats.screensVisited.add(screenToShow.id); // Track visited screens for achievement
-        checkAchievements('pathfinder');
-        saveGameStats(); // Save stats after screen change
-    }
-
-    /**
-     * Saves all game data to Local Storage.
-     * MODIFIED: Now saves earningHistory too.
-     */
-    function saveGameStats() {
-        localStorage.setItem('echoplexEcp', currentEcp);
-        // Convert Set to Array for storing gameStats.screensVisited
-        const gameStatsToSave = {
-            ...gameStats,
-            screensVisited: Array.from(gameStats.screensVisited)
-        };
-        localStorage.setItem('echoplexGameStats', JSON.stringify(gameStatsToSave));
-        localStorage.setItem('echoplexAchievements', JSON.stringify(achievementsData));
-        localStorage.setItem('echoplexTheme', activeThemeId);
-        // NEW: Save earning history
-        localStorage.setItem('echoplexEarningHistory', JSON.stringify(earningHistory));
-    }
-
-    /**
-     * Loads all game data from Local Storage.
-     * MODIFIED: Now loads earningHistory too.
-     */
-    function loadGameStats() {
-        const savedEcp = localStorage.getItem('echoplexEcp');
-        if (savedEcp !== null) {
-            currentEcp = parseInt(savedEcp, 10);
-        }
-
-        const savedStats = localStorage.getItem('echoplexGameStats');
-        if (savedStats) {
-            const loadedStats = JSON.parse(savedStats);
-            // Convert Array back to Set for screensVisited
-            gameStats = {
-                ...loadedStats,
-                screensVisited: new Set(loadedStats.screensVisited || ['gameIntroScreen']) // Ensure default is present
-            };
-        }
-
-        const savedAchievements = localStorage.getItem('echoplexAchievements');
+        const savedAchievements = localStorage.getItem('rollFlipAchievements');
         if (savedAchievements) {
-            const loadedAchievements = JSON.parse(savedAchievements);
-            // Merge loaded achievements with default structure to prevent missing new achievements
-            achievementsData.forEach(defaultAch => {
-                const loadedAch = loadedAchievements.find(a => a.id === defaultAch.id);
-                if (loadedAch) {
-                    // Update only relevant properties, keeping new default properties
-                    defaultAch.current = loadedAch.current || 0;
-                    defaultAch.unlocked = loadedAch.unlocked || false;
-                }
+            const parsed = JSON.parse(savedAchievements);
+            achievementsData.forEach((ach, i) => {
+                if (parsed[i]) ach.unlocked = parsed[i].unlocked;
             });
         }
-
-        const savedTheme = localStorage.getItem('echoplexTheme');
-        if (savedTheme) {
-            activeThemeId = savedTheme;
-        }
-
-        // NEW: Load earning history
-        const savedHistory = localStorage.getItem('echoplexEarningHistory');
-        if (savedHistory) {
-            earningHistory = JSON.parse(savedHistory);
-        }
+        updateAllEcp();
     }
 
-    /**
-     * Applies the selected theme to the body.
-     * @param {string} themeId - The ID of the theme to apply.
-     */
-    function applyTheme(themeId) {
-        // Remove all existing theme classes from body
-        document.body.classList.forEach(className => {
-            if (className.endsWith('-theme')) {
-                document.body.classList.remove(className);
-            }
-        });
-        // Add the new theme class
-        document.body.classList.add(`${themeId}-theme`);
-        activeThemeId = themeId;
-        saveGameStats();
-        renderThemes(); // Re-render themes to update "Current" badge
+    // ============================================================
+    // 6. SCREEN MANAGEMENT
+    // ============================================================
+
+    function showScreen(screen) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        screen.classList.add('active');
     }
 
-    /**
-     * Renders all theme options in the theme selection screen.
-     */
-    function renderThemes() {
-        themeGrid.innerHTML = '';
-        themes.forEach(theme => {
-            const themeOptionDiv = document.createElement('div');
-            themeOptionDiv.classList.add('theme-option');
-            if (theme.id === activeThemeId) {
-                themeOptionDiv.classList.add('active-theme-selected'); // Add class for active theme
-            }
+    function showModal(modal) { modal.classList.add('active'); }
+    function hideModal(modal) { modal.classList.remove('active'); }
 
-            themeOptionDiv.innerHTML = `
-                <img src="${theme.preview}" alt="${theme.name} Theme Preview">
-                <h3>${theme.name}</h3>
-                <button class="action-button secondary-button apply-theme-button" data-theme-id="${theme.id}">
-                    ${theme.id === activeThemeId ? 'Current' : 'Apply'}
-                </button>
-            `;
-            themeGrid.appendChild(themeOptionDiv);
+    // ============================================================
+    // 7. MODE SWITCHING
+    // ============================================================
 
-            // Add event listener to the apply button
-            const applyButton = themeOptionDiv.querySelector('.apply-theme-button');
-            if (theme.id === activeThemeId) {
-                applyButton.disabled = true; // Disable "Current" button
-            }
-            applyButton.addEventListener('click', () => applyTheme(theme.id));
-        });
+    function switchMode(mode) {
+        currentMode = mode;
+        diceModeBtn.classList.toggle('btn-mode--active', mode === 'dice');
+        coinModeBtn.classList.toggle('btn-mode--active', mode === 'coin');
+        diceControls.style.display = mode === 'dice' ? 'grid' : 'none';
+        coinControls.style.display = mode === 'coin' ? 'grid' : 'none';
+        resultEmoji.textContent = mode === 'dice' ? '🎲' : '🪙';
+        resultText.textContent = 'Place your bet and make a guess!';
+        resultText.className = '';
+        ecpChangeDisplay.textContent = '';
+        ecpChangeDisplay.className = 'ecp-change';
+        feedbackMessage.textContent = '';
+        feedbackMessage.className = 'feedback-message';
     }
 
-    /**
-     * Checks achievement progress and unlocks if thresholds are met.
-     * @param {string} achievementId - Optional: check a specific achievement.
-     */
-    function checkAchievements(achievementId = null) {
-        let achievementsToCheck = achievementsData;
-        if (achievementId) {
-            achievementsToCheck = achievementsData.filter(ach => ach.id === achievementId);
-        }
+    // ============================================================
+    // 8. DICE UI HELPERS
+    // ============================================================
 
-        // MODIFIED: Pathfinder now checks 5 screens
-        const pathfinderAch = achievementsData.find(a => a.id === 'pathfinder');
-        if (pathfinderAch) {
-            pathfinderAch.threshold = 5; // Update threshold if it changes
-            if (!pathfinderAch.unlocked && gameStats.screensVisited.size >= pathfinderAch.threshold) {
-                 pathfinderAch.current = gameStats.screensVisited.size;
-                 pathfinderAch.unlocked = true;
-                 if (pathfinderAch.reward && pathfinderAch.reward > 0) {
-                    addEcp(pathfinderAch.reward);
-                    showFeedback(`🏆 Achievement Unlocked: ${pathfinderAch.name}! +${pathfinderAch.reward} ECP!`, 'success');
-                 } else {
-                    showFeedback(`🏆 Achievement Unlocked: ${pathfinderAch.name}!`, 'success');
-                 }
-            } else if (!pathfinderAch.unlocked) {
-                 pathfinderAch.current = gameStats.screensVisited.size;
-            }
-        }
+    function updateDiceGuessOptions() {
+        const numDice = parseInt(diceCount.value);
+        const betType = diceBetType.value;
+        const guessSelect = diceGuess;
+        const isExact = betType === 'exact' || betType === 'exact_sum';
 
-
-        let totalUnlockedCount = 0; // Track for completionist
-
-        achievementsData.forEach(ach => { // Iterate through all achievements, not just ones to check
-            if (ach.unlocked) {
-                if (ach.id !== 'completionist') { // Don't count completionist itself for this tally
-                    totalUnlockedCount++;
-                }
-                return; // Skip already unlocked achievements
-            }
-
-            let progressUpdated = false;
-
-            switch (ach.id) {
-                case 'firstFlip':
-                    if (gameStats.totalCoinFlips > ach.current) { ach.current = gameStats.totalCoinFlips; progressUpdated = true; }
-                    break;
-                case 'diceRookie':
-                    if (gameStats.totalDiceRolls > ach.current) { ach.current = gameStats.totalDiceRolls; progressUpdated = true; }
-                    break;
-                case 'luckyStreak':
-                    if (gameStats.maxConsecutiveWins > ach.current) { ach.current = gameStats.maxConsecutiveWins; progressUpdated = true; }
-                    break;
-                case 'ecpTycoon':
-                    // Current ECP is the "current" for this achievement, but it's a "threshold" achievement
-                    if (currentEcp >= ach.threshold && !ach.unlocked) {
-                        ach.current = currentEcp;
-                        progressUpdated = true;
-                    } else if (currentEcp < ach.threshold && ach.unlocked) { // If ECP drops below threshold after unlocking
-                        ach.unlocked = false; // Relock achievement
-                        showFeedback(`Achievement Relocked: ${ach.name} (ECP below ${ach.threshold})`, 'error');
-                        progressUpdated = true;
-                    }
-                    break;
-                case 'highRoller':
-                    if (gameStats.highLeverageWins > ach.current) { ach.current = gameStats.highLeverageWins; progressUpdated = true; }
-                    break;
-                case 'riskTaker':
-                    if (gameStats.highLeverageLosses > ach.current) { ach.current = gameStats.highLeverageLosses; progressUpdated = true; }
-                    break;
-                case 'echoKingQueen':
-                    if (gameStats.totalWins > ach.current) { ach.current = gameStats.totalWins; progressUpdated = true; }
-                    break;
-                case 'goldenGuess':
-                    // This is handled by a flag in handleGameRound and checked there
-                    break;
-                case 'pathfinder':
-                    // Handled specifically above to avoid conflicting with generic loop
-                    break;
-                case 'completionist':
-                    // Handled specifically below
-                    break;
-            }
-
-            if (ach.current >= ach.threshold && !ach.unlocked) {
-                ach.unlocked = true;
-                if (ach.id !== 'completionist') { // Increment count only if it's not completionist
-                    totalUnlockedCount++;
-                }
-                if (ach.reward && ach.reward > 0) {
-                    addEcp(ach.reward);
-                    showFeedback(`🏆 Achievement Unlocked: ${ach.name}! +${ach.reward} ECP!`, 'success');
-                } else {
-                    showFeedback(`🏆 Achievement Unlocked: ${ach.name}!`, 'success');
-                }
-                progressUpdated = true;
-            } else if (progressUpdated) {
-                saveGameStats(); // Save if progress but not unlock (e.g. current increases)
-            }
-        });
-
-        // Check for Completionist after all others are processed
-        const completionistAch = achievementsData.find(a => a.id === 'completionist');
-        if (completionistAch && !completionistAch.unlocked) {
-            completionistAch.current = totalUnlockedCount; // Update current count for display
-            if (completionistAch.current >= completionistAch.threshold) {
-                completionistAch.unlocked = true;
-                if (completionistAch.reward && completionistAch.reward > 0) {
-                    addEcp(completionistAch.reward);
-                    showFeedback(`🌟 Achievement Unlocked: ${completionistAch.name}! +${completionistAch.reward} ECP!`, 'success');
-                } else {
-                    showFeedback(`🌟 Achievement Unlocked: ${completionistAch.name}!`, 'success');
-                }
-            }
-        }
-        renderAchievements(); // Always re-render achievements after checking
-        saveGameStats(); // Ensure all changes are saved
-    }
-
-
-    /**
-     * Renders all achievement items in the achievements screen.
-     */
-    function renderAchievements() {
-        achievementsList.innerHTML = '';
-        achievementsData.forEach(ach => {
-            const achievementItemDiv = document.createElement('div');
-            achievementItemDiv.classList.add('achievement-item');
-
-            const iconClass = ach.unlocked ? 'unlocked' : 'locked';
-            const iconHtml = `<div class="achievement-icon ${iconClass}"><i class="${ach.icon}"></i></div>`;
-
-            // For Pathfinder, display screens visited / total screens
-            let progressText = ach.unlocked ? 'Unlocked!' : `(${ach.current}/${ach.threshold})`;
-            if (ach.id === 'pathfinder' && !ach.unlocked) {
-                progressText = `(${gameStats.screensVisited.size}/${ach.threshold})`;
-            }
-
-            achievementItemDiv.innerHTML = `
-                ${iconHtml}
-                <div class="achievement-details">
-                    <h3>${ach.name} <span class="progress-text">${progressText}</span></h3>
-                    <p>${ach.description}</p>
-                    ${ach.reward ? `<p class="reward-text">Reward: ${ach.reward} ECP</p>` : ''}
-                </div>
-            `;
-            achievementsList.appendChild(achievementItemDiv);
-        });
-    }
-
-    /**
-     * Updates the enabled/disabled state of the play buttons based on selected guess.
-     * CRITICAL FIX: Ensures only relevant play button is active.
-     */
-    function updatePlayButtonState() {
-        const selectedValue = playerChoiceSelect.value;
-        const isCoinGuess = ['heads', 'tails'].includes(selectedValue);
-        const isDiceGuess = ['1', '2', '3', '4', '5', '6'].includes(selectedValue);
-
-        coinFlipButton.classList.toggle('disabled-button', !isCoinGuess);
-        diceRollButton.classList.toggle('disabled-button', !isDiceGuess);
-
-        coinFlipButton.disabled = !isCoinGuess;
-        diceRollButton.disabled = !isDiceGuess;
-    }
-
-    // NEW: Function to log history entry
-    function logHistoryEntry(entry) {
-        // Limit history to a reasonable number, e.g., 50 entries
-        const MAX_HISTORY_ENTRIES = 50;
-        earningHistory.unshift(entry); // Add to the beginning of the array (newest first)
-        if (earningHistory.length > MAX_HISTORY_ENTRIES) {
-            earningHistory.pop(); // Remove the oldest entry if over limit
-        }
-        saveGameStats(); // Save history immediately
-    }
-
-    // NEW: Function to render history table
-    function renderHistory() {
-        earningHistoryTableBody.innerHTML = ''; // Clear existing entries
-
-        if (earningHistory.length === 0) {
-            noHistoryMessage.style.display = 'block';
+        if (betType === '') {
+            guessSelect.disabled = true;
+            guessSelect.innerHTML = '<option value="">Select a bet type first...</option>';
             return;
+        }
+
+        if (isExact) {
+            guessSelect.disabled = false;
+            const maxVal = numDice * 6;
+            const minVal = numDice;
+            let options = `<option value="">Select a number (${minVal}-${maxVal})...</option>`;
+            for (let i = minVal; i <= maxVal; i++) {
+                options += `<option value="${i}">${i}</option>`;
+            }
+            guessSelect.innerHTML = options;
         } else {
-            noHistoryMessage.style.display = 'none';
+            guessSelect.disabled = true;
+            guessSelect.innerHTML = `<option value="">Guess disabled for this bet type</option>`;
         }
-
-        // Sort history by timestamp (newest first)
-        const sortedHistory = [...earningHistory].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-
-        sortedHistory.forEach(entry => {
-            const row = earningHistoryTableBody.insertRow();
-            
-            const dateTime = new Date(entry.timestamp).toLocaleString();
-            const gameTypeDisplay = entry.gameType === 'coin' ? 'Coin Flip' : 'Dice Roll';
-            const playerChoiceDisplay = entry.playerChoice.charAt(0).toUpperCase() + entry.playerChoice.slice(1);
-            const outcomeDisplay = String(entry.outcome).charAt(0).toUpperCase() + String(entry.outcome).slice(1);
-            const stakeDisplay = entry.stake;
-            const leverageDisplay = `${entry.leverage}x`;
-            const changeDisplay = `${entry.result > 0 ? '+' : ''}${entry.result}`;
-            const resultDisplay = entry.result > 0 ? 'Win' : 'Loss';
-            const resultClass = entry.result > 0 ? 'outcome-win' : 'outcome-loss';
-            const changeClass = entry.result > 0 ? 'positive' : 'negative';
-
-            row.insertCell().textContent = dateTime;
-            row.insertCell().textContent = gameTypeDisplay;
-            row.insertCell().textContent = playerChoiceDisplay;
-            row.insertCell().textContent = outcomeDisplay;
-            row.insertCell().textContent = stakeDisplay;
-            row.insertCell().textContent = leverageDisplay;
-            const changeCell = row.insertCell();
-            changeCell.textContent = changeDisplay;
-            changeCell.classList.add(changeClass);
-            const resultCell = row.insertCell();
-            resultCell.textContent = resultDisplay;
-            resultCell.classList.add(resultClass);
-        });
     }
 
+    function updateStakeMax() {
+        const leverage = parseInt(leverageInput.value) || 1;
+        const maxStake = Math.floor(100000 / leverage);
+        stakeInput.max = maxStake;
+        if (parseInt(stakeInput.value) > maxStake) {
+            stakeInput.value = maxStake;
+        }
+        stakeInput.placeholder = `Max ${maxStake}`;
+    }
 
-    // --- Game Logic ---
+    // ============================================================
+    // 9. GAME LOGIC — DICE
+    // ============================================================
 
-    /**
-     * Handles a single round of the game (coin flip or dice roll).
-     * @param {string} gameType - 'coin' or 'dice'.
-     * MODIFIED: Now logs history entry.
-     */
-    function handleGameRound(gameType) {
-        const stake = parseInt(stakeAmountInput.value);
+    function rollDice() {
+        const stake = parseInt(stakeInput.value);
         const leverage = parseInt(leverageInput.value);
-        const playerChoice = playerChoiceSelect.value;
+        const numDice = parseInt(diceCount.value);
+        const betType = diceBetType.value;
+        const guess = parseInt(diceGuess.value);
 
-        // Input Validation
+        // Validations
         if (isNaN(stake) || stake <= 0) {
-            showFeedback('Please enter a valid stake amount.', 'error');
+            feedbackMessage.textContent = 'Please enter a valid stake!';
+            feedbackMessage.className = 'feedback-message error';
             return;
         }
-        if (stake > currentEcp) {
-            showFeedback('Insufficient ECP!', 'error');
-            return;
-        }
-        if (isNaN(leverage) || leverage < 1 || leverage > MAX_LEVERAGE) { // Enforce max leverage
-            showFeedback(`Leverage must be between 1 and ${MAX_LEVERAGE}.`, 'error');
-            return;
-        }
-        if (!playerChoice) {
-            showFeedback('Please choose a guess (Heads, Tails, or a Dice Number).', 'error');
+        if (stake > getECP()) {
+            feedbackMessage.textContent = 'Not enough ECP!';
+            feedbackMessage.className = 'feedback-message error';
             return;
         }
 
-        // CRITICAL FIX: Ensure gameType matches playerChoice type
-        if (gameType === 'coin' && !['heads', 'tails'].includes(playerChoice)) {
-            showFeedback('You selected a Coin Flip but your guess is for Dice.', 'error');
-            return;
-        }
-        if (gameType === 'dice' && !['1', '2', '3', '4', '5', '6'].includes(playerChoice)) {
-            showFeedback('You selected a Dice Roll but your guess is for Coin.', 'error');
+        const maxStake = Math.floor(100000 / leverage);
+        if (stake > maxStake) {
+            feedbackMessage.textContent = `Max stake for ${leverage}x leverage is ${maxStake} ECP!`;
+            feedbackMessage.className = 'feedback-message error';
             return;
         }
 
-        subtractEcp(stake); // Deduct stake immediately
+        if (isNaN(leverage) || leverage < 1 || leverage > 100) {
+            feedbackMessage.textContent = 'Leverage must be between 1 and 100!';
+            feedbackMessage.className = 'feedback-message error';
+            return;
+        }
+        if (!betType) {
+            feedbackMessage.textContent = 'Please select a bet type!';
+            feedbackMessage.className = 'feedback-message error';
+            return;
+        }
 
-        let outcome;
+        // For exact bets, validate guess
+        const isExactBet = betType === 'exact' || betType === 'exact_sum';
+        if (isExactBet && (isNaN(guess) || guess < numDice || guess > numDice * 6)) {
+            feedbackMessage.textContent = `Please select a valid number (${numDice}-${numDice*6})!`;
+            feedbackMessage.className = 'feedback-message error';
+            return;
+        }
+
+        deductEcp(stake, 'Roll & Flip - Dice Stake');
+
+        // Roll dice
+        const rolls = [];
+        let total = 0;
+        for (let i = 0; i < numDice; i++) {
+            const roll = Math.floor(Math.random() * 6) + 1;
+            rolls.push(roll);
+            total += roll;
+        }
+
+        // Determine win
         let win = false;
-        let resultText = '';
-        let ecpChange = -stake; // Initialize ECP change as the stake lost
+        let outcomeDisplay = '';
 
-        if (gameType === 'coin') {
-            outcome = Math.random() < 0.5 ? 'heads' : 'tails';
-            win = (playerChoice === outcome);
-            resultText = `Flipped: ${outcome.charAt(0).toUpperCase() + outcome.slice(1)}`;
-            gameStats.totalCoinFlips++;
-            checkAchievements('firstFlip');
-        } else { // gameType === 'dice'
-            outcome = Math.floor(Math.random() * 6) + 1; // 1-6
-            win = (parseInt(playerChoice) === outcome);
-            resultText = `Rolled: ${outcome}`;
-            gameStats.totalDiceRolls++;
-            checkAchievements('diceRookie');
+        switch (betType) {
+            case 'exact':
+                win = total === guess;
+                outcomeDisplay = `${rolls.join(', ')}`;
+                break;
+            case 'even':
+                win = total % 2 === 0;
+                outcomeDisplay = `${rolls.join(', ')}`;
+                break;
+            case 'odd':
+                win = total % 2 !== 0;
+                outcomeDisplay = `${rolls.join(', ')}`;
+                break;
+            case 'over3':
+                win = total > 3;
+                outcomeDisplay = `${rolls.join(', ')}`;
+                break;
+            case 'under4':
+                win = total < 4;
+                outcomeDisplay = `${rolls.join(', ')}`;
+                break;
+            case 'between1_4':
+                win = total >= 1 && total <= 4;
+                outcomeDisplay = `${rolls.join(', ')}`;
+                break;
+            case 'exact_sum':
+                win = total === guess;
+                outcomeDisplay = `${rolls.join(', ')} = ${total}`;
+                break;
+            case 'over10':
+                win = total > 10;
+                outcomeDisplay = `${rolls.join(', ')} = ${total}`;
+                break;
+            case 'under11':
+                win = total < 11;
+                outcomeDisplay = `${rolls.join(', ')} = ${total}`;
+                break;
+            case 'between2_8':
+                win = total >= 2 && total <= 8;
+                outcomeDisplay = `${rolls.join(', ')} = ${total}`;
+                break;
+            case 'between9_12':
+                win = total >= 9 && total <= 12;
+                outcomeDisplay = `${rolls.join(', ')} = ${total}`;
+                break;
+            case 'between13_18':
+                win = total >= 13 && total <= 18;
+                outcomeDisplay = `${rolls.join(', ')} = ${total}`;
+                break;
+            case 'even_sum':
+                win = total % 2 === 0;
+                outcomeDisplay = `${rolls.join(', ')} = ${total}`;
+                break;
+            case 'odd_sum':
+                win = total % 2 !== 0;
+                outcomeDisplay = `${rolls.join(', ')} = ${total}`;
+                break;
+            default:
+                win = false;
         }
 
-        resultDisplay.textContent = resultText;
+        let ecpChange = 0;
+
+        // Show result
+        const animEl = document.querySelector('.result-animation');
+        animEl.className = 'result-animation roll';
+
+        // Build dice display with Unicode dice faces
+        const diceFaces = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
+        let diceDisplay = '';
+        if (numDice === 1) {
+            diceDisplay = `<span class="dice-face">${diceFaces[rolls[0]-1]}</span>`;
+        } else if (numDice === 2) {
+            diceDisplay = `<span class="dice-face">${diceFaces[rolls[0]-1]}</span> <span class="dice-face">${diceFaces[rolls[1]-1]}</span>`;
+        } else {
+            diceDisplay = `<span class="dice-face">${diceFaces[rolls[0]-1]}</span> <span class="dice-face">${diceFaces[rolls[1]-1]}</span> <span class="dice-face">${diceFaces[rolls[2]-1]}</span>`;
+        }
+        resultEmoji.innerHTML = diceDisplay;
 
         if (win) {
             const winnings = stake * leverage;
-            addEcp(winnings + stake); // Return stake + winnings
-            ecpChange = winnings; // Actual profit
-            showFeedback('🎉 You Win!', 'success');
-            showEcpChange(winnings);
-            gameStats.consecutiveWins++;
-            gameStats.totalWins++;
-            if (leverage >= 10) { // Update high leverage wins
-                gameStats.highLeverageWins++;
-                checkAchievements('highRoller'); // Check for high roller
-            }
-            if (gameStats.firstTryWinThisSession) {
-                const goldenGuessAch = achievementsData.find(a => a.id === 'goldenGuess');
-                if (goldenGuessAch && !goldenGuessAch.unlocked) { // Only check if not already unlocked
-                    goldenGuessAch.unlocked = true;
-                    if (goldenGuessAch.reward && goldenGuessAch.reward > 0) {
-                        addEcp(goldenGuessAch.reward);
-                        showFeedback(`🏆 Achievement Unlocked: ${goldenGuessAch.name}! +${goldenGuessAch.reward} ECP!`, 'success');
-                    } else {
-                        showFeedback(`🏆 Achievement Unlocked: ${goldenGuessAch.name}!`, 'success');
-                    }
-                }
-                gameStats.firstTryWinThisSession = false; // Only one chance per session
-            }
+            addEcp(winnings + stake, 'Roll & Flip - Dice Win');
+            ecpChange = winnings;
+            gameState.totalWins++;
+            currentStreak++;
+            resultText.className = 'win';
+            resultText.textContent = `✅ (${outcomeDisplay}) YOU WIN!`;
+            ecpChangeDisplay.className = 'ecp-change positive';
+            ecpChangeDisplay.textContent = `+${winnings} ECP`;
+            feedbackMessage.textContent = '🎉 Congratulations!';
+            feedbackMessage.className = 'feedback-message success';
+
+            if (leverage >= 40) unlockAchievement('high_roller');
+            if (currentStreak >= 3) unlockAchievement('lucky_streak_3');
+            if (currentStreak >= 5) unlockAchievement('lucky_streak_5');
+            if (currentStreak >= 10) unlockAchievement('lucky_streak_10');
+            if (gameState.totalWins >= 10) unlockAchievement('win_10');
+            if (gameState.totalWins >= 50) unlockAchievement('win_50');
+            if (gameState.totalWins >= 100) unlockAchievement('win_100');
         } else {
-            showFeedback('😔 You Lose!', 'error');
-            showEcpChange(-stake); // Show the loss
-            gameStats.consecutiveWins = 0; // Reset consecutive wins
-            gameStats.totalLosses++;
-            if (leverage >= 10) { // Update high leverage losses
-                gameStats.highLeverageLosses++;
-                checkAchievements('riskTaker'); // Check for risk taker
+            ecpChange = -stake;
+            gameState.totalLosses++;
+            currentStreak = 0;
+            resultText.className = 'loss';
+            resultText.textContent = `❌ (${outcomeDisplay}) YOU LOSE!`;
+            ecpChangeDisplay.className = 'ecp-change negative';
+            ecpChangeDisplay.textContent = `-${stake} ECP`;
+            feedbackMessage.textContent = '😞 Better luck next time!';
+            feedbackMessage.className = 'feedback-message error';
+        }
+
+        // History
+        gameState.history.unshift({
+            gameType: 'dice',
+            guess: `${numDice} dice ${betType} ${guess || ''}`,
+            outcome: rolls.join(','),
+            stake: stake,
+            leverage: leverage,
+            result: ecpChange,
+            win: win,
+            timestamp: new Date().toISOString()
+        });
+        if (gameState.history.length > 100) gameState.history = gameState.history.slice(0, 100);
+
+        gameState.totalDiceRolls = (gameState.totalDiceRolls || 0) + 1;
+        if (gameState.totalDiceRolls === 1) unlockAchievement('first_roll');
+
+        checkAchievements();
+        saveGame();
+
+        setTimeout(() => {
+            animEl.className = 'result-animation';
+        }, 800);
+    }
+
+    function updateDiceBetTypes() {
+    const numDice = parseInt(diceCount.value);
+    const betTypeSelect = diceBetType;
+    const currentValue = betTypeSelect.value;
+
+    // Store the current selected value
+    const selectedValue = currentValue;
+
+    // Clear all options
+    betTypeSelect.innerHTML = '<option value="">Select Bet Type</option>';
+
+    // Add 1 Die options
+    const group1 = document.createElement('optgroup');
+    group1.label = '1 Die';
+    const group1Options = ['exact', 'even', 'odd', 'over3', 'under4', 'between1_4'];
+    const group1Labels = ['Exact Number', 'Even', 'Odd', 'Over 3', 'Under 4', 'Between 1-4'];
+    group1Options.forEach((val, i) => {
+        const opt = document.createElement('option');
+        opt.value = val;
+        opt.textContent = group1Labels[i];
+        group1.appendChild(opt);
+    });
+    betTypeSelect.appendChild(group1);
+
+    // Add 2-3 Dice options
+    const group2 = document.createElement('optgroup');
+    group2.label = '2-3 Dice';
+    const group2Options = ['exact_sum', 'over10', 'under11', 'between2_8', 'between9_12', 'between13_18', 'even_sum', 'odd_sum'];
+    const group2Labels = ['Exact Sum', 'Over 10', 'Under 11', 'Between 2-8', 'Between 9-12', 'Between 13-18', 'Even Sum', 'Odd Sum'];
+    group2Options.forEach((val, i) => {
+        const opt = document.createElement('option');
+        opt.value = val;
+        opt.textContent = group2Labels[i];
+        group2.appendChild(opt);
+    });
+    betTypeSelect.appendChild(group2);
+
+    // Show/hide groups based on dice count
+    if (numDice === 1) {
+        group1.style.display = '';
+        group2.style.display = 'none';
+    } else {
+        group1.style.display = 'none';
+        group2.style.display = '';
+    }
+
+    // Restore selected value if still valid
+    if (selectedValue) {
+        const options = betTypeSelect.querySelectorAll('option');
+        let found = false;
+        options.forEach(opt => {
+            if (opt.value === selectedValue) {
+                found = true;
+            }
+        });
+        if (found) {
+            betTypeSelect.value = selectedValue;
+        } else {
+            betTypeSelect.value = '';
+        }
+    }
+}
+
+    // ============================================================
+    // 10. COIN UI HELPERS
+    // ============================================================
+
+    function updateCoinGuessOptions() {
+        const numCoins = parseInt(coinCount.value);
+        const betType = coinBetType.value;
+        const guessSelect = coinGuess;
+
+        if (betType === '') {
+            guessSelect.disabled = true;
+            guessSelect.innerHTML = '<option value="">Select a bet type first...</option>';
+            return;
+        }
+
+        if (numCoins === 1) {
+            guessSelect.disabled = false;
+            guessSelect.innerHTML = `<option value="">Select outcome...</option><option value="heads">Heads</option><option value="tails">Tails</option>`;
+        } else {
+            if (betType === 'exact') {
+                guessSelect.disabled = false;
+                guessSelect.innerHTML = `<option value="">Select outcome...</option><option value="HH">Heads-Heads</option><option value="HT">Heads-Tails</option><option value="TH">Tails-Heads</option><option value="TT">Tails-Tails</option>`;
+            } else {
+                guessSelect.disabled = true;
+                guessSelect.innerHTML = `<option value="">Guess disabled for this bet type</option>`;
+            }
+        }
+    }
+
+    function updateCoinStakeMax() {
+        const leverage = parseInt(coinLeverageInput.value) || 1;
+        const maxStake = Math.floor(100000 / leverage);
+        coinStakeInput.max = maxStake;
+        if (parseInt(coinStakeInput.value) > maxStake) {
+            coinStakeInput.value = maxStake;
+        }
+        coinStakeInput.placeholder = `Max ${maxStake}`;
+    }
+
+    // ============================================================
+    // 11. GAME LOGIC — COIN FLIP
+    // ============================================================
+
+    function flipCoin() {
+        const stake = parseInt(coinStakeInput.value);
+        const leverage = parseInt(coinLeverageInput.value);
+        const numCoins = parseInt(coinCount.value);
+        const betType = coinBetType.value;
+        const guess = coinGuess.value;
+
+        // Validations
+        if (isNaN(stake) || stake <= 0) {
+            feedbackMessage.textContent = 'Please enter a valid stake!';
+            feedbackMessage.className = 'feedback-message error';
+            return;
+        }
+        if (stake > getECP()) {
+            feedbackMessage.textContent = 'Not enough ECP!';
+            feedbackMessage.className = 'feedback-message error';
+            return;
+        }
+
+        const maxStake = Math.floor(100000 / leverage);
+        if (stake > maxStake) {
+            feedbackMessage.textContent = `Max stake for ${leverage}x leverage is ${maxStake} ECP!`;
+            feedbackMessage.className = 'feedback-message error';
+            return;
+        }
+
+        if (isNaN(leverage) || leverage < 1 || leverage > 100) {
+            feedbackMessage.textContent = 'Leverage must be between 1 and 100!';
+            feedbackMessage.className = 'feedback-message error';
+            return;
+        }
+        if (!betType) {
+            feedbackMessage.textContent = 'Please select a bet type!';
+            feedbackMessage.className = 'feedback-message error';
+            return;
+        }
+        if (betType === 'exact' && !guess) {
+            feedbackMessage.textContent = 'Please select your guess!';
+            feedbackMessage.className = 'feedback-message error';
+            return;
+        }
+
+        deductEcp(stake, 'Roll & Flip - Coin Stake');
+
+        // Random hidden difficulty
+        const ratios = [
+            { heads: 4, tails: 7 },
+            { heads: 0.1, tails: 10 },
+            { heads: 10, tails: 0.1 },
+            { heads: 3, tails: 5 },
+            { heads: 1, tails: 2 },
+            { heads: 2, tails: 1 },
+            { heads: 5, tails: 3 },
+            { heads: 7, tails: 4 }
+        ];
+        const ratio = ratios[Math.floor(Math.random() * ratios.length)];
+
+        let outcomes = [];
+        let win = false;
+        let outcomeDisplay = '';
+
+        if (numCoins === 1) {
+            const rand = Math.random() * (ratio.heads + ratio.tails);
+            const outcome = rand < ratio.heads ? 'heads' : 'tails';
+            outcomes = [outcome];
+            outcomeDisplay = outcome.charAt(0).toUpperCase() + outcome.slice(1);
+            win = guess === outcome;
+        } else {
+            const outcomes2 = [];
+            for (let i = 0; i < 2; i++) {
+                const r = Math.random() * (ratio.heads + ratio.tails);
+                outcomes2.push(r < ratio.heads ? 'heads' : 'tails');
+            }
+            outcomes = outcomes2;
+            const resultStr = outcomes.map(o => o === 'heads' ? 'H' : 'T').join('');
+            outcomeDisplay = resultStr;
+
+            if (betType === 'exact') {
+                win = guess === resultStr;
+            } else if (betType === 'any_heads') {
+                win = outcomes.some(o => o === 'heads');
+            } else if (betType === 'any_tails') {
+                win = outcomes.some(o => o === 'tails');
+            } else if (betType === 'both_same') {
+                win = outcomes[0] === outcomes[1];
             }
         }
 
-        gameStats.maxConsecutiveWins = Math.max(gameStats.maxConsecutiveWins, gameStats.consecutiveWins);
-        checkAchievements('luckyStreak');
-        checkAchievements('echoKingQueen');
-        saveGameStats();
+        let ecpChange = 0;
 
-        // NEW: Log this round to history
-        logHistoryEntry({
-            type: win ? 'win' : 'loss',
+        // Coin animation
+        const animEl = document.querySelector('.result-animation');
+        animEl.className = 'result-animation flip';
+
+        let coinDisplay = '';
+        if (numCoins === 1) {
+            coinDisplay = `<span class="coin-face">${outcomes[0] === 'heads' ? '👑' : '🪙'}</span>`;
+        } else {
+            const results = outcomes.map(o => o === 'heads' ? '👑' : '🪙').join(' ');
+            coinDisplay = `<span class="coin-face">${results}</span>`;
+        }
+        resultEmoji.innerHTML = coinDisplay;
+
+        if (win) {
+            const winnings = stake * leverage;
+            addEcp(winnings + stake, 'Roll & Flip - Coin Win');
+            ecpChange = winnings;
+            gameState.totalWins++;
+            currentStreak++;
+            resultText.className = 'win';
+            resultText.textContent = `✅ (${outcomeDisplay}) YOU WIN!`;
+            ecpChangeDisplay.className = 'ecp-change positive';
+            ecpChangeDisplay.textContent = `+${winnings} ECP`;
+            feedbackMessage.textContent = '🎉 Congratulations!';
+            feedbackMessage.className = 'feedback-message success';
+
+            if (leverage >= 40) unlockAchievement('high_roller');
+            if (currentStreak >= 3) unlockAchievement('lucky_streak_3');
+            if (currentStreak >= 5) unlockAchievement('lucky_streak_5');
+            if (currentStreak >= 10) unlockAchievement('lucky_streak_10');
+            if (gameState.totalWins >= 10) unlockAchievement('win_10');
+            if (gameState.totalWins >= 50) unlockAchievement('win_50');
+            if (gameState.totalWins >= 100) unlockAchievement('win_100');
+        } else {
+            ecpChange = -stake;
+            gameState.totalLosses++;
+            currentStreak = 0;
+            resultText.className = 'loss';
+            resultText.textContent = `❌ (${outcomeDisplay}) YOU LOSE!`;
+            ecpChangeDisplay.className = 'ecp-change negative';
+            ecpChangeDisplay.textContent = `-${stake} ECP`;
+            feedbackMessage.textContent = '😞 Better luck next time!';
+            feedbackMessage.className = 'feedback-message error';
+        }
+
+        // History
+        gameState.history.unshift({
+            gameType: 'coin',
+            guess: `${numCoins} coin ${betType} ${guess || ''}`,
+            outcome: outcomes.join(','),
             stake: stake,
             leverage: leverage,
-            result: ecpChange, // Actual ECP profit/loss for the round
-            timestamp: new Date().toISOString(), // ISO string for easy sorting/storage
-            gameType: gameType,
-            playerChoice: playerChoice,
-            outcome: outcome,
-            startingEcp: currentEcp + (win ? (stake - ecpChange) : stake) // ECP before this round
+            result: ecpChange,
+            win: win,
+            timestamp: new Date().toISOString()
+        });
+        if (gameState.history.length > 100) gameState.history = gameState.history.slice(0, 100);
+
+        gameState.totalCoinFlips = (gameState.totalCoinFlips || 0) + 1;
+        if (gameState.totalCoinFlips === 1) unlockAchievement('first_flip');
+
+        checkAchievements();
+        saveGame();
+
+        setTimeout(() => {
+            animEl.className = 'result-animation';
+        }, 800);
+    }
+
+    function updateCoinBetTypes() {
+    const numCoins = parseInt(coinCount.value);
+    const betTypeSelect = coinBetType;
+    const currentValue = betTypeSelect.value;
+
+    // Clear all options
+    betTypeSelect.innerHTML = '<option value="">Select Bet Type</option>';
+
+    if (numCoins === 1) {
+        // 1 Coin: Only exact (Heads/Tails)
+        const opt = document.createElement('option');
+        opt.value = 'exact';
+        opt.textContent = 'Exact Outcome (Heads/Tails)';
+        betTypeSelect.appendChild(opt);
+    } else {
+        // 2 Coins: All options
+        const options = [
+            { val: 'exact', label: 'Exact Outcome (HH/HT/TH/TT)' },
+            { val: 'any_heads', label: 'At least one Heads' },
+            { val: 'any_tails', label: 'At least one Tails' },
+            { val: 'both_same', label: 'Both Same' }
+        ];
+        options.forEach(opt => {
+            const option = document.createElement('option');
+            option.value = opt.val;
+            option.textContent = opt.label;
+            betTypeSelect.appendChild(option);
         });
     }
 
-    // --- Event Listeners ---
-    startGameButton.addEventListener('click', () => switchScreen(gamePlayScreen));
-    themeButton.addEventListener('click', () => { switchScreen(themeScreen); renderThemes(); });
-    achievementsButton.addEventListener('click', () => { switchScreen(achievementsScreen); renderAchievements(); });
-    // NEW: Event listener for history button
-    historyButton.addEventListener('click', () => { switchScreen(historyScreen); renderHistory(); });
-
-
-    backToIntroButton.addEventListener('click', () => switchScreen(gameIntroScreen));
-    backToIntroFromThemeButton.addEventListener('click', () => switchScreen(gameIntroScreen));
-    backToIntroFromAchievementsButton.addEventListener('click', () => switchScreen(gameIntroScreen));
-    // NEW: Event listener for back button from history screen
-    backToIntroFromHistoryButton.addEventListener('click', () => switchScreen(gameIntroScreen));
-
-    coinFlipButton.addEventListener('click', () => handleGameRound('coin'));
-    diceRollButton.addEventListener('click', () => handleGameRound('dice'));
-
-    // CRITICAL FIX: Listen for changes on the player choice select to update button states
-    playerChoiceSelect.addEventListener('change', updatePlayButtonState);
-
-    // Initial disable of buttons until a choice is made
-    coinFlipButton.disabled = true;
-    diceRollButton.disabled = true;
-    coinFlipButton.classList.add('disabled-button');
-    diceRollButton.classList.add('disabled-button');
-
-    // Share Button Logic
-    shareButton.addEventListener('click', () => {
-        const shareText = `I'm playing EchoPlex: Roll & Flip and have ${currentEcp} ECP! Can you beat my score?`;
-        if (navigator.share) {
-            navigator.share({
-                title: 'EchoPlex: Roll & Flip',
-                text: shareText,
-                url: window.location.href // Shares the current page URL
-            }).catch((error) => console.error('Error sharing:', error));
+    // Restore selected value if still valid
+    if (currentValue) {
+        const options = betTypeSelect.querySelectorAll('option');
+        let found = false;
+        options.forEach(opt => {
+            if (opt.value === currentValue) {
+                found = true;
+            }
+        });
+        if (found) {
+            betTypeSelect.value = currentValue;
         } else {
-            // Fallback for browsers that do not support navigator.share
-            navigator.clipboard.writeText(shareText).then(() => {
-                showFeedback('ECP copied to clipboard!', 'success');
-            }).catch(err => {
-                showFeedback('Failed to copy ECP to clipboard.', 'error');
-                console.error('Could not copy text: ', err);
+            betTypeSelect.value = '';
+        }
+    }
+
+    // Reset guess
+    updateCoinGuessOptions();
+}
+
+    // ============================================================
+    // 12. ACHIEVEMENTS
+    // ============================================================
+
+    function checkAchievements() {
+        const ecp = getECP();
+        if (ecp >= 100) unlockAchievement('ecp_100');
+        if (ecp >= 500) unlockAchievement('ecp_500');
+        if (ecp >= 1000) unlockAchievement('ecp_1000');
+        saveGame();
+        renderAchievements();
+    }
+
+    function unlockAchievement(id) {
+        const ach = achievementsData.find(a => a.id === id);
+        if (ach && !ach.unlocked) {
+            ach.unlocked = true;
+            addEcp(ECP.REWARDS.ACHIEVEMENT, `Roll & Flip - Achievement: ${ach.name}`);
+            feedbackMessage.textContent = `🏆 Achievement Unlocked: ${ach.name}! +${ECP.REWARDS.ACHIEVEMENT} ECP`;
+            feedbackMessage.className = 'feedback-message success';
+            setTimeout(() => {
+                if (feedbackMessage.textContent.includes('Achievement Unlocked')) {
+                    feedbackMessage.textContent = '';
+                    feedbackMessage.className = 'feedback-message';
+                }
+            }, 3000);
+        }
+    }
+
+    function renderAchievements() {
+        achievementsList.innerHTML = '';
+        achievementsData.forEach(ach => {
+            const li = document.createElement('li');
+            const nameSpan = document.createElement('span');
+            nameSpan.className = 'ach-name';
+            nameSpan.textContent = ach.name;
+            const statusSpan = document.createElement('span');
+            statusSpan.className = `ach-status ${ach.unlocked ? 'unlocked' : 'locked'}`;
+            statusSpan.textContent = ach.unlocked ? '✅ Unlocked' : '🔒 Locked';
+            li.appendChild(nameSpan);
+            li.appendChild(statusSpan);
+            achievementsList.appendChild(li);
+        });
+    }
+
+    // ============================================================
+    // 13. THEMES
+    // ============================================================
+
+    function renderThemes() {
+        themeGrid.innerHTML = '';
+        themes.forEach(theme => {
+            const btn = document.createElement('button');
+            btn.textContent = theme.name;
+            if (gameState.currentTheme === theme.id) btn.classList.add('active');
+            btn.addEventListener('click', () => {
+                applyTheme(theme.id);
+                renderThemes();
             });
+            themeGrid.appendChild(btn);
+        });
+    }
+
+    function applyTheme(themeId) {
+        document.body.className = '';
+        if (themeId !== 'default') {
+            document.body.classList.add(`theme-${themeId}`);
+        }
+        gameState.currentTheme = themeId;
+        saveGame();
+    }
+
+    // ============================================================
+    // 14. HISTORY
+    // ============================================================
+
+    function renderHistory() {
+        statWins.textContent = gameState.totalWins;
+        statLosses.textContent = gameState.totalLosses;
+        statHighestEcp.textContent = gameState.highestEcp;
+
+        historyBody.innerHTML = '';
+
+        if (gameState.history.length === 0) {
+            noHistoryMessage.style.display = 'block';
+            return;
+        }
+
+        noHistoryMessage.style.display = 'none';
+
+        gameState.history.forEach(entry => {
+            const row = document.createElement('tr');
+            const gameTypeDisplay = entry.gameType === 'coin' ? '🪙 Coin' : '🎲 Dice';
+            const guessDisplay = entry.guess;
+            const outcomeDisplay = entry.outcome;
+            const resultClass = entry.win ? 'positive' : 'negative';
+            const outcomeClass = entry.win ? 'outcome-win' : 'outcome-loss';
+
+            row.innerHTML = `
+                <td>${gameTypeDisplay}</td>
+                <td>${guessDisplay}</td>
+                <td class="${outcomeClass}">${outcomeDisplay}</td>
+                <td>${entry.stake}</td>
+                <td>${entry.leverage}x</td>
+                <td class="${resultClass}">${entry.result > 0 ? '+' : ''}${entry.result}</td>
+            `;
+            historyBody.appendChild(row);
+        });
+    }
+
+    // ============================================================
+    // 15. SHARE
+    // ============================================================
+
+    function shareProgress() {
+        const text = `🎲 Roll & Flip\nECP: ${getECP()}\nWins: ${gameState.totalWins}\nLosses: ${gameState.totalLosses}\n\nPlay now at EchoPlex Games! 🎮`;
+
+        if (navigator.share) {
+            navigator.share({ title: 'Roll & Flip', text });
+            unlockAchievement('share_roll');
+        } else {
+            navigator.clipboard.writeText(text).then(() => {
+                feedbackMessage.textContent = '📋 Progress copied to clipboard!';
+                feedbackMessage.className = 'feedback-message success';
+                unlockAchievement('share_roll');
+                setTimeout(() => {
+                    feedbackMessage.textContent = '';
+                    feedbackMessage.className = 'feedback-message';
+                }, 2000);
+            });
+        }
+    }
+
+    // ============================================================
+    // 16. KEYBOARD SHORTCUTS
+    // ============================================================
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            document.querySelectorAll('.modal.active').forEach(m => m.classList.remove('active'));
         }
     });
 
-    // --- Initialization ---
-    function initializeGame() {
-        loadGameStats(); // Load all saved data first
-        updateEcpDisplay(); // Update ECP display based on loaded data
-        applyTheme(activeThemeId); // Apply the loaded theme
-        renderThemes(); // Render themes initially
-        renderAchievements(); // Render achievements initially
-        // MODIFIED: Pathfinder achievement needs to know all possible screens
-        const allPossibleScreens = new Set([
-            'gameIntroScreen', 'gamePlayScreen', 'themeScreen', 'achievementsScreen', 'historyScreen'
-        ]);
-        achievementsData.find(a => a.id === 'pathfinder').threshold = allPossibleScreens.size;
+    // ============================================================
+    // 17. PARTICLE SYSTEM
+    // ============================================================
 
-        switchScreen(gameIntroScreen); // Always start on the intro screen
-        
-        // Initial check for Pathfinder as intro screen is visited on load
-        gameStats.screensVisited.add('gameIntroScreen');
-        checkAchievements('pathfinder');
-        
-        // Ensure max leverage is enforced on input
-        leverageInput.max = MAX_LEVERAGE;
+    const canvas = document.getElementById('particleCanvas');
+    if (canvas) {
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let w, h;
+
+        function resizeCanvas() {
+            w = canvas.width = window.innerWidth;
+            h = canvas.height = window.innerHeight;
+        }
+
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * w;
+                this.y = Math.random() * h;
+                this.size = Math.random() * 1.5 + 0.5;
+                this.speedX = (Math.random() - 0.5) * 0.2;
+                this.speedY = (Math.random() - 0.5) * 0.2;
+                this.opacity = Math.random() * 0.4 + 0.05;
+                this.pulse = Math.random() * Math.PI * 2;
+                this.pulseSpeed = 0.01 + Math.random() * 0.02;
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.pulse += this.pulseSpeed;
+                if (this.x < 0 || this.x > w) this.speedX *= -1;
+                if (this.y < 0 || this.y > h) this.speedY *= -1;
+                this.currentOpacity = this.opacity * (0.6 + 0.4 * Math.sin(this.pulse));
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(167, 139, 250, ${this.currentOpacity})`;
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < 50; i++) particles.push(new Particle());
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, w, h);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animateParticles);
+        }
+
+        animateParticles();
     }
 
-    initializeGame();
+    // ============================================================
+    // 18. EVENT LISTENERS
+    // ============================================================
+
+    playBtn.addEventListener('click', () => showScreen(menuScreen));
+    startGameBtn.addEventListener('click', () => {
+        switchMode('dice');
+        showScreen(gameScreen);
+    });
+
+    backToMenuFromGameBtn.addEventListener('click', () => showScreen(menuScreen));
+    backToIntroFromMenuBtn.addEventListener('click', () => showScreen(introScreen));
+
+    diceModeBtn.addEventListener('click', () => switchMode('dice'));
+    coinModeBtn.addEventListener('click', () => switchMode('coin'));
+
+    rollDiceBtn.addEventListener('click', rollDice);
+    flipCoinBtn.addEventListener('click', flipCoin);
+
+    shareGameBtn.addEventListener('click', shareProgress);
+
+    // Dice UI Events
+    diceCount.addEventListener('change', () => {
+    updateDiceBetTypes();
+    updateDiceGuessOptions();
+    updateStakeMax();
 });
 
+    diceBetType.addEventListener('change', () => {
+        updateDiceGuessOptions();
+    });
+
+    leverageInput.addEventListener('input', function() {
+        let val = parseInt(this.value);
+        if (val > 100) {
+            this.value = 100;
+            feedbackMessage.textContent = '⚠️ Max leverage is 100x!';
+            feedbackMessage.className = 'feedback-message error';
+            setTimeout(() => {
+                feedbackMessage.textContent = '';
+                feedbackMessage.className = 'feedback-message';
+            }, 2000);
+        }
+        updateStakeMax();
+    });
+
+    // Coin UI Events
+   coinCount.addEventListener('change', () => {
+    updateCoinBetTypes();
+    updateCoinGuessOptions();
+    updateCoinStakeMax();
+});
+    coinBetType.addEventListener('change', () => {
+        updateCoinGuessOptions();
+    });
+
+    coinLeverageInput.addEventListener('input', function() {
+        let val = parseInt(this.value);
+        if (val > 100) {
+            this.value = 100;
+            feedbackMessage.textContent = '⚠️ Max leverage is 100x!';
+            feedbackMessage.className = 'feedback-message error';
+            setTimeout(() => {
+                feedbackMessage.textContent = '';
+                feedbackMessage.className = 'feedback-message';
+            }, 2000);
+        }
+        updateCoinStakeMax();
+    });
+
+    // Modals
+    achievementsBtn.addEventListener('click', () => { renderAchievements(); showModal(achievementsModal); });
+    themeBtn.addEventListener('click', () => { renderThemes(); showModal(themeModal); });
+    historyBtn.addEventListener('click', () => { renderHistory(); showModal(historyModal); });
+
+    achievementsClose.addEventListener('click', () => hideModal(achievementsModal));
+    themeClose.addEventListener('click', () => hideModal(themeModal));
+    historyClose.addEventListener('click', () => hideModal(historyModal));
+
+    document.querySelectorAll('.modal').forEach(m => {
+        m.addEventListener('click', (e) => {
+            if (e.target === m) m.classList.remove('active');
+        });
+    });
+
+    if (progressBar) {
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.pageYOffset;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            progressBar.style.width = docHeight > 0 ? (scrollTop / docHeight * 100) + '%' : '0%';
+        });
+    }
+
+    // ============================================================
+    // 19. INITIALIZATION
+    // ============================================================
+
+    function init() {
+        loadGame();
+        applyTheme(gameState.currentTheme);
+        renderAchievements();
+        updateAllEcp();
+
+        updateStakeMax();
+        updateCoinStakeMax();
+
+        diceGuess.disabled = true;
+        diceGuess.innerHTML = '<option value="">Select a bet type first...</option>';
+        coinGuess.disabled = true;
+        coinGuess.innerHTML = '<option value="">Select a bet type first...</option>';
+
+        switchMode('dice');
+        updateDiceBetTypes();
+        updateCoinBetTypes();
+        showScreen(introScreen);
+
+        console.log('%c🎲 Roll & Flip', 'font-size: 20px; font-weight: 700; color: #fbbf24;');
+        console.log('%cTest your luck and strategy!', 'font-size: 14px; color: #b8b0d8;');
+        console.log('%c🪙 Coin Flip • 🎲 Dice Roll • ⚡ Up to 100x Leverage', 'font-size: 12px; color: #6f6390;');
+        console.log(`%c🪙 ECP: ${getECP()} (shared across all games)`, 'font-size: 12px; color: #fbbf24;');
+    }
+
+    init();
+
+})();

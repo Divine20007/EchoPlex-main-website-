@@ -1,823 +1,966 @@
-// --- DOM Element References ---
-const gameIntroScreen = document.getElementById('game-intro-screen');
-const levelSelectionScreen = document.getElementById('level-selection-screen');
-const mainGameScreen = document.getElementById('main-game-screen');
-const historyScreen = document.getElementById('history-screen');
-const themeSelectionScreen = document.getElementById('theme-selection-screen');
-const ecpDisplayIntro = document.querySelector('#ecp-display-intro span');
-const ecpDisplayLevels = document.querySelector('#ecp-display-levels span');
-// Buttons
-const backToGamesButton = document.getElementById('back-to-games-button'); // NEW
-const startGameButton = document.getElementById('start-game-button');
-const viewHistoryIntroButton = document.getElementById('view-history-intro-button');
-const backToIntroButton = document.getElementById('back-to-intro-button'); // NEW
-const selectThemeButton = document.getElementById('select-theme-button');
-const viewHistoryLevelsButton = document.getElementById('view-history-levels-button');
-const submitAnswerButton = document.getElementById('submit-answer-button');
-const hintButton = document.getElementById('hint-button');
-const revealButton = document.getElementById('reveal-button');
-const shuffleButton = document.getElementById('shuffle-button');
-const shareButton = document.getElementById('share-button');
-const backToLevelsFromGameButton = document.getElementById('back-to-levels-from-game');
-const backToLevelsFromHistoryButton = document.getElementById('back-to-levels-from-history');
-const backToLevelsFromThemeButton = document.getElementById('back-to-levels-from-theme');
+/* ==========================================================================
+   Word Scramble — Complete JavaScript (FULL 200 Levels)
+   ========================================================================== */
 
-// Game Displays
-const timerDisplay = document.querySelector('#timer span');
-const ecpDisplay = document.querySelector('#ecp-display span');
-const scrambledWordDisplay = document.getElementById('scrambled-word');
-const userInput = document.getElementById('user-input');
-const currentLevelInfo = document.getElementById('current-level-info');
-const messageDisplay = document.getElementById('message-display');
+(function() {
+    'use strict';
 
-// Dynamic Content Containers
-const levelGrid = document.getElementById('level-grid');
-const achievementsList = document.getElementById('achievements-list');
-const statsUnscrambled = document.getElementById('stats-unscrambled');
-const statsFailures = document.getElementById('stats-failures');
-const statsHighestEcp = document.getElementById('stats-highest-ecp');
-const themeGrid = document.getElementById('theme-grid');
+    // ============================================================
+    // 1. DOM REFS
+    // ============================================================
 
+    const introScreen = document.getElementById('introScreen');
+    const menuScreen = document.getElementById('menuScreen');
+    const levelScreen = document.getElementById('levelScreen');
+    const gameScreen = document.getElementById('gameScreen');
+    const backToIntroFromMenuBtn = document.getElementById('backToIntroFromMenuBtn');
 
-// --- Game State Variables (Loaded/Saved from Local Storage) ---
-let gameData = {
-    currentECP: 200, // Default ECP for new users
-    completedLevels: {}, // { level: true }
-    achievements: {}, // { achievementId: true }
-    totalUnscrambled: 0,
-    totalFailures: 0,
-    highestECP: 200,
-    currentTheme: 'default', // Stores the active theme class
-    currentLevelNum: 1,
-    currentWordIndex: 0
-};
+    const achievementsModal = document.getElementById('achievementsModal');
+    const themeModal = document.getElementById('themeModal');
+    const historyModal = document.getElementById('historyModal');
 
-// --- Game Logic Variables ---
-let currentLevelWords = [];
-let correctWord = '';
-let timerInterval;
-const defaultAttemptTime = 40; // Default 20 seconds for level 1-40
-let timeLeft = defaultAttemptTime;
+    const playBtn = document.getElementById('playBtn');
+    const achievementsBtn = document.getElementById('achievementsBtn');
+    const themeBtn = document.getElementById('themeBtn');
+    const historyBtn = document.getElementById('historyBtn');
+    const startGameBtn = document.getElementById('startGameBtn');
+    const backToMenuBtn = document.getElementById('backToMenuBtn');
+    const prevLevelBtn = document.getElementById('prevLevelBtn');
+    const nextLevelBtn = document.getElementById('nextLevelBtn');
+    const backToLevelsBtn = document.getElementById('backToLevelsBtn');
+    const prevWordBtn = document.getElementById('prevWordBtn');
+    const nextWordBtn = document.getElementById('nextWordBtn');
+    const submitGuessBtn = document.getElementById('submitGuessBtn');
+    const shuffleBtn = document.getElementById('shuffleBtn');
+    const hintBtn = document.getElementById('hintBtn');
+    const revealBtn = document.getElementById('revealBtn');
+    const shareGameBtn = document.getElementById('shareGameBtn');
+    const shareProgressBtn = document.getElementById('shareProgressBtn');
 
+    const ecpDisplay = document.getElementById('ecpDisplay');
+    const ecpLevelDisplay = document.getElementById('ecpLevelDisplay');
+    const ecpGameDisplay = document.getElementById('ecpGameDisplay');
+    const currentLevelDisplay = document.getElementById('currentLevelDisplay');
+    const puzzleGrid = document.getElementById('puzzleGrid');
+    const gameLevelDisplay = document.getElementById('gameLevelDisplay');
+    const timerValue = document.getElementById('timerValue');
+    const timerDisplay = document.getElementById('timerDisplay');
+    const wordCounter = document.getElementById('wordCounter');
+    const scrambledWord = document.getElementById('scrambledWord');
+    const guessInput = document.getElementById('guessInput');
+    const feedbackMessage = document.getElementById('feedbackMessage');
+    const hintCost = document.getElementById('hintCost');
+    const revealCost = document.getElementById('revealCost');
 
-// --- Game Configuration (Based on your requirements) ---
+    const achievementsList = document.getElementById('achievementsList');
+    const themeGrid = document.getElementById('themeGrid');
+    const statUnscrambled = document.getElementById('statUnscrambled');
+    const statFailures = document.getElementById('statFailures');
+    const statHighestEcp = document.getElementById('statHighestEcp');
 
-// Achievement Definitions (Matching your 15 requirements)
-const achievementsConfig = [
-    { id: 'firstScramble', name: 'First Scramble!', description: 'Unscramble your very first word.', condition: (stats) => stats.totalUnscrambled >= 1, awarded: false },
-    { id: 'wordWhiz', name: 'Word Whiz', description: 'Unscramble 10 words correctly.', condition: (stats) => stats.totalUnscrambled >= 10, awarded: false },
-    { id: 'puzzlePro', name: 'Puzzle Pro', description: 'Unscramble 50 words correctly.', condition: (stats) => stats.totalUnscrambled >= 50, awarded: false },
-    { id: 'masterOfWords', name: 'Master of Words', description: 'Unscramble 100 words correctly.', condition: (stats) => stats.totalUnscrambled >= 100, awarded: false },
-    { id: 'speedDemon', name: 'Speed Demon', description: 'Unscramble 5 words in a row with 10+ seconds left (Not implemented yet, placeholder logic).', condition: (stats) => false, awarded: false }, // Needs more complex tracking
-    { id: 'hintHater', name: 'Hint Hater', description: 'Complete 10 levels without using hints (Not implemented yet, placeholder logic).', condition: (stats) => false, awarded: false }, // Needs more complex tracking
-    { id: 'noPeeking', name: 'No Peeking', description: 'Complete 5 levels without using the "Reveal" button (Not implemented yet, placeholder logic).', condition: (stats) => false, awarded: false }, // Needs more complex tracking
-    { id: 'levelConqueror', name: 'Level Conqueror', description: 'Complete all levels in a single difficulty tier (Placeholder: Level 40).', condition: (stats) => gameData.completedLevels[40], awarded: false }, // Example: check for a specific level completion
-    { id: 'themeExplorer', name: 'Theme Explorer', description: 'Play on all 6 available themes (Not implemented yet, placeholder logic).', condition: (stats) => false, awarded: false }, // Needs more complex tracking
-    { id: 'perfectStreak', name: 'Perfect Streak', description: 'Unscramble 20 words in a row without failures (Not implemented yet, placeholder logic).', condition: (stats) => false, awarded: false }, // Needs more complex tracking
-    { id: 'economyMaster', name: 'Economy Master', description: 'Accumulate 1000 ECP.', condition: (stats) => stats.highestECP >= 1000, awarded: false },
-    { id: 'shareKnowledge', name: 'Share the Knowledge', description: 'Use the "Share" button to ask for help.', condition: (stats) => false, awarded: false }, // Triggered on share button click
-    { id: 'comebackKid', name: 'Comeback Kid', description: 'Unscramble a word with less than 5 seconds left (Not implemented yet, placeholder logic).', condition: (stats) => false, awarded: false }, // Needs more complex tracking
-    { id: 'marathonMover', name: 'Marathon Mover', description: 'Play 50 game sessions (Not implemented yet, placeholder logic).', condition: (stats) => false, awarded: false }, // Needs more complex tracking
-    { id: 'ultimateScrambler', name: 'Ultimate Scrambler', description: 'Complete all 200 levels.', condition: (stats) => Object.keys(gameData.completedLevels).length === 200, awarded: false }
-];
+    const achievementsClose = document.getElementById('achievementsClose');
+    const themeClose = document.getElementById('themeClose');
+    const historyClose = document.getElementById('historyClose');
 
-// Theme Definitions (Matching your CSS classes)
-const themes = [
-    { id: 'default', name: 'Cosmic Purple' }, // Your initial theme
-    { id: 'ocean', name: 'Deep Ocean' },
-    { id: 'forest', name: 'Forest Green' },
-    { id: 'desert', name: 'Desert Sands' },
-    { id: 'cyberpunk', name: 'Cyberpunk City' },
-    { id: 'sunset', name: 'Sunset Hues' }
-];
+    // ============================================================
+    // 2. GAME DATA — FULL 200 LEVELS
+    // ============================================================
 
-// Level Definitions (Placeholder for word data)
-const levelsConfig = [];
-// This will be populated by generateAllWords()
+    const wordLists = {
+        easy: ['APPLE', 'TABLE', 'CHAIR', 'HOUSE', 'WATER', 'PHONE', 'CLOUD', 'HAPPY', 'DREAM', 'FLOWER', 'LIGHT', 'MUSIC', 'DANCE', 'PEACE', 'STONE', 'HEART', 'STAR', 'MOON', 'SUN', 'WIND', 'FIRE', 'RAIN', 'SNOW', 'TREE', 'BIRD', 'FISH', 'LION', 'BEAR', 'WOLF', 'FOX', 'OWL', 'EAGLE', 'HAWK', 'SNAKE', 'TIGER', 'PANDA', 'KOALA', 'ZEBRA', 'HORSE', 'SHEEP', 'GOAT', 'COW', 'PIG', 'DOG', 'CAT', 'RABBIT', 'MOUSE', 'DEER', 'ELK', 'MOOSE'],
+        medium: ['BUTTERFLY', 'COMPUTER', 'ELEPHANT', 'MOUNTAIN', 'OCEANIC', 'JOURNEY', 'FANTASY', 'WHISPER', 'PARADISE', 'HARMONY', 'ENDEAVOR', 'MAJESTIC', 'SERENDIPITY', 'EPHEMERAL', 'LUMINOUS', 'INNOVATION', 'QUINTESSENTIAL', 'EFFULGENT', 'JUXTAPOSE', 'ONOMATOPOEIA', 'SYNCHRONIZE', 'AMBIGUOUS', 'CACOPHONY', 'DIAPHANOUS', 'EQUILIBRIUM', 'FUGACIOUS', 'GALUMPHING', 'HETEROGENEOUS', 'INCONSPICUOUS', 'JOCULAR'],
+        hard: ['SUPERCALIFRAGILISTICEXPIALIDOCIOUS', 'UNCOPYRIGHTABLE', 'DEOXYRIBONUCLEIC', 'KALEIDOSCOPE', 'LACONIC', 'MAELSTROM', 'NEFARIOUS', 'OBFUSCATE', 'PARSIMONIOUS', 'QUINTESSENCE', 'REDOLENT', 'SAGACIOUS', 'TACITURN', 'UBIQUITOUS', 'VACILLATE', 'WAINSCOT', 'XENOPHOBIA', 'ZEPHYR', 'ABERRATION', 'BELLIGERENT', 'CAPRICIOUS', 'DESULTORY', 'EFFRONTERY', 'FLUMMOX', 'GARRULOUS', 'HEGEMONY', 'IMPECUNIOUS', 'JETTISON', 'KOWTOW', 'LUGUBRIOUS']
+    };
 
+    const levelsConfig = [];
 
-// --- Utility Functions ---
+    for (let i = 1; i <= 200; i++) {
+        let wordCount, timer, wordPool;
+        if (i <= 40) { wordCount = 2; timer = 30; wordPool = wordLists.easy; }
+        else if (i <= 80) { wordCount = 3; timer = 45; wordPool = wordLists.easy.concat(wordLists.medium); }
+        else if (i <= 120) { wordCount = 4; timer = 60; wordPool = wordLists.medium; }
+        else if (i <= 160) { wordCount = 5; timer = 75; wordPool = wordLists.medium.concat(wordLists.hard); }
+        else { wordCount = 6; timer = 90; wordPool = wordLists.hard; }
 
-// Function to scramble a word
-function scrambleWord(word) {
-    let a = word.split("");
-    let n = a.length;
-    for(let i = n - 1; i > 0; i--) {
-        let j = Math.floor(Math.random() * (i + 1));
-        let tmp = a[i];
-        a[i] = a[j];
-        a[j] = tmp;
-    }
-    let scrambled = a.join("");
-    // Ensure the scrambled word is not the same as the original, re-scramble if it is
-    if (scrambled === word && word.length > 1) {
-        return scrambleWord(word); // Recursive call to re-scramble
-    }
-    return scrambled;
-}
-
-// Function to show a specific screen
-function showScreen(screenToShow) {
-    const screens = document.querySelectorAll('.screen');
-    screens.forEach(screen => {
-        if (screen === screenToShow) {
-            screen.classList.add('active');
-            screen.style.animation = 'fadeIn 0.5s ease-out forwards'; // Apply fadeIn
-        } else {
-            screen.classList.remove('active');
-            screen.style.animation = 'fadeOut 0.5s ease-out forwards'; // Apply fadeOut
+        const words = [];
+        const shuffledPool = [...wordPool].sort(() => Math.random() - 0.5);
+        for (let w = 0; w < wordCount; w++) {
+            words.push(shuffledPool[w % shuffledPool.length]);
         }
-    });
-}
-
-
-// Function to update ECP display (MODIFIED)
-function updateECP(amount) {
-    gameData.currentECP += amount;
-    if (gameData.currentECP < 0) {
-        gameData.currentECP = 0; // Prevent negative ECP
+        levelsConfig.push({ level: i, words: words, timer: timer });
     }
 
-    // Update ALL ECP displays
-    ecpDisplay.textContent = gameData.currentECP; // Main game screen
-    if (ecpDisplayIntro) { // Check if element exists before updating (good practice)
-        ecpDisplayIntro.textContent = gameData.currentECP;
+    // ============================================================
+    // 3. GAME STATE
+    // ============================================================
+
+    let gameState = {
+        currentLevel: 1,
+        currentWordIndex: 0,
+        completedPuzzles: {},
+        totalUnscrambled: 0,
+        totalFailures: 0,
+        highestEcp: 200,
+        currentTheme: 'default',
+        achievements: {}
+    };
+
+    let timerInterval = null;
+    let timeLeft = 30;
+    let savedTimeLeft = 0;
+    let currentWords = [];
+    let currentCorrectWord = '';
+    let currentScrambled = '';
+    let currentStreak = 0;
+
+    // Store time per word index
+    let wordTimers = {};
+
+    // ============================================================
+    // 4. ECP FUNCTIONS — USING ECP MANAGER
+    // ============================================================
+
+    function getECP() {
+        return ECP.get();
     }
-    if (ecpDisplayLevels) { // Check if element exists
-        ecpDisplayLevels.textContent = gameData.currentECP;
+
+    function addEcp(amount, reason) {
+        const newBalance = ECP.add(amount, reason || 'Word Scramble reward');
+        updateAllEcp();
+        return newBalance;
     }
 
-    if (gameData.currentECP > gameData.highestECP) {
-        gameData.highestECP = gameData.currentECP; // Update highest ECP
-        checkAchievements(); // Recheck achievements if highest ECP changes
-    }
-    saveGameData();
-    // Update button disabled states based on new ECP (relevant for main game screen)
-    updateGameDisplay();
-}
-// Function to display messages (success/failure)
-function displayMessage(message, type) {
-    messageDisplay.textContent = message;
-    messageDisplay.className = ''; // Clear previous classes
-    if (type) {
-        messageDisplay.classList.add(type); // Add 'success', 'failure', or 'info' class
-    }
-    setTimeout(() => {
-        messageDisplay.textContent = '';
-        messageDisplay.className = '';
-    }, 3000); // Message disappears after 2 seconds
-}
-
-// --- Game Initialization & Data Handling ---
-
-// Load game data from Local Storage
-function loadGameData() {
-    const savedData = localStorage.getItem('wordScrambleGameData');
-    if (savedData) {
-        gameData = JSON.parse(savedData);
-    }
-    // Ensure new properties are initialized if loading old data
-    gameData.completedLevels = gameData.completedLevels || {};
-    gameData.achievements = gameData.achievements || {};
-    gameData.totalUnscrambled = gameData.totalUnscrambled || 0;
-    gameData.totalFailures = gameData.totalFailures || 0;
-    gameData.highestECP = gameData.highestECP || 200;
-    gameData.currentTheme = gameData.currentTheme || 'default';
-    gameData.currentLevelNum = gameData.currentLevelNum || 1;
-    gameData.currentWordIndex = gameData.currentWordIndex || 0;
-
-    applyTheme(gameData.currentTheme);
-    updateECP(0); // Just update display
-}
-
-// Save game data to Local Storage
-function saveGameData() {
-    localStorage.setItem('wordScrambleGameData', JSON.stringify(gameData));
-}
-
-
-// --- Theme Management ---
-
-function applyTheme(themeId) {
-    // Remove all existing theme classes from the body
-    document.body.classList.forEach(cls => {
-        if (cls.startsWith('theme-')) {
-            document.body.classList.remove(cls);
+    function deductEcp(amount, reason) {
+        const newBalance = ECP.spend(amount, reason || 'Word Scramble cost');
+        if (newBalance === -1) {
+            feedbackMessage.textContent = 'Not enough ECP!';
+            feedbackMessage.className = 'feedback-message error';
+            return false;
         }
-    });
-    // Add the new theme class
-    if (themeId && themeId !== 'default') {
-        document.body.classList.add(`theme-${themeId}`);
+        updateAllEcp();
+        return true;
     }
-    gameData.currentTheme = themeId;
-    saveGameData();
-    updateThemeButtons(); // Highlight active theme button
-}
 
-function renderThemeSelection() {
-    themeGrid.innerHTML = '';
-    themes.forEach(theme => {
-        const themeButton = document.createElement('button');
-        themeButton.classList.add('btn', 'theme-btn');
-        themeButton.dataset.themeId = theme.id;
-        themeButton.textContent = theme.name;
-        if (gameData.currentTheme === theme.id) {
-            themeButton.classList.add('active-theme');
+    function updateAllEcp() {
+        const val = getECP();
+        if (ecpDisplay) ecpDisplay.textContent = val;
+        if (ecpLevelDisplay) ecpLevelDisplay.textContent = val;
+        if (ecpGameDisplay) ecpGameDisplay.textContent = val;
+        if (val > gameState.highestEcp) {
+            gameState.highestEcp = val;
+            saveGame();
         }
-        themeButton.addEventListener('click', () => {
-            applyTheme(theme.id);
-            // Optionally, switch back to level selection after choosing theme
-            // showScreen(levelSelectionScreen);
-        });
-        themeGrid.appendChild(themeButton);
-    });
-}
+    }
 
-function updateThemeButtons() {
-    document.querySelectorAll('.theme-btn').forEach(btn => {
-        if (btn.dataset.themeId === gameData.currentTheme) {
-            btn.classList.add('active-theme');
-        } else {
-            btn.classList.remove('active-theme');
-        }
-    });
-}
+    // ============================================================
+    // 5. THEMES & ACHIEVEMENTS
+    // ============================================================
 
-
-// --- Level Generation & Display ---
-
-// Helper to get words based on approximate difficulty
-// (In a real game, you'd have a large word list and pick based on length/complexity)
-function getRandomWord(minLength, maxLength) {
-    // This is a placeholder. In a real app, you'd load words from a JSON file or API.
-    const commonWords = [
-        "APPLE", "TABLE", "CHAIR", "HOUSE", "WATER", "PHONE", "CLOUD", "HAPPY", "DREAM", "FLOWER",
-        "BUTTERFLY", "COMPUTER", "ELEPHANT", "MOUNTAIN", "OCEANIC", "JOURNEY", "FANTASY", "WHISPER",
-        "PARADISE", "HARMONY", "ENDEAVOR", "MAJESTIC", "SERENDIPITY", "EPHEMERAL", "LUMINOUS",
-        "INNOVATION", "QUINTESSENTIAL", "EFFULGENT", "CACUOUS", "JUXTAPOSE", "ONOMATOPOEIA",
-        "SUPERCALIFRAGILISTICEXPIALIDOCIOUS", "UNCOPYRIGHTABLE", "DEOXYRIBONUCLEIC",
-        "SYNCHRONIZE", "AMBIGUOUS", "CACOPHONY", "DIAPHANOUS", "EQUILIBRIUM", "FUGACIOUS",
-        "GALUMPHING", "HETEROGENEOUS", "INCONSPICUOUS", "JOCULAR", "KALEIDOSCOPE", "LACONIC",
-        "MAELSTROM", "NEFARIOUS", "OBFUSCATE", "PARSIMONIOUS", "QUINTESSENCE", "REDOLENT",
-        "SAGACIOUS", "TACITURN", "UBIQUITOUS", "VACILLATE", "WAINSCOT", "XENOPHOBIA",
-        "ZEPHYR", "ABERRATION", "BELLIGERENT", "CAPRICIOUS", "DESULTORY", "EFFRONTERY",
-        "FLUMMOX", "GARRULOUS", "HEGEMONY", "IMPECUNIOUS", "JETTISON", "KOWTOW",
-        "LUGUBRIOUS", "MENDACIOUS", "NOCTURNAL", "OBLIVION", "PANACEA", "QUANDARY",
-        "RECALCITRANT", "SANCTIMONIOUS", "TREPIDATION", "UNCTUOUS", "VERISIMILITUDE",
-        "WINSOME", "XYLOPHONE", "YOUTHFUL", "ZANY", "ACERBIC", "BENEVOLENT",
-        "CAUSTIC", "DEBILITATE", "EFFERVESCENT", "FASTIDIOUS", "GREGARIOUS", "HAPHAZARD",
-        "IMPERTURBABLE", "JUBILANT", "KINETIC", "LITHE", "MALLEABLE", "NUGATORY",
-        "OBSEQUIOUS", "PERNICIOUS", "QUIXOTIC", "RAUCOUS", "SALIENT", "TRENCHANT",
-        "UNFATHOMABLE", "VICARIOUS", "WISTFUL", "YIELDING", "ZIGZAG", "ADUMBRATE",
-        "BLITHE", "CHOLERIC", "DELETERIOUS", "EUPHEMISM", "FRACTIOUS", "GAUCHE",
-        "HISTRIONIC", "IMPLACABLE", "JINGOISM", "KUDOS", "LASSITUDE", "MAUDLIN",
-        "NEPOTISM", "OBSTREPEROUS", "PALLIATE", "QUELL", "REPROBATE", "SARDONIC",
-        "TEMERITY", "UNDULATE", "VIRULENT", "WAGGISH", "YOKEL", "ZENITH"
+    const themes = [
+        { id: 'default', name: 'Cosmic' },
+        { id: 'ocean', name: 'Ocean' },
+        { id: 'forest', name: 'Forest' },
+        { id: 'cyberpunk', name: 'Cyberpunk' },
+        { id: 'sunset', name: 'Sunset' }
     ];
 
+    const achievementsData = [
+        { id: 'first_scramble', name: 'First Scramble!', unlocked: false },
+        { id: 'word_whiz', name: 'Word Whiz (10 words)', unlocked: false },
+        { id: 'puzzle_pro', name: 'Puzzle Pro (50 words)', unlocked: false },
+        { id: 'master_of_words', name: 'Master of Words (100 words)', unlocked: false },
+        { id: 'level_conqueror', name: 'Level Conqueror (Complete Level 1)', unlocked: false },
+        { id: 'level_10', name: 'Level 10 Master', unlocked: false },
+        { id: 'level_50', name: 'Level 50 Legend', unlocked: false },
+        { id: 'level_100', name: 'Level 100 Champion', unlocked: false },
+        { id: 'level_200', name: 'Ultimate Scrambler (All 200 Levels)', unlocked: false },
+        { id: 'ecp_100', name: 'ECP Novice (100 ECP)', unlocked: false },
+        { id: 'ecp_500', name: 'ECP Apprentice (500 ECP)', unlocked: false },
+        { id: 'ecp_1000', name: 'ECP Master (1000 ECP)', unlocked: false },
+        { id: 'streak_5', name: 'Streak of 5', unlocked: false },
+        { id: 'streak_10', name: 'Streak of 10', unlocked: false },
+        { id: 'share_knowledge', name: 'Share the Knowledge', unlocked: false }
+    ];
 
-    let filteredWords = commonWords.filter(word => word.length >= minLength && word.length <= maxLength);
-    if (filteredWords.length === 0) {
-        // Fallback if no words match criteria, should not happen with good lists
-        console.warn(`No words found for length range ${minLength}-${maxLength}. Using default.`);
-        return "DEFAULT";
+    // ============================================================
+    // 6. SAVE / LOAD
+    // ============================================================
+
+    function saveGame() {
+        localStorage.setItem('scrambleGame', JSON.stringify(gameState));
+        localStorage.setItem('scrambleAchievements', JSON.stringify(achievementsData));
+        // Save word timers
+        localStorage.setItem('scrambleWordTimers', JSON.stringify(wordTimers));
     }
-    return filteredWords[Math.floor(Math.random() * filteredWords.length)];
-}
 
-// Generate all 200 levels with words and timers
-function generateAllWords() {
-    levelsConfig.length = 0; // Clear existing levels
-
-    for (let i = 1; i <= 200; i++) {
-        let numWords;
-        let timer;
-        let minLength, maxLength; // For word selection difficulty
-        let difficultyTag = '';
-
-        if (i <= 40) { // Level 1-40: 2 words, 20 secs, moderately hard
-            numWords = 2;
-            timer = 40;
-            minLength = 4;
-            maxLength = 6;
-            difficultyTag = 'Moderately Hard';
-        } else if (i <= 80) { // Level 41-80: 3 words, 25 secs, getting harder
-            numWords = 3;
-            timer = 60;
-            minLength = 5;
-            maxLength = 8;
-            difficultyTag = 'Getting Harder';
-        } else if (i <= 120) { // Level 81-120: 4 words, 30 secs, hard
-            numWords = 4;
-            timer = 80;
-            minLength = 6;
-            maxLength = 10;
-            difficultyTag = 'Hard';
-        } else if (i <= 160) { // Level 121-160: 5 words, 35 secs, very hard
-            numWords = 5;
-            timer = 100;
-            minLength = 8;
-            maxLength = 12;
-            difficultyTag = 'Very Hard';
-        } else { // Level 161-200: 6 words, 40 secs, extremely hard
-            numWords = 6;
-            timer = 120;
-            minLength = 10;
-            maxLength = 15;
-            difficultyTag = 'Extremely Hard';
+    function loadGame() {
+        const saved = localStorage.getItem('scrambleGame');
+        if (saved) {
+            const parsed = JSON.parse(saved);
+            gameState = { ...gameState, ...parsed };
         }
-
-        let wordsForLevel = [];
-        for (let w = 0; w < numWords; w++) {
-            wordsForLevel.push(getRandomWord(minLength, maxLength).toUpperCase());
+        const savedAchievements = localStorage.getItem('scrambleAchievements');
+        if (savedAchievements) {
+            const parsed = JSON.parse(savedAchievements);
+            achievementsData.forEach((ach, i) => {
+                if (parsed[i]) ach.unlocked = parsed[i].unlocked;
+            });
         }
-
-        levelsConfig.push({
-            level: i,
-            words: wordsForLevel,
-            timer: timer,
-            difficulty: difficultyTag
-        });
+        // Load word timers
+        const savedTimers = localStorage.getItem('scrambleWordTimers');
+        if (savedTimers) {
+            wordTimers = JSON.parse(savedTimers);
+        }
+        updateAllEcp();
     }
-    // console.log("Generated levelsConfig:", levelsConfig); // For debugging
-}
 
+    // ============================================================
+    // 7. SCREEN MANAGEMENT
+    // ============================================================
 
-function renderLevelSelection() {
-    levelGrid.innerHTML = '';
-    for (let i = 1; i <= 200; i++) {
-        const levelButton = document.createElement('button');
-        levelButton.classList.add('level-btn');
-        levelButton.dataset.level = i;
+    function showScreen(screen) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        screen.classList.add('active');
+        if (screen === levelScreen) renderPuzzleGrid();
+    }
 
-        const isPreviousLevelCompleted = (i === 1) || gameData.completedLevels[i - 1];
-        const isLevelCompleted = gameData.completedLevels[i];
-        const isLocked = !isPreviousLevelCompleted && !isLevelCompleted; // A level is locked if previous is not completed AND it's not already completed
+    function showModal(modal) { modal.classList.add('active'); }
+    function hideModal(modal) { modal.classList.remove('active'); }
 
-        if (isLocked) {
-            levelButton.classList.add('locked');
-            levelButton.disabled = true; // Disable the button
-            // Add a lock icon (using emoji for simplicity, could be Font Awesome)
-            levelButton.innerHTML = `<span class="lock-icon">🔒</span> Level ${i}`;
+    // ============================================================
+    // 8. SCRAMBLE
+    // ============================================================
+
+    function scrambleWord(word) {
+        let arr = word.split('');
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        let scrambled = arr.join('');
+        if (scrambled === word && word.length > 1) {
+            return scrambleWord(word);
+        }
+        return scrambled;
+    }
+
+    // ============================================================
+    // 9. TIMER
+    // ============================================================
+
+    function startTimer() {
+        stopTimer();
+        const levelConfig = levelsConfig[gameState.currentLevel - 1];
+        const timerKey = `${gameState.currentLevel}_${gameState.currentWordIndex}`;
+        
+        // Check if we have a saved time for this word
+        if (wordTimers[timerKey] !== undefined && wordTimers[timerKey] > 0) {
+            timeLeft = wordTimers[timerKey];
         } else {
-            levelButton.textContent = `Level ${i}`;
-            if (isLevelCompleted) {
-                levelButton.classList.add('completed');
-            }
-            levelButton.disabled = false; // Ensure it's enabled if not locked
+            timeLeft = levelConfig ? levelConfig.timer : 30;
         }
+        
+        timerValue.textContent = timeLeft;
+        timerDisplay.classList.remove('low');
 
-        levelButton.addEventListener('click', () => {
-            if (!isLocked) { // Double-check lock status on click
-                loadLevel(i);
-            } else {
-                displayMessage('Complete the previous level to unlock this one!', 'failure');
+        timerInterval = setInterval(() => {
+            timeLeft--;
+            timerValue.textContent = timeLeft;
+            
+            // Save current time to wordTimers every second
+            const saveKey = `${gameState.currentLevel}_${gameState.currentWordIndex}`;
+            wordTimers[saveKey] = timeLeft;
+            
+            if (timeLeft <= 5) timerDisplay.classList.add('low');
+            if (timeLeft <= 0) {
+                stopTimer();
+                handleTimeOut();
             }
-        });
-        levelGrid.appendChild(levelButton);
-    }
-}
-
-// --- Main Game Flow ---
-
-function loadLevel(levelNum) {
-    const levelConfig = levelsConfig[levelNum - 1]; // levelsConfig is 0-indexed
-    if (!levelConfig) {
-        console.error("Level configuration not found for level:", levelNum);
-        displayMessage("Error loading level. Please try again.", "failure");
-        return;
+        }, 1000);
     }
 
-    // Stop any ongoing timer from previous game session
-    clearInterval(timerInterval);
-
-    gameData.currentLevelNum = levelNum;
-    gameData.currentWordIndex = 0; // Start with the first word of the level
-    currentLevelWords = [...levelConfig.words]; // Copy array to modify it
-    timeLeft = levelConfig.timer;
-
-    showScreen(mainGameScreen);
-    startNewWord();
-    updateGameDisplay();
-    startTimer();
-}
-
-function startNewWord() {
-    if (gameData.currentWordIndex < currentLevelWords.length) {
-        correctWord = currentLevelWords[gameData.currentWordIndex];
-        scrambledWordDisplay.textContent = scrambleWord(correctWord);
-        userInput.value = ''; // Clear input field
-        displayMessage(''); // Clear any previous messages
-        updateGameDisplay();
-        restartTimer(); // Restart timer for each new word in a level
-    } else {
-        // All words in the level completed
-        gameData.completedLevels[gameData.currentLevelNum] = true;
-        saveGameData();
-        checkAchievements();
-        displayMessage(`Level ${gameData.currentLevelNum} Completed!`, 'success');
-        clearInterval(timerInterval); // Stop timer when level is fully completed
-        setTimeout(() => {
-            showScreen(levelSelectionScreen);
-            renderLevelSelection(); // Refresh level buttons to show completion/unlock next
-        }, 1500);
-    }
-}
-
-function updateGameDisplay() {
-    ecpDisplay.textContent = gameData.currentECP;
-    timerDisplay.textContent = timeLeft;
-    currentLevelInfo.textContent = `Level ${gameData.currentLevelNum} - Word ${gameData.currentWordIndex + 1} of ${currentLevelWords.length}`;
-
-    // Disable hint/reveal if ECP is too low
-    hintButton.disabled = gameData.currentECP < 20;
-    revealButton.disabled = gameData.currentECP < 40;
-}
-
-
-// --- Timer Logic ---
-
-function startTimer() {
-    clearInterval(timerInterval); // Clear any existing timer
-    timerInterval = setInterval(() => {
-        timeLeft--;
-        timerDisplay.textContent = timeLeft;
-
-        if (timeLeft <= 0) {
+    function stopTimer() {
+        if (timerInterval) {
             clearInterval(timerInterval);
-            handleLevelFailure();
+            timerInterval = null;
         }
-    }, 1000);
-}
-
-function restartTimer() {
-    clearInterval(timerInterval);
-    const levelConfig = levelsConfig[gameData.currentLevelNum - 1];
-    timeLeft = levelConfig ? levelConfig.timer : defaultAttemptTime;
-    timerDisplay.textContent = timeLeft;
-    startTimer();
-}
-
-function handleLevelFailure() {
-    updateECP(-3); // -3 ECP for every failure
-    gameData.totalFailures++;
-    saveGameData();
-    displayMessage(`Time's up! You failed Level ${gameData.currentLevelNum}.`, 'failure');
-    clearInterval(timerInterval); // Ensure timer stops
-
-    setTimeout(() => {
-        showScreen(levelSelectionScreen); // Redirect to level selection
-        renderLevelSelection(); // Refresh level buttons state
-    }, 2500);
-}
-
-
-// --- Event Listeners ---
-
-// NEW: Back to Games button
-backToGamesButton.addEventListener('click', () => {
-    // Redirect to your main game intro page
-    window.location.href = 'gameintro.html'; // Assuming this is the path
-});
-
-startGameButton.addEventListener('click', () => {
-    showScreen(levelSelectionScreen);
-    renderLevelSelection();
-    updateECP(0)
-});
-
-viewHistoryIntroButton.addEventListener('click', () => {
-    showScreen(historyScreen);
-    renderHistoryScreen();
-});
-
-// NEW: Back to Intro button
-backToIntroButton.addEventListener('click', () => {
-    showScreen(gameIntroScreen);
-    updateECP(0);
-});
-
-selectThemeButton.addEventListener('click', () => {
-    showScreen(themeSelectionScreen);
-    renderThemeSelection();
-});
-
-viewHistoryLevelsButton.addEventListener('click', () => {
-    showScreen(historyScreen);
-    renderHistoryScreen();
-});
-
-backToLevelsFromGameButton.addEventListener('click', () => {
-    clearInterval(timerInterval); // Stop timer when leaving game
-    showScreen(levelSelectionScreen);
-    renderLevelSelection();
-    updateECP(0);
-});
-
-backToLevelsFromHistoryButton.addEventListener('click', () => {
-    showScreen(levelSelectionScreen);
-    renderLevelSelection();
-    updateECP(0);
-});
-
-backToLevelsFromThemeButton.addEventListener('click', () => {
-    showScreen(levelSelectionScreen);
-    renderLevelSelection();
-    updateECP(0);
-});
-
-
-// ... (rest of your script.js code above) ...
-
-submitAnswerButton.addEventListener('click', () => {
-    const userAnswer = userInput.value.trim().toUpperCase();
-    if (userAnswer === correctWord) {
-        // Check if the level is being completed for the first time
-        if (!gameData.completedLevels[gameData.currentLevelNum]) {
-            updateECP(30); // ONLY award ECP if completing for the first time
-            displayMessage('Correct! Level completed!', 'success'); // Changed message
-        } else {
-            // Level already completed, no ECP awarded
-            displayMessage('Correct! (Level already completed)', 'info',); // Informative message
-        }
-
-        gameData.totalUnscrambled++;
-        gameData.currentWordIndex++; // Move to next word
-
-        // Mark the level as completed AFTER the final word of the level
-        if (gameData.currentWordIndex === currentLevelWords.length) {
-            gameData.completedLevels[gameData.currentLevelNum] = true;
-            checkAchievements(); // Check achievements only after level is marked completed
-        }
-
-        saveGameData(); // Save game data after all updates
-        setTimeout(startNewWord, 500); // Load next word or finish level after a brief pause
-    } else {
-        updateECP(-3); // Still deduct ECP for incorrect answers, regardless of first time play
-        gameData.totalFailures++;
-        displayMessage('Incorrect! Try again.', 'failure');
-        saveGameData();
-        // Timer continues as per your requirement
+        timerDisplay.classList.remove('low');
     }
-});
 
-// ... (rest of your script.js code below) ...
-
-hintButton.addEventListener('click', () => {
-    if (gameData.currentECP >= 20) {
-        updateECP(-20); // 20 ECP for hint
-        giveHint();
-        // The displayMessage in giveHint() will handle the feedback
-        updateGameDisplay(); // Update ECP display and button states
-    } else {
-        displayMessage('Not enough ECP for a hint!', 'failure');
-    }
-});
-
-revealButton.addEventListener('click', () => {
-    if (gameData.currentECP >= 40) {
-        updateECP(-40); // 40 ECP for reveal
-        displayMessage(`The word was: ${correctWord}`, 'info');
-        userInput.value = correctWord; // Fill input with correct word
-        gameData.totalFailures++; // Reveal counts as a failure, as per game logic "every failure"
-        saveGameData();
-        clearInterval(timerInterval); // Stop timer
-        // Directly call handleLevelFailure after a short delay
+    function handleTimeOut() {
+        deductEcp(ECP.COSTS.SCRAMBLE_WRONG, 'Time out penalty');
+        feedbackMessage.textContent = `⏰ Time's up! -${ECP.COSTS.SCRAMBLE_WRONG} ECP`;
+        feedbackMessage.className = 'feedback-message error';
+        gameState.totalFailures++;
+        guessInput.disabled = true;
+        submitGuessBtn.disabled = true;
+        stopTimer();
+        
+        // Clear saved time for this word on timeout
+        const timerKey = `${gameState.currentLevel}_${gameState.currentWordIndex}`;
+        delete wordTimers[timerKey];
+        
         setTimeout(() => {
-            handleLevelFailure(); // This will deduct ECP again for the failure, but the user explicitly asked for -3 ECP per failure and reveal counts as failure.
-                                  // If you only want -40 ECP for reveal and no additional -3, remove the updateECP(-3) from handleLevelFailure.
-                                  // As per "3. ECP for every failure" and "REVEAL button will cost 40 ECP.", I'm interpreting reveal as a type of failure.
+            showScreen(levelScreen);
+            renderPuzzleGrid();
+            resetGameUI();
         }, 1500);
-    } else {
-        displayMessage('Not enough ECP to reveal!', 'failure');
     }
-});
-shuffleButton.addEventListener('click', () => {
-    // Re-scramble the correct word and update the display
-    scrambledWordDisplay.textContent = scrambleWord(correctWord);
-    displayMessage('Word shuffled!', 'info'); // Provide feedback
-});
 
-shareButton.addEventListener('click', () => {
-    const textToShare = `I'm stuck on this word in Word Scramble: "${scrambledWordDisplay.textContent}"! Can you help me?`;
-    if (navigator.share) {
-        navigator.share({
-            title: 'Word Scramble Help',
-            text: textToShare,
-        }).then(() => {
-            console.log('Shared successfully!');
-            // Add achievement logic here if you want to track shares
-            // gameData.achievements.shareKnowledge = true; // This specific ID
-            // checkAchievements();
-            displayMessage('Shared!', 'success');
-        }).catch((error) => {
-            console.error('Error sharing:', error);
-            displayMessage('Failed to share.', 'failure');
-        });
-    } else {
-        // Fallback for browsers that don't support Web Share API
-        navigator.clipboard.writeText(textToShare).then(() => {
-            displayMessage('Scrambled word copied to clipboard!', 'info');
-            // gameData.achievements.shareKnowledge = true; // Still counts as sharing intent
-            // checkAchievements();
-        }).catch(err => {
-            console.error('Failed to copy: ', err);
-            displayMessage('Could not copy to clipboard.', 'failure');
-        });
+    function resetGameUI() {
+        guessInput.disabled = false;
+        submitGuessBtn.disabled = false;
+        guessInput.value = '';
+        feedbackMessage.textContent = '';
+        feedbackMessage.className = 'feedback-message';
     }
-});
 
+    // ============================================================
+    // 10. LOAD LEVEL
+    // ============================================================
 
-// --- Hint Logic ---
-let hintGivenCount = 0; // To track which hint type to give
+    function loadLevel(level) {
+        const levelConfig = levelsConfig[level - 1];
+        if (!levelConfig) return;
 
-function giveHint() {
-    let hintText = '';
-    const currentScrambled = scrambledWordDisplay.textContent;
+        gameState.currentLevel = level;
+        gameState.currentWordIndex = 0;
+        currentWords = [...levelConfig.words];
+        currentStreak = 0;
 
-    // Cycle through hint types
-    switch (hintGivenCount % 4) {
-        case 0: // Show first letter
-            hintText = `First letter: ${correctWord.charAt(0)}`;
-            break;
-        case 1: // Show second letter
-            if (correctWord.length > 1) {
-                hintText = `Second letter: ${correctWord.charAt(1)}`;
+        showScreen(gameScreen);
+        loadWord();
+        updateAllEcp();
+        saveGame();
+    }
+
+    function loadWord() {
+        const levelConfig = levelsConfig[gameState.currentLevel - 1];
+        if (!levelConfig) {
+            showScreen(levelScreen);
+            renderPuzzleGrid();
+            return;
+        }
+
+        if (gameState.currentWordIndex >= levelConfig.words.length) {
+            const allCompleted = levelConfig.words.every((_, i) => {
+                return gameState.completedPuzzles[`${gameState.currentLevel}_${i}`];
+            });
+
+            if (allCompleted) {
+                feedbackMessage.textContent = `🏆 Level ${gameState.currentLevel} Complete! +${ECP.REWARDS.LEVEL_COMPLETE} ECP`;
+                feedbackMessage.className = 'feedback-message success';
+                addEcp(ECP.REWARDS.LEVEL_COMPLETE, `Word Scramble - Level ${gameState.currentLevel} complete`);
+                // Clear timers for this level
+                Object.keys(wordTimers).forEach(key => {
+                    if (key.startsWith(`${gameState.currentLevel}_`)) {
+                        delete wordTimers[key];
+                    }
+                });
+                setTimeout(() => {
+                    showScreen(levelScreen);
+                    renderPuzzleGrid();
+                    resetGameUI();
+                }, 1500);
+            }
+            return;
+        }
+
+        currentCorrectWord = levelConfig.words[gameState.currentWordIndex];
+        currentScrambled = scrambleWord(currentCorrectWord);
+        scrambledWord.textContent = currentScrambled;
+        guessInput.value = '';
+        guessInput.disabled = false;
+        submitGuessBtn.disabled = false;
+        feedbackMessage.textContent = '';
+        feedbackMessage.className = 'feedback-message';
+
+        const total = levelConfig.words.length;
+        wordCounter.textContent = `Word ${gameState.currentWordIndex + 1} / ${total}`;
+        gameLevelDisplay.textContent = `Level ${gameState.currentLevel}`;
+
+        // Previous button
+        if (prevWordBtn) {
+            prevWordBtn.disabled = (gameState.currentWordIndex === 0);
+        }
+
+        // Next button
+        if (nextWordBtn) {
+            const key = `${gameState.currentLevel}_${gameState.currentWordIndex}`;
+            const isCompleted = gameState.completedPuzzles[key];
+            const isLast = (gameState.currentWordIndex === levelConfig.words.length - 1);
+        
+            if (isCompleted && !isLast) {
+                nextWordBtn.style.display = 'inline-flex';
+                nextWordBtn.disabled = false;
             } else {
-                hintText = `Word is too short for a second letter hint. Meaning: ${getWordMeaning(correctWord)}`;
+                nextWordBtn.style.display = 'none';
             }
-            break;
-        case 2: // Show last letter
-            hintText = `Last letter: ${correctWord.charAt(correctWord.length - 1)}`;
-            break;
-        case 3: // Say the meaning of the word (placeholder)
-            hintText = `Meaning: ${getWordMeaning(correctWord)}`;
-            break;
-    }
-    displayMessage(hintText, 'info');
-    hintGivenCount++;
-}
+        }
 
-// Placeholder for getting word meaning. In a real app, you'd use a dictionary API.
-function getWordMeaning(word) {
-    const meanings = {
-        "APPLE": "A round fruit with crisp flesh and a green, red, or yellow skin.",
-        "TABLE": "A piece of furniture with a flat top and one or more legs, providing a level surface for eating, writing, or working.",
-        "CHAIR": "A separate seat for one person, typically with a back and four legs.",
-        "HOUSE": "A building for human habitation, especially one that is lived in by a family or small group of people.",
-        "WATER": "A colorless, transparent, odorless liquid that forms the seas, lakes, rivers, and rain and is the basis of the fluids of living organisms.",
-        "COMPUTER": "An electronic device for storing and processing data, typically in binary form, according to instructions given to it in a variable program.",
-        "BUTTERFLY": "An insect with four large, often brightly colored wings, a slender body, and antennae with clubbed ends.",
-        "ELEPHANT": "A very large plant-eating mammal with a prehensile trunk, long curved tusks, and large ears, native to Africa and southern Asia.",
-        "MOUNTAIN": "A large natural elevation of the earth's surface rising abruptly from the surrounding level; a large steep hill.",
-        "OCEANIC": "Of or relating to the ocean.",
-        "JOURNEY": "An act of traveling from one place to another.",
-        "FANTASY": "The faculty or activity of imagining things, especially impossible or improbable things.",
-        "WHISPER": "Speak very softly using one's breath rather than one's vocal cords, especially for the sake of secrecy.",
-        "PARADISE": "An ideal or idyllic place or state.",
-        "HARMONY": "The combination of simultaneously sounded musical notes to produce chords and chord progressions having a pleasing effect.",
-        "ENDEAVOR": "An attempt to achieve a goal.",
-        "MAJESTIC": "Having or showing impressive beauty or dignity.",
-        "SERENDIPITY": "The occurrence and development of events by chance in a happy or beneficial way.",
-        "EPHEMERAL": "Lasting for a very short time.",
-        "LUMINOUS": "Emitting or reflecting light; shining.",
-        "INNOVATION": "The action or process of innovating.",
-        "QUINTESSENTIAL": "Representing the most perfect or typical example of a quality or class.",
-        "EFFULGENT": "Shining brightly; radiant.",
-        "CACUOUS": "Lacking content; empty (less common word, for higher levels).",
-        "JUXTAPOSE": "Place or deal with close together for contrasting effect.",
-        "ONOMATOPOEIA": "The formation of a word from a sound associated with what is named (e.g., cuckoo, sizzle).",
-        "SUPERCALIFRAGILISTICEXPIALIDOCIOUS": "Extraordinarily good; wonderful (from Mary Poppins).",
-        "UNCOPYRIGHTABLE": "Not able to be copyrighted.",
-        "DEOXYRIBONUCLEIC": "Relating to deoxyribonucleic acid, the main constituent of chromosomes and the carrier of genetic information.",
-        "SYNCHRONIZE": "Cause to occur or operate at the same time or rate.",
-        "AMBIGUOUS": "Open to more than one interpretation; having a double meaning.",
-        "CACOPHONY": "A harsh, discordant mixture of sounds.",
-        "DIAPHANOUS": "Light, delicate, and translucent.",
-        "EQUILIBRIUM": "A state in which opposing forces or influences are balanced.",
-        "FUGACIOUS": "Tending to disappear; fleeting.",
-        "GALUMPHING": "Move in a clumsy, ponderous, or noisy manner.",
-        "HETEROGENEOUS": "Diverse in character or content.",
-        "INCONSPICUOUS": "Not clearly visible or attracting attention.",
-        "JOCULAR": "Fond of or characterized by joking; humorous or playful.",
-        "KALEIDOSCOPE": "A constantly changing pattern or sequence of elements.",
-        "LACONIC": "Using very few words.",
-        "MAELSTROM": "A powerful whirlpool in the sea or a river.",
-        "NEFARIOUS": "Wicked or criminal.",
-        "OBFUSCATE": "Make obscure, unclear, or unintelligible.",
-        "PARSIMONIOUS": "Unwilling to spend money or use resources; stingy or frugal.",
-        "QUINTESSENCE": "The most perfect or typical example of a quality or class.",
-        "REDOLENT": "Strongly reminiscent or suggestive of (something).",
-        "SAGACIOUS": "Having or showing keen mental discernment and good judgment; shrewd.",
-        "TACITURN": "Reserved or uncommunicative in speech; saying little.",
-        "UBIQUITOUS": "Present, appearing, or found everywhere.",
-        "VACILLATE": "Alternate or waver between different opinions or actions; be indecisive.",
-        "WAINSCOT": "An area of wooden paneling on the lower part of the walls of a room.",
-        "XENOPHOBIA": "Dislike of or prejudice against people from other countries.",
-        "ZEPHYR": "A soft, gentle breeze.",
-        "ABERRATION": "A departure from what is normal, usual, or expected, typically an unwelcome one.",
-        "BELLIGERENT": "Hostile and aggressive.",
-        "CAPRICIOUS": "Given to sudden and unaccountable changes of mood or behavior.",
-        "DESULTORY": "Lacking a plan, purpose, or enthusiasm.",
-        "EFFRONTERY": "Impertinent behavior.",
-        "FLUMMOX": "Perplex (someone) to the extent of rendering them speechless.",
-        "GARRULOUS": "Excessively talkative, especially on trivial matters.",
-        "HEGEMONY": "Leadership or dominance, especially by one state or social group over others.",
-        "IMPECUNIOUS": "Having little or no money.",
-        "JETTISON": "Throw or drop (something) from an aircraft or ship.",
-        "KOWTOW": "Act in an excessively subservient manner.",
-        "LUGUBRIOUS": "Looking or sounding sad and dismal.",
-        "MENDACIOUS": "Not telling the truth; lying.",
-        "NOCTURNAL": "Done, occurring, or active at night.",
-        "OBLIVION": "The state of being unaware or unconscious of what is happening around one.",
-        "PANACEA": "A solution or remedy for all difficulties or diseases.",
-        "QUANDARY": "A state of perplexity or uncertainty over what to do in a difficult situation.",
-        "RECALCITRANT": "Having an obstinately uncooperative attitude toward authority or discipline.",
-        "SANCTIMONIOUS": "Making a show of being morally superior to other people.",
-        "TREPIDATION": "A feeling of fear or anxiety about something that may happen.",
-        "UNCTUOUS": "Excessively or ingratiatingly flattering; oily.",
-        "VERISIMILITUDE": "The appearance of being true or real.",
-        "WINSOME": "Attractive or appealing in a fresh, innocent way.",
-        "XYLOPHONE": "A musical instrument played by striking a row of wooden bars of different lengths with mallets.",
-        "YOUTHFUL": "Having the qualities of youth.",
-        "ZANY": "Amusingly unconventional and idiosyncratic.",
-        "ADUMBRATE": "Report or represent in outline.",
-        "BLITHE": "Showing a casual and cheerful indifference considered to be callous or improper.",
-        "CHOLERIC": "Bad-tempered or irritable.",
-        "DELETERIOUS": "Causing harm or damage.",
-        "EUPHEMISM": "A mild or indirect word or expression substituted for one considered to be too harsh or blunt.",
-        "FRACTIOUS": "Irritable and quarrelsome.",
-        "GAUCHE": "Lacking ease or grace; unsophisticated and socially awkward.",
-        "HISTRIONIC": "Overly theatrical or melodramatic in character or style.",
-        "IMPLACABLE": "Unable to be appeased or mollified.",
-        "JINGOISM": "Extreme patriotism, especially in the form of aggressive or warlike foreign policy.",
-        "KUDOS": "Praise and honor received for an achievement.",
-        "LASSITUDE": "A state of physical or mental weariness; lack of energy.",
-        "MAUDLIN": "Self-pityingly or tearfully sentimental, often through drunkenness.",
-        "NEPOTISM": "The practice among those with power or influence of favoring relatives or friends, especially by giving them jobs.",
-        "OBSTREPEROUS": "Noisy and difficult to control.",
-        "PALLIATE": "Make (a disease or its symptoms) less severe or unpleasant without removing the cause.",
-        "QUELL": "Put an end to (a rebellion or other disorder), typically by the use of force.",
-        "REPROBATE": "An unprincipled person (often used humorously or as a term of endearment).",
-        "SARDONIC": "Grimly mocking or cynical.",
-        "TEMERITY": "Excessive confidence or boldness; audacity.",
-        "UNDULATE": "Move with a smooth up-and-down motion.",
-        "VIRULENT": "Extremely severe or harmful in its effects.",
-        "WAGGISH": "Humorous in a playful, mischievous, or facetious manner.",
-        "YOKEL": "An uneducated and unsophisticated person from the countryside.",
-        "ZENITH": "The time at which something is most powerful or successful."
-    };
-    return meanings[word] || "No meaning found for this word. It's a challenging one!";
-}
-
-
-// --- History and Achievements ---
-
-function renderHistoryScreen() {
-    // Update stats display
-    statsUnscrambled.textContent = gameData.totalUnscrambled;
-    statsFailures.textContent = gameData.totalFailures;
-    statsHighestEcp.textContent = gameData.highestECP;
-
-    // Render achievements
-    achievementsList.innerHTML = '';
-    achievementsConfig.forEach(ach => {
-        const li = document.createElement('li');
-        li.textContent = ach.name;
-        const statusSpan = document.createElement('span');
-        if (gameData.achievements[ach.id]) {
-            statusSpan.textContent = 'Unlocked';
-            li.classList.add('completed-achievement');
+        const key = `${gameState.currentLevel}_${gameState.currentWordIndex}`;
+        if (gameState.completedPuzzles[key]) {
+            guessInput.disabled = true;
+            submitGuessBtn.disabled = true;
+            feedbackMessage.textContent = '✅ Already completed!';
+            feedbackMessage.className = 'feedback-message success';
+            stopTimer();
         } else {
-            statusSpan.textContent = 'Locked';
-            li.classList.remove('completed-achievement');
+            startTimer();
         }
-        li.appendChild(statusSpan);
-        achievementsList.appendChild(li);
-    });
-}
 
-function checkAchievements() {
-    achievementsConfig.forEach(ach => {
-        if (!gameData.achievements[ach.id] && ach.condition(gameData)) {
-            gameData.achievements[ach.id] = true;
-            updateECP(100); // 100 ECP per achievement completion
-            displayMessage(`Achievement Unlocked: ${ach.name}! (+100 ECP)`, 'success');
-            saveGameData();
-            // Re-render history screen if currently visible
-            if (historyScreen.classList.contains('active')) {
-                renderHistoryScreen();
+        updateHintRevealButtons();
+        saveGame();
+    }
+
+    function updateHintRevealButtons() {
+        const ecp = getECP();
+        hintCost.textContent = `${ecp >= ECP.COSTS.SCRAMBLE_HINT ? ECP.COSTS.SCRAMBLE_HINT : '🔒 ' + ECP.COSTS.SCRAMBLE_HINT} ECP`;
+        revealCost.textContent = `${ecp >= ECP.COSTS.SCRAMBLE_REVEAL ? ECP.COSTS.SCRAMBLE_REVEAL : '🔒 ' + ECP.COSTS.SCRAMBLE_REVEAL} ECP`;
+        hintBtn.disabled = ecp < ECP.COSTS.SCRAMBLE_HINT;
+        revealBtn.disabled = ecp < ECP.COSTS.SCRAMBLE_REVEAL;
+    }
+
+    // ============================================================
+    // 11. SUBMIT GUESS
+    // ============================================================
+
+    function submitGuess() {
+        const guess = guessInput.value.trim().toUpperCase();
+        if (!guess) {
+            feedbackMessage.textContent = 'Please enter a word!';
+            feedbackMessage.className = 'feedback-message error';
+            return;
+        }
+
+        const key = `${gameState.currentLevel}_${gameState.currentWordIndex}`;
+        if (gameState.completedPuzzles[key]) {
+            feedbackMessage.textContent = 'Already completed!';
+            feedbackMessage.className = 'feedback-message success';
+            return;
+        }
+
+        if (guess === currentCorrectWord) {
+            feedbackMessage.textContent = `🎉 Correct! +${ECP.REWARDS.CORRECT_ANSWER} ECP`;
+            feedbackMessage.className = 'feedback-message success';
+            addEcp(ECP.REWARDS.CORRECT_ANSWER, 'Word Scramble - Correct word');
+            gameState.totalUnscrambled++;
+            gameState.completedPuzzles[key] = true;
+            currentStreak++;
+
+            guessInput.disabled = true;
+            submitGuessBtn.disabled = true;
+            stopTimer();
+
+            // Clear saved time for this word
+            const timerKey = `${gameState.currentLevel}_${gameState.currentWordIndex}`;
+            delete wordTimers[timerKey];
+
+            checkAchievements();
+
+            setTimeout(() => {
+                gameState.currentWordIndex++;
+                loadWord();
+                saveGame();
+            }, 1000);
+        } else {
+            feedbackMessage.textContent = '❌ Wrong word. Try again!';
+            feedbackMessage.className = 'feedback-message error';
+            deductEcp(ECP.COSTS.SCRAMBLE_WRONG, 'Word Scramble - Wrong guess');
+            gameState.totalFailures++;
+            currentStreak = 0;
+            saveGame();
+        }
+    }
+
+    // ============================================================
+    // 12. SHUFFLE
+    // ============================================================
+
+    function shuffleWord() {
+        if (guessInput.disabled) return;
+        currentScrambled = scrambleWord(currentCorrectWord);
+        scrambledWord.textContent = currentScrambled;
+        feedbackMessage.textContent = '🔄 Shuffled!';
+        feedbackMessage.className = 'feedback-message hint';
+        setTimeout(() => {
+            if (feedbackMessage.textContent === '🔄 Shuffled!') {
+                feedbackMessage.textContent = '';
+                feedbackMessage.className = 'feedback-message';
+            }
+        }, 1000);
+    }
+
+    // ============================================================
+    // 13. HINT & REVEAL
+    // ============================================================
+
+    function giveHint() {
+        if (getECP() < ECP.COSTS.SCRAMBLE_HINT) {
+            feedbackMessage.textContent = `Not enough ECP for a hint! (${ECP.COSTS.SCRAMBLE_HINT} ECP needed)`;
+            feedbackMessage.className = 'feedback-message error';
+            return;
+        }
+
+        const word = currentCorrectWord;
+        let hint = `First letter: ${word[0]}`;
+        if (word.length > 3) {
+            hint += `, Last letter: ${word[word.length - 1]}`;
+        }
+        if (word.length > 5) {
+            hint += `, ${word.length} letters total`;
+        }
+
+        feedbackMessage.textContent = `💡 ${hint}`;
+        feedbackMessage.className = 'feedback-message hint';
+        deductEcp(ECP.COSTS.SCRAMBLE_HINT, 'Word Scramble - Hint used');
+        saveGame();
+    }
+
+    function revealAnswer() {
+        if (getECP() < ECP.COSTS.SCRAMBLE_REVEAL) {
+            feedbackMessage.textContent = `Not enough ECP to reveal! (${ECP.COSTS.SCRAMBLE_REVEAL} ECP needed)`;
+            feedbackMessage.className = 'feedback-message error';
+            return;
+        }
+
+        const key = `${gameState.currentLevel}_${gameState.currentWordIndex}`;
+        if (gameState.completedPuzzles[key]) {
+            feedbackMessage.textContent = 'Already completed!';
+            feedbackMessage.className = 'feedback-message success';
+            return;
+        }
+
+        feedbackMessage.textContent = `👁️ The word is: ${currentCorrectWord}`;
+        feedbackMessage.className = 'feedback-message hint';
+        guessInput.value = currentCorrectWord;
+        deductEcp(ECP.COSTS.SCRAMBLE_REVEAL, 'Word Scramble - Reveal used');
+        gameState.completedPuzzles[key] = true;
+        gameState.totalFailures++;
+        currentStreak = 0;
+        guessInput.disabled = true;
+        submitGuessBtn.disabled = true;
+        stopTimer();
+        
+        // Clear saved time for this word
+        const timerKey = `${gameState.currentLevel}_${gameState.currentWordIndex}`;
+        delete wordTimers[timerKey];
+        
+        saveGame();
+
+        setTimeout(() => {
+            gameState.currentWordIndex++;
+            loadWord();
+            saveGame();
+        }, 1500);
+    }
+
+    // ============================================================
+    // 14. PUZZLE GRID
+    // ============================================================
+
+    function renderPuzzleGrid() {
+        const levelConfig = levelsConfig[gameState.currentLevel - 1];
+        if (!levelConfig) {
+            console.error('No level config found for level:', gameState.currentLevel);
+            puzzleGrid.innerHTML = '<p style="color: var(--nebula-rose); text-align: center; padding: 20px;">Error loading level data.</p>';
+            return;
+        }
+
+        puzzleGrid.innerHTML = '';
+        currentLevelDisplay.textContent = `Level ${gameState.currentLevel}`;
+
+        levelConfig.words.forEach((word, index) => {
+            const box = document.createElement('div');
+            box.classList.add('puzzle-box');
+            const key = `${gameState.currentLevel}_${index}`;
+
+            if (gameState.completedPuzzles[key]) {
+                box.classList.add('completed');
+            } else {
+                const isFirst = index === 0;
+                const prevKey = `${gameState.currentLevel}_${index - 1}`;
+                const isPrevCompleted = gameState.completedPuzzles[prevKey];
+                const isPrevLevelCompleted = gameState.currentLevel === 1 ||
+                    levelsConfig[gameState.currentLevel - 2].words.every((_, i) => {
+                        return gameState.completedPuzzles[`${gameState.currentLevel - 1}_${i}`];
+                    });
+
+                if ((isFirst && isPrevLevelCompleted) || (isPrevCompleted && isPrevLevelCompleted)) {
+                    box.classList.add('current');
+                    box.textContent = index + 1;
+                    box.addEventListener('click', () => {
+                        gameState.currentWordIndex = index;
+                        currentWords = [...levelConfig.words];
+                        currentStreak = 0;
+                        showScreen(gameScreen);
+                        loadWord();
+                        saveGame();
+                    });
+                } else {
+                    box.classList.add('locked');
+                }
+            }
+
+            puzzleGrid.appendChild(box);
+        });
+
+        prevLevelBtn.disabled = gameState.currentLevel === 1;
+        const allCompleted = levelConfig.words.every((_, i) => {
+            return gameState.completedPuzzles[`${gameState.currentLevel}_${i}`];
+        });
+        nextLevelBtn.disabled = gameState.currentLevel === levelsConfig.length || !allCompleted;
+
+        updateAllEcp();
+    }
+
+    // ============================================================
+    // 15. ACHIEVEMENTS
+    // ============================================================
+
+    function checkAchievements() {
+        if (gameState.totalUnscrambled >= 1) unlockAchievement('first_scramble');
+        if (gameState.totalUnscrambled >= 10) unlockAchievement('word_whiz');
+        if (gameState.totalUnscrambled >= 50) unlockAchievement('puzzle_pro');
+        if (gameState.totalUnscrambled >= 100) unlockAchievement('master_of_words');
+
+        const level1Config = levelsConfig[0];
+        if (level1Config) {
+            const all = level1Config.words.every((_, i) => gameState.completedPuzzles[`1_${i}`]);
+            if (all) unlockAchievement('level_conqueror');
+        }
+        if (gameState.completedPuzzles[`10_${levelsConfig[9].words.length - 1}`]) unlockAchievement('level_10');
+        if (gameState.completedPuzzles[`50_${levelsConfig[49].words.length - 1}`]) unlockAchievement('level_50');
+        if (gameState.completedPuzzles[`100_${levelsConfig[99].words.length - 1}`]) unlockAchievement('level_100');
+
+        const allLevels = levelsConfig.every((l, li) => {
+            return l.words.every((_, wi) => gameState.completedPuzzles[`${li + 1}_${wi}`]);
+        });
+        if (allLevels) unlockAchievement('level_200');
+
+        const ecp = getECP();
+        if (ecp >= 100) unlockAchievement('ecp_100');
+        if (ecp >= 500) unlockAchievement('ecp_500');
+        if (ecp >= 1000) unlockAchievement('ecp_1000');
+
+        if (currentStreak >= 5) unlockAchievement('streak_5');
+        if (currentStreak >= 10) unlockAchievement('streak_10');
+
+        saveGame();
+        renderAchievements();
+    }
+
+    function unlockAchievement(id) {
+        const ach = achievementsData.find(a => a.id === id);
+        if (ach && !ach.unlocked) {
+            ach.unlocked = true;
+            addEcp(ECP.REWARDS.ACHIEVEMENT, `Word Scramble - Achievement: ${ach.name}`);
+            feedbackMessage.textContent = `🏆 Achievement Unlocked: ${ach.name}! +${ECP.REWARDS.ACHIEVEMENT} ECP`;
+            feedbackMessage.className = 'feedback-message success';
+            setTimeout(() => {
+                if (feedbackMessage.textContent.includes('Achievement Unlocked')) {
+                    feedbackMessage.textContent = '';
+                    feedbackMessage.className = 'feedback-message';
+                }
+            }, 3000);
+        }
+    }
+
+    function renderAchievements() {
+        achievementsList.innerHTML = '';
+        achievementsData.forEach(ach => {
+            const li = document.createElement('li');
+            const nameSpan = document.createElement('span');
+            nameSpan.className = 'ach-name';
+            nameSpan.textContent = ach.name;
+            const statusSpan = document.createElement('span');
+            statusSpan.className = `ach-status ${ach.unlocked ? 'unlocked' : 'locked'}`;
+            statusSpan.textContent = ach.unlocked ? '✅ Unlocked' : '🔒 Locked';
+            li.appendChild(nameSpan);
+            li.appendChild(statusSpan);
+            achievementsList.appendChild(li);
+        });
+    }
+
+    // ============================================================
+    // 16. THEMES
+    // ============================================================
+
+    function renderThemes() {
+        themeGrid.innerHTML = '';
+        themes.forEach(theme => {
+            const btn = document.createElement('button');
+            btn.textContent = theme.name;
+            if (gameState.currentTheme === theme.id) btn.classList.add('active');
+            btn.addEventListener('click', () => {
+                applyTheme(theme.id);
+                renderThemes();
+            });
+            themeGrid.appendChild(btn);
+        });
+    }
+
+    function applyTheme(themeId) {
+        document.body.className = '';
+        if (themeId !== 'default') {
+            document.body.classList.add(`theme-${themeId}`);
+        }
+        gameState.currentTheme = themeId;
+        saveGame();
+    }
+
+    // ============================================================
+    // 17. HISTORY
+    // ============================================================
+
+    function renderHistory() {
+        statUnscrambled.textContent = gameState.totalUnscrambled;
+        statFailures.textContent = gameState.totalFailures;
+        statHighestEcp.textContent = gameState.highestEcp;
+    }
+
+    // ============================================================
+    // 18. SHARE
+    // ============================================================
+
+    function shareProgress() {
+        const totalLevels = levelsConfig.length;
+        let completedCount = 0;
+        for (let i = 1; i <= totalLevels; i++) {
+            const levelConfig = levelsConfig[i - 1];
+            const all = levelConfig.words.every((_, wi) => gameState.completedPuzzles[`${i}_${wi}`]);
+            if (all) completedCount++;
+        }
+
+        const text = `🧩 Word Scramble\nLevel: ${gameState.currentLevel}\nECP: ${getECP()}\nWords Unscrambled: ${gameState.totalUnscrambled}\nCompleted ${completedCount}/${totalLevels} Levels\n\nPlay now at EchoPlex Games! 🎮`;
+
+        if (navigator.share) {
+            navigator.share({ title: 'Word Scramble', text });
+            unlockAchievement('share_knowledge');
+        } else {
+            navigator.clipboard.writeText(text).then(() => {
+                feedbackMessage.textContent = '📋 Progress copied to clipboard!';
+                feedbackMessage.className = 'feedback-message success';
+                unlockAchievement('share_knowledge');
+                setTimeout(() => {
+                    feedbackMessage.textContent = '';
+                    feedbackMessage.className = 'feedback-message';
+                }, 2000);
+            });
+        }
+    }
+
+    // ============================================================
+    // 19. KEYBOARD SHORTCUTS
+    // ============================================================
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && gameScreen.classList.contains('active')) {
+            submitGuess();
+        }
+        if (e.key === 'h' && gameScreen.classList.contains('active')) {
+            giveHint();
+        }
+        if (e.key === 'r' && gameScreen.classList.contains('active')) {
+            revealAnswer();
+        }
+        if (e.key === 's' && gameScreen.classList.contains('active')) {
+            shuffleWord();
+        }
+        if (e.key === 'Escape') {
+            document.querySelectorAll('.modal.active').forEach(m => m.classList.remove('active'));
+        }
+    });
+
+    // ============================================================
+    // 20. PARTICLE SYSTEM
+    // ============================================================
+
+    const canvas = document.getElementById('particleCanvas');
+    if (canvas) {
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let w, h;
+
+        function resizeCanvas() {
+            w = canvas.width = window.innerWidth;
+            h = canvas.height = window.innerHeight;
+        }
+
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * w;
+                this.y = Math.random() * h;
+                this.size = Math.random() * 1.5 + 0.5;
+                this.speedX = (Math.random() - 0.5) * 0.2;
+                this.speedY = (Math.random() - 0.5) * 0.2;
+                this.opacity = Math.random() * 0.4 + 0.05;
+                this.pulse = Math.random() * Math.PI * 2;
+                this.pulseSpeed = 0.01 + Math.random() * 0.02;
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.pulse += this.pulseSpeed;
+                if (this.x < 0 || this.x > w) this.speedX *= -1;
+                if (this.y < 0 || this.y > h) this.speedY *= -1;
+                this.currentOpacity = this.opacity * (0.6 + 0.4 * Math.sin(this.pulse));
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(167, 139, 250, ${this.currentOpacity})`;
+                ctx.fill();
             }
         }
+
+        for (let i = 0; i < 50; i++) particles.push(new Particle());
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, w, h);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animateParticles);
+        }
+
+        animateParticles();
+    }
+
+    // ============================================================
+    // 21. EVENT LISTENERS
+    // ============================================================
+
+    playBtn.addEventListener('click', () => showScreen(menuScreen));
+
+    startGameBtn.addEventListener('click', () => {
+        const levelConfig = levelsConfig[gameState.currentLevel - 1];
+        if (levelConfig) {
+            currentWords = [...levelConfig.words];
+            currentStreak = 0;
+        }
+        showScreen(levelScreen);
+        renderPuzzleGrid();
     });
-}
 
+    backToMenuBtn.addEventListener('click', () => showScreen(menuScreen));
 
-// --- Initial Setup ---
-document.addEventListener('DOMContentLoaded', () => {
-    generateAllWords(); // Generate all words for all levels
-    loadGameData(); // Load saved data or initialize new
-    // Initial screen setup
-    showScreen(gameIntroScreen);
-    updateECP(0); // Update ECP display based on loaded data
-});
+    backToIntroFromMenuBtn.addEventListener('click', () => {
+        showScreen(introScreen);
+    });
+
+    backToLevelsBtn.addEventListener('click', () => {
+        // Save current time before leaving
+        if (timerInterval) {
+            const timerKey = `${gameState.currentLevel}_${gameState.currentWordIndex}`;
+            wordTimers[timerKey] = timeLeft;
+            stopTimer();
+        }
+        showScreen(levelScreen);
+        renderPuzzleGrid();
+        resetGameUI();
+    });
+
+    prevLevelBtn.addEventListener('click', () => {
+        if (gameState.currentLevel > 1) {
+            gameState.currentLevel--;
+            renderPuzzleGrid();
+        }
+    });
+
+    nextLevelBtn.addEventListener('click', () => {
+        if (gameState.currentLevel < levelsConfig.length) {
+            gameState.currentLevel++;
+            renderPuzzleGrid();
+        }
+    });
+
+    achievementsBtn.addEventListener('click', () => { renderAchievements(); showModal(achievementsModal); });
+    themeBtn.addEventListener('click', () => { renderThemes(); showModal(themeModal); });
+    historyBtn.addEventListener('click', () => { renderHistory(); showModal(historyModal); });
+
+    achievementsClose.addEventListener('click', () => hideModal(achievementsModal));
+    themeClose.addEventListener('click', () => hideModal(themeModal));
+    historyClose.addEventListener('click', () => hideModal(historyModal));
+
+    document.querySelectorAll('.modal').forEach(m => {
+        m.addEventListener('click', (e) => {
+            if (e.target === m) m.classList.remove('active');
+        });
+    });
+
+    submitGuessBtn.addEventListener('click', submitGuess);
+
+    guessInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') submitGuess();
+    });
+
+    shuffleBtn.addEventListener('click', shuffleWord);
+    hintBtn.addEventListener('click', giveHint);
+    revealBtn.addEventListener('click', revealAnswer);
+    shareGameBtn.addEventListener('click', shareProgress);
+    shareProgressBtn.addEventListener('click', shareProgress);
+
+    // Previous Word Button
+    prevWordBtn.addEventListener('click', () => {
+        if (gameState.currentWordIndex > 0) {
+            // Save current time before leaving
+            if (timerInterval) {
+                const timerKey = `${gameState.currentLevel}_${gameState.currentWordIndex}`;
+                wordTimers[timerKey] = timeLeft;
+                stopTimer();
+            }
+            gameState.currentWordIndex--;
+            loadWord();
+            saveGame();
+        }
+    });
+
+    // Next Word Button
+    nextWordBtn.addEventListener('click', () => {
+        if (gameState.currentWordIndex < currentWords.length - 1) {
+            // Save current time before leaving
+            if (timerInterval) {
+                const timerKey = `${gameState.currentLevel}_${gameState.currentWordIndex}`;
+                wordTimers[timerKey] = timeLeft;
+                stopTimer();
+            }
+            gameState.currentWordIndex++;
+            loadWord();
+            saveGame();
+        }
+    });
+
+    const progressBar = document.getElementById('scrollProgress');
+    if (progressBar) {
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.pageYOffset;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            progressBar.style.width = docHeight > 0 ? (scrollTop / docHeight * 100) + '%' : '0%';
+        });
+    }
+
+    // ============================================================
+    // 22. INITIALIZATION
+    // ============================================================
+
+    function init() {
+        loadGame();
+        applyTheme(gameState.currentTheme);
+        renderAchievements();
+        updateAllEcp();
+        showScreen(introScreen);
+
+        console.log('%c🧩 Word Scramble', 'font-size: 20px; font-weight: 700; color: #ec4899;');
+        console.log('%c200 Levels • Complete Word Lists • Full Achievement System', 'font-size: 14px; color: #b8b0d8;');
+        console.log(`%c📊 Loaded ${levelsConfig.length} levels with ${levelsConfig.reduce((acc, l) => acc + l.words.length, 0)} words`, 'font-size: 12px; color: #a78bfa;');
+        console.log(`%c🪙 ECP: ${getECP()} (shared across all games)`, 'font-size: 12px; color: #fbbf24;');
+        console.log('%c⌨️ Shortcuts: Enter=Submit, H=Hint, R=Reveal, S=Shuffle', 'font-size: 12px; color: #6f6390;');
+    }
+
+    init();
+
+})();

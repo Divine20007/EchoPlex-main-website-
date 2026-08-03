@@ -1,102 +1,148 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>EchoPlex - Privacy Policy</title>
-    <link rel="stylesheet" href="privacy.css">
-    <link rel="icon" href="https://i.supaimg.com/ea0765f1-a228-4d8d-abef-afe3e3f74dd1.png" type="image/png">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EchoPlex — Privacy Policy</title>
+    <meta name="description" content="EchoPlex Privacy Policy — your privacy matters to us." />
 
-    <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="c9c94981-538d-4efb-ac01-836fea1f6881" data-blockingmode="auto" type="text/javascript"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Sora:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
-    </head>
+    <link rel="stylesheet" href="privacy.css" />
+</head>
 <body>
-    <header class="main-header">
+
+    <!-- ============================================================
+    AMBIENT BACKGROUND
+    ============================================================ -->
+    <canvas id="particleCanvas" aria-hidden="true"></canvas>
+    <div class="gradient-orb orb-1" aria-hidden="true"></div>
+    <div class="gradient-orb orb-2" aria-hidden="true"></div>
+
+    <!-- ============================================================
+    SCROLL PROGRESS
+    ============================================================ -->
+    <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+
+    <!-- ============================================================
+    NAVIGATION
+    ============================================================ -->
+    <header class="main-header" id="mainHeader">
         <div class="container">
-            <div class="logo">
-                <img src="https://i.supaimg.com/6713cd75-0639-4244-8031-1a478e4cd6a1.png" alt="EchoPlex Logo">
-                <h1>EchoPlex</h1>
-            </div>
-            <nav class="main-nav">
-                <ul class="nav-links">
-                    <li><a href="index.html#hero">Home</a></li>
-                </div>
-            </nav>
-            <div class="hamburger-menu">
-                <i class="fas fa-bars"></i>
+            <a href="index.html" class="logo" aria-label="Back to Home">
+                <img src="https://i.supaimg.com/6713cd75-0639-4244-8031-1a478e4cd6a1.png" alt="EchoPlex" loading="lazy" />
+                <span>EchoPlex</span>
+            </a>
+            <div class="header-right">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="gameintro.html" class="nav-link">Games</a>
             </div>
         </div>
     </header>
 
-    <main class="content-area">
-        <h1>Privacy Policy</h1>
+    <!-- ============================================================
+    PRIVACY CONTENT
+    ============================================================ -->
+    <main class="privacy-main">
+        <div class="container">
+            <div class="privacy-card">
+                <div class="privacy-header">
+                    <span class="privacy-badge">🔒 Legal</span>
+                    <h1 class="privacy-title">Privacy Policy</h1>
+                    <p class="privacy-subtitle">Your privacy is of utmost importance to us at EchoPlex.</p>
+                </div>
 
-        <p>Your privacy is of utmost importance to us at EchoPlex. This Privacy Policy outlines the types of information we collect, how we use it, and the measures we take to protect your data.</p>
-        <p>By using the EchoPlex website, you agree to the terms outlined in this policy. If you do not agree with these terms, please do not use our website.</p>
+                <div class="privacy-body">
+                    <section class="privacy-section">
+                        <h2>1. Information We Collect</h2>
+                        <p>We collect certain information to improve your experience and understand how our website is used. This may include:</p>
+                        <ul>
+                            <li><strong>Usage Data:</strong> Information about how you interact with our website, such as pages visited, time spent on pages, and referring URLs. This is primarily collected via cookies and analytics services.</li>
+                            <li><strong>Technical Data:</strong> Your IP address, browser type, operating system, and device information.</li>
+                            <li><strong>Voluntary Information:</strong> If you subscribe to our newsletter (e.g., via our pre-launch site) or contact us, you may provide personal details like your email address.</li>
+                        </ul>
+                    </section>
 
-        <h2>1. Information We Collect</h2>
-        <p>We collect certain information to improve your experience and understand how our website is used. This may include:</p>
-        <ul>
-            <li><strong>Usage Data:</strong> Information about how you interact with our website, such as pages visited, time spent on pages, and referring URLs. This is primarily collected via cookies and analytics services.</li>
-            <li><strong>Technical Data:</strong> Your IP address, browser type, operating system, and device information.</li>
-            <li><strong>Voluntary Information:</strong> If you subscribe to our newsletter (e.g., via our pre-launch site) or contact us, you may provide personal details like your email address.</li>
-        </ul>
+                    <section class="privacy-section">
+                        <h2>2. How We Use Your Information</h2>
+                        <p>The information we collect is used to:</p>
+                        <ul>
+                            <li>Operate and maintain our website.</li>
+                            <li>Improve and personalize your experience.</li>
+                            <li>Understand and analyze how you use our website.</li>
+                            <li>Develop new products, services, features, and functionality.</li>
+                            <li>Communicate with you, including for customer service or marketing purposes (if you've opted in).</li>
+                            <li>Detect and prevent fraud.</li>
+                            <li>Comply with legal obligations.</li>
+                        </ul>
+                    </section>
 
-        <h2>2. How We Use Your Information</h2>
-        <p>The information we collect is used to:</p>
-        <ul>
-            <li>Operate and maintain our website.</li>
-            <li>Improve and personalize your experience.</li>
-            <li>Understand and analyze how you use our website.</li>
-            <li>Develop new products, services, features, and functionality.</li>
-            <li>Communicate with you, including for customer service or marketing purposes (if you've opted in).</li>
-            <li>Detect and prevent fraud.</li>
-            <li>Serve relevant advertisements through third-party ad networks (e.g., Google AdSense).</li>
-            <li>Comply with legal obligations.</li>
-        </ul>
+                    <section class="privacy-section">
+                        <h2>3. Cookies and Tracking Technologies</h2>
+                        <p>EchoPlex uses cookies and similar tracking technologies to enhance user experience, analyze site usage, and support advertising efforts. Cookies are small data files stored on your device.</p>
+                        <p>You have control over your cookie preferences through our consent banner. Below is a detailed list of the cookies used on this website and your current consent status:</p>
 
-        <h2>3. Cookies and Tracking Technologies</h2>
-        <p>EchoPlex uses cookies and similar tracking technologies to enhance user experience, analyze site usage, and support advertising efforts. Cookies are small data files stored on your device.</p>
-        <p>You have control over your cookie preferences through our consent banner. Below is a detailed list of the cookies used on this website and your current consent status:</p>
+                        <div id="CookieDeclaration"></div>
+                        <script type="text/javascript" id="CookieDeclarationScript" src="https://consent.cookiebot.com/c9c94981-538d-4efb-ac01-836fea1f6881/cd.js" async></script>
+                    </section>
 
-        <div id="CookieDeclaration"></div>
-        <script type="text/javascript" id="CookieDeclarationScript" src="https://consent.cookiebot.com/c9c94981-538d-4efb-ac01-836fea1f6881/cd.js" async></script>
-        <h2>4. Third-Party Services</h2>
-        <p>We utilize various third-party services that may also collect information, subject to their own privacy policies:</p>
-        <ul>
-            <li><strong>Google AdSense:</strong> Used to display advertisements. AdSense uses cookies to serve ads based on your prior visits to this and other websites.</li>
-            <li><strong>Google Analytics (if used):</strong> Collects data on website traffic and usage.</li>
-            <li><strong>Cookiebot:</strong> Our Consent Management Platform (CMP) that manages your cookie preferences.</li>
-            <li><strong>Netlify:</strong> Our hosting provider, which may log basic access data.</li>
-            <li><strong>Supaimg:</strong> Image hosting service.</li>
-            <li><strong>X (formerly Twitter), Telegram:</strong> For social media integration and community engagement.</li>
-        </ul>
-        <p>We encourage you to review the privacy policies of these third-party services.</p>
+                    <section class="privacy-section">
+                        <h2>4. Third-Party Services</h2>
+                        <p>We utilize various third-party services that may also collect information, subject to their own privacy policies:</p>
+                        <ul>
+                            <li><strong>Cookiebot:</strong> Our Consent Management Platform (CMP) that manages your cookie preferences.</li>
+                            <li><strong>Netlify:</strong> Our hosting provider, which may log basic access data.</li>
+                            <li><strong>Supaimg:</strong> Image hosting service.</li>
+                            <li><strong>X (formerly Twitter), Telegram:</strong> For social media integration and community engagement.</li>
+                        </ul>
+                        <p>We encourage you to review the privacy policies of these third-party services.</p>
+                    </section>
 
-        <h2>5. Data Security</h2>
-        <p>We implement reasonable security measures to protect your information from unauthorized access, alteration, disclosure, or destruction. However, no method of transmission over the Internet or electronic storage is 100% secure.</p>
+                    <section class="privacy-section">
+                        <h2>5. Data Security</h2>
+                        <p>We implement reasonable security measures to protect your information from unauthorized access, alteration, disclosure, or destruction. However, no method of transmission over the Internet or electronic storage is 100% secure.</p>
+                    </section>
 
-        <h2>6. Your Data Protection Rights</h2>
-        <p>Depending on your location (e.g., GDPR in Europe, CCPA in California), you may have certain rights regarding your personal data, including the right to access, rectify, erase, restrict processing, object to processing, and data portability. To exercise these rights, please contact us using the details below.</p>
+                    <section class="privacy-section">
+                        <h2>6. Your Data Protection Rights</h2>
+                        <p>Depending on your location (e.g., GDPR in Europe, CCPA in California), you may have certain rights regarding your personal data, including the right to access, rectify, erase, restrict processing, object to processing, and data portability. To exercise these rights, please contact us using the details below.</p>
+                    </section>
 
-        <h2>Changes to This Privacy Policy</h2>
-        <p>We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page. You are advised to review this Privacy Policy periodically for any changes.</p>
+                    <section class="privacy-section">
+                        <h2>7. Changes to This Privacy Policy</h2>
+                        <p>We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page. You are advised to review this Privacy Policy periodically for any changes.</p>
+                    </section>
 
-        <h2></h2>Contact Us</h2>
-        <p>If you have any questions or concerns about this Privacy Policy, please contact us at:</p>
-        <p>Email: <a href="mailto:echoplexhq@gmail.com">echoplexhq@gmail.com</a></p>
-        <p>Telegram: <a href="https://t.me/Reasonance0" target="_blank">@Reasonance0</a></p>
-        <p>X (Twitter): <a href="https://x.com/EchoPlexHQ" target="_blank">@EchoPlexHQ</a></p>
+                    <section class="privacy-section">
+                        <h2>8. Contact Us</h2>
+                        <p>If you have any questions or concerns about this Privacy Policy, please contact us at:</p>
+                        <div class="contact-info">
+                            <p><strong>Email:</strong> <a href="mailto:echoplexhq@gmail.com">echoplexhq@gmail.com</a></p>
+                            <p><strong>Telegram:</strong> <a href="https://t.me/Reasonance0" target="_blank">@Reasonance0</a></p>
+                            <p><strong>X (Twitter):</strong> <a href="https://x.com/EchoPlexHQ" target="_blank">@EchoPlexHQ</a></p>
+                        </div>
+                    </section>
 
-        <p><em>Last updated: July 21, 2025</em></p>
-
+                    <div class="privacy-footer">
+                        <p><em>Last updated: July 21, 2025</em></p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
 
+    <!-- ============================================================
+    FOOTER
+    ============================================================ -->
     <footer class="main-footer">
         <div class="container">
             <p>&copy; 2025 EchoPlex. All rights reserved.</p>
+        </div>
+    </footer>
+
     <script src="privacy.js"></script>
 </body>
 </html>

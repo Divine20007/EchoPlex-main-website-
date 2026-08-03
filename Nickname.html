@@ -1,133 +1,168 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EchoPlex Nickname Generator</title>
-    <link rel="stylesheet" href="nickname.css">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Oxanium:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link rel="icon" href="https://placehold.co/32x32/1a1a2e/ffffff/favicon.png?text=EP" type="image/png">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2829367980126501"
-     crossorigin="anonymous"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nickname Generator — EchoPlex</title>
+    <meta name="description" content="Generate unique nicknames for gaming, social profiles, and more!" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Sora:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+    <link rel="stylesheet" href="Nickname.css" />
 </head>
 <body>
-    <div class="background-grid"></div>
-    <div class="container">
-             <ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-2829367980126501"
-     data-ad-slot="7576793955"
-     data-ad-format="auto"
-     data-full-width-responsive="true"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-        <h1 class="glow">EchoPlex Nickname Generator</h1>
-        <div class="category-selection">
-            <label>Choose a Vibe or Provide Your Own Words:</label>
-            <div class="radio-group">
-                <div><input type="radio" id="categoryGaming" name="nicknameCategory" value="gaming" checked><label for="categoryGaming">Gaming</label></div>
-                <div><input type="radio" id="categoryNature" name="nicknameCategory" value="nature"><label for="categoryNature">Nature</label></div>
-                <div><input type="radio" id="categoryLove" name="nicknameCategory" value="love"><label for="categoryLove">Love</label></div>
-                <div><input type="radio" id="categoryHorror" name="nicknameCategory" value="horror"><label for="categoryHorror">Horror</label></div>
-                <div><input type="radio" id="categoryAbstract" name="nicknameCategory" value="abstract"><label for="categoryAbstract">Abstract</label></div>
-                <div><input type="radio" id="categoryMystic" name="nicknameCategory" value="mystic"><label for="categoryMystic">Mystic</label></div>
-                <div><input type="radio" id="categoryAncient" name="nicknameCategory" value="ancient"><label for="categoryAncient">Ancient</label></div>
-                <div><input type="radio" id="categoryCute" name="nicknameCategory" value="cute"><label for="categoryCute">Cute</label></div>
-                <div><input type="radio" id="categoryStreet" name="nicknameCategory" value="street"><label for="categoryStreet">Street</label></div>
-                <div><input type="radio" id="categoryFood" name="nicknameCategory" value="food"><label for="categoryFood">Food</label></div>
-                <div><input type="radio" id="categoryFantasy" name="nicknameCategory" value="fantasy"><label for="categoryFantasy">Fantasy</label></div>
-                <div><input type="radio" id="categoryTech" name="nicknameCategory" value="tech"><label for="categoryTech">Tech</label></div>
-<div><input type="radio" id="categoryMusic" name="nicknameCategory" value="Music"><label for="categoryMusic">Music</label></div>
-<div><input type="radio" id="categorySport" name="nicknameCategory" value="Sport"><label for="categorySport">Sport</label></div>
-<div><input type="radio" id="categoryTravel" name="nicknameCategory" value="Travel"><label for="categoryTravel">Travel</label></div>
-<div><input type="radio" id="categoryBusiness" name="nicknameCategory" value="Business"><label for="categoryBusiness">Business</label></div>
-<div><input type="radio" id="categoryScience" name="nicknameCategory" value="Science"><label for="categoryScience">Science</label></div>
-<div><input type="radio" id="categoryArt" name="nicknameCategory" value="Art"><label for="categoryArt">Art</label></div>
-<div><input type="radio" id="categoryHistory" name="nicknameCategory" value="History"><label for="categoryHistory">History</label></div>
-                <div><input type="radio" id="categorygod" name="nicknameCategory" value="god"><label for="categorygod">god</label></div>
-<div><input type="radio" id="categoryWarrior" name="nicknameCategory" value="Warrior"><label for="categoryWarrior">Warrior</label></div>
-<div><input type="radio" id="categorySuperhero" name="nicknameCategory" value="Superhero"><label for="categorySuperhero">Superhero</label></div>
-<div><input type="radio" id="categoryVillain" name="nicknameCategory" value="Villain"><label for="categoryVillain">Villain</label></div>
-<div><input type="radio" id="categorySpace" name="nicknameCategory" value="Space"><label for="categorySpace">Space</label></div>
-<div><input type="radio" id="categoryAutomotive" name="nicknameCategory" value="Automotive"><label for="categoryAutomotive">Automotive</label></div>
-<div><input type="radio" id="categoryAviation" name="nicknameCategory" value="Aviation"><label for="categoryAviation">Aviation</label></div>
-<div><input type="radio" id="categoryMasculine" name="nicknameCategory" value="Masculine"><label for="categoryMasculine">Masculine</label></div>
-<div><input type="radio" id="categoryFeminine" name="nicknameCategory" value="Feminine"><label for="categoryFeminine">Feminine</label></div>
-<div><input type="radio" id="categoryBaby" name="nicknameCategory" value="Baby"><label for="categoryBaby">Baby</label></div>
-                <div><input type="radio" id="categoryWeapon" name="nicknameCategory" value="Weapon"><label for="categoryWeapon">Weapon</label></div>
-                <div><input type="radio" id="userCustom" name="nicknameCategory" value="custom"><label for="userCustom">Custom List</label></div>
+
+    <!-- ============================================================
+    AMBIENT BACKGROUND
+    ============================================================ -->
+    <canvas id="particleCanvas" aria-hidden="true"></canvas>
+    <div class="gradient-orb orb-1" aria-hidden="true"></div>
+    <div class="gradient-orb orb-2" aria-hidden="true"></div>
+
+    <!-- ============================================================
+    SCROLL PROGRESS
+    ============================================================ -->
+    <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+
+    <!-- ============================================================
+    NAVIGATION
+    ============================================================ -->
+    <header class="main-header" id="mainHeader">
+        <div class="container">
+            <a href="index.html" class="logo" aria-label="Back to Home">
+                <i class="fas fa-arrow-left"></i>
+                <span>Back to Home</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- ============================================================
+    MAIN CONTAINER
+    ============================================================ -->
+    <main class="main-container">
+        <div class="container">
+            <div class="generator-card">
+                <div class="generator-header">
+                    <span class="generator-badge">✨ AI-Powered</span>
+                    <h1 class="generator-title">Nickname Generator</h1>
+                    <p class="generator-subtitle">Discover unique and unforgettable nicknames for gaming, online profiles, creative projects, and more.</p>
+                </div>
+
+                <div class="generator-body">
+                    <!-- Category Selection -->
+                    <div class="category-section">
+                        <label class="section-label">Choose a Vibe</label>
+                        <div class="category-grid" id="categoryGrid">
+                            <!-- Rendered by JS -->
+                        </div>
+                        <button id="randomCategoryBtn" class="btn btn-secondary">
+                            <i class="fas fa-dice"></i> Surprise Me!
+                        </button>
+                    </div>
+
+                    <!-- Custom Words -->
+                    <div class="custom-section" id="customSection">
+                        <label class="section-label">Or Provide Your Own Words</label>
+                        <textarea id="userWords" rows="4" placeholder="Enter words separated by commas, spaces, or new lines..."></textarea>
+                        <button id="useCustomBtn" class="btn btn-secondary btn-small">Use Custom Words</button>
+                    </div>
+
+                    <!-- Filters -->
+                    <div class="filters-section">
+                        <label class="section-label">Filters</label>
+                        <div class="filter-grid">
+                            <div class="filter-group">
+                                <label>Min Length</label>
+                                <input type="number" id="minLength" value="3" min="1" max="20" />
+                            </div>
+                            <div class="filter-group">
+                                <label>Max Length</label>
+                                <input type="number" id="maxLength" value="12" min="3" max="20" />
+                            </div>
+                            <div class="filter-group">
+                                <label>Starts With</label>
+                                <input type="text" id="startsWith" maxlength="5" placeholder="e.g., A" />
+                            </div>
+                            <div class="filter-group">
+                                <label>Ends With</label>
+                                <input type="text" id="endsWith" maxlength="5" placeholder="e.g., X" />
+                            </div>
+                            <div class="filter-group">
+                                <label>Includes</label>
+                                <input type="text" id="includesText" maxlength="10" placeholder="e.g., star" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Markov Order -->
+                    <div class="markov-section">
+                        <label class="section-label">Markov Order</label>
+                        <div class="markov-control">
+                            <input type="range" id="markovOrder" min="1" max="5" value="3" />
+                            <span id="markovValue">3</span>
+                        </div>
+                        <p class="markov-hint">Higher = less mixing, more distinct words. Recommended: 3-5.</p>
+                    </div>
+
+                    <!-- Generate Button -->
+                    <button id="generateBtn" class="btn btn-primary btn-large">
+                        <i class="fas fa-wand-magic-sparkles"></i> Generate Nickname
+                    </button>
+
+                    <!-- Output -->
+                    <div class="output-section">
+                        <div class="output-display" id="outputDisplay">
+                            <span id="generatedNickname">Your nickname appears here...</span>
+                        </div>
+                        <div class="output-actions">
+                            <button id="copyBtn" class="btn btn-secondary btn-small" style="display:none;">
+                                <i class="fas fa-copy"></i> Copy
+                            </button>
+                            <button id="saveBtn" class="btn btn-secondary btn-small" style="display:none;">
+                                <i class="fas fa-save"></i> Save
+                            </button>
+                            <button id="shareBtn" class="btn btn-secondary btn-small" style="display:none;">
+                                <i class="fas fa-share-alt"></i> Share
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Saved Nicknames -->
+                <div class="saved-section">
+                    <div class="saved-header">
+                        <h2 class="saved-title">📁 Saved Nicknames</h2>
+                        <div class="collection-controls">
+                            <input type="text" id="newCollectionName" placeholder="New collection name..." />
+                            <button id="addCollectionBtn" class="btn btn-secondary btn-small">Add Collection</button>
+                        </div>
+                    </div>
+                    <div class="collection-selector">
+                        <label>Active Collection:</label>
+                        <select id="currentCollection">
+                            <!-- Rendered by JS -->
+                        </select>
+                    </div>
+                    <div id="savedNicknamesList" class="saved-list">
+                        <p class="empty-message">No nicknames saved yet.</p>
+                    </div>
+                </div>
             </div>
-<button id="randomCategoryBtn" class="action-button">Surprise Me! (Random Category)</button>
-            <div id="userWordsContainer" style="display: none; margin-top: 20px;">
-                <label for="userWords" style="font-size: 1em; margin-bottom: 5px;">Enter your words (comma, space, or new line separated):</label>
-                <textarea id="userWords" rows="5" placeholder="e.g., happy, brave, quick, smart, awesome"></textarea>
-                  <button id="backToCategoriesBtn" class="action-button secondary-button" style="margin-top: 15px;">
-        ← Back to Categories</button>
-            </div>
-            <div class="filter-options">
-    <h3>Filters:</h3>
-    <div class="filter-group">
-        <label for="minLength">Min Length:</label>
-        <input type="number" id="minLength" min="1" max="20" value="3">
-    </div>
-    <div class="filter-group">
-        <label for="maxLength">Max Length:</label>
-        <input type="number" id="maxLength" min="3" max="20" value="12">
-    </div>
-    <div class="filter-group">
-        <label for="startsWith">Starts With:</label>
-        <input type="text" id="startsWith" maxlength="5">
-    </div>
-    <div class="filter-group">
-        <label for="endsWith">Ends With:</label>
-        <input type="text" id="endsWith" maxlength="5">
-    </div>
-    <div class="filter-group">
-        <label for="includesText">Includes:</label>
-        <input type="text" id="includesText" maxlength="10">
-    </div>
-</div>
-            <div class="markov-order-selection" style="margin-top: 20px;">
-    <label for="markovOrder" style="font-size: 1em; margin-bottom: 5px; display: block;">Markov Order (Higher = less mixing):</label>
-    <input type="number" id="markovOrder" value="3" min="1" max="5" style="padding: 8px; border-radius: 5px; border: 1px solid var(--border-glow); background-color: var(--bg-dark); color: var(--text-light); width: 80px; text-align: center;">
-    <p class="instruction-text" style="font-size: 0.8em; margin-top: 5px; color: var(--text-muted);">
-        Try 2 or 3 for more mixing, 4 or 5 for more distinct words.
-        Recommended: "3-5" [Depending on text length].
-    </p>
-</div>
         </div>
+    </main>
 
-        <button id="generateBtn" class="action-button primary-button">GENERATE NICKNAME</button>
-
-        <div class="output-area">
-            <input type="text" id="generatedNickname" readonly placeholder="Your new nickname appears here...">
-            <button id="copyBtn" class="action-button secondary-button" style="display: none;">COPY</button>
-            <button id="saveBtn" class="action-button secondary-button" style="display: none;">SAVE</button>
-            <button id="shareBtn" class="action-button">Share Nickname</button>
+    <!-- ============================================================
+    FOOTER
+    ============================================================ -->
+    <footer class="main-footer">
+        <div class="container">
+            <p>&copy; 2025 EchoPlex. All rights reserved.</p>
         </div>
+    </footer>
 
-        <p class="instruction-text">
-            Select a category and tap "GENERATE NICKNAME" for unique ideas!
-        </p>
-    </div>
-<div class="saved-nicknames-section">
-    <h2>Saved Nicknames</h2>
-
-    <div class="collection-management">
-        <label for="newCollectionName">New Collection:</label>
-        <input type="text" id="newCollectionName" placeholder="e.g., Gaming Names">
-        <button id="addCollectionBtn" class="action-button">Add Collection</button>
-    </div>
-
-    <div class="collection-selector">
-        <label for="currentCollection">Active Collection:</label>
-        <select id="currentCollection"></select>
-    </div>
-
-    <div id="savedNicknamesList">
-        </div>
-</div>
-    <script src="nickname.js"></script>
+    <script src="Nickname.js"></script>
 </body>
 </html>

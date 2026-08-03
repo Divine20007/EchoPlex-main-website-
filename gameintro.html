@@ -1,47 +1,293 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ECHOPLEX GAMES - Your Gaming Hub</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Oxanium:wght@300;400;500;700&display=swap" rel="stylesheet">
-     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="gameintro.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EchoPlex Games — Next-Gen Gaming Hub</title>
+    <meta name="description" content="EchoPlex Games — cutting-edge gaming platform with blockchain tech and futuristic visuals." />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Sora:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+    <link rel="stylesheet" href="gameintro.css" />
 </head>
 <body>
-    <p>⚠️ STILL UNDER DEVELOPMENT!</p>
-<div class="Go-home-div">
-    <a href="index.html" class="Go-home">
-        <i class="fas fa-sign-out-alt"></i> </a>
+     <div class="dev-notice">⚠️ This site is under active development.</div>
+    <!-- ============================================================
+    PARTICLE BACKGROUND
+    ============================================================ -->
+    <canvas id="particleCanvas" aria-hidden="true"></canvas>
+
+    <!-- ============================================================
+    SCROLL PROGRESS
+    ============================================================ -->
+    <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+
+    <!-- ============================================================
+HEADER — Clean, No Nav Bar
+============================================================ -->
+<div class="header-clean">
+    <a href="index.html" class="header-clean-home" title="Home">
+        <i class="fas fa-home"></i>
+    </a>
+    <div class="header-clean-logo">
+    <img src="https://i.supaimg.com/6713cd75-0639-4244-8031-1a478e4cd6a1.png" alt="EchoPlex Logo" loading="lazy" />
+    <span>EchoPlex</span>
 </div>
-    <div class="background-grid"></div> <header class="main-header container">
-        <h1>ECHOPLEX GAMES</h1>
-        <p>Dive into a world of thrilling adventures and captivating challenges!</p>
-    </header>
+</div>
 
-    <main class="game-showcase">
-        <section class="game-card">
-            <img src="https://i.supaimg.com/98e3fbf2-a7ea-435c-8825-65827f2448c5.jpg" alt="Thumbnail for Guess The Number">
-            <h2>Mind Mania</h2>
-            <p>Sharpen your mind and unravel the hidden digits! Each sentence holds a numerical secret waiting to be discovered. Analyze, deduce, and pinpoint the correct number to claim victory in this unique word-and-logic challenge!</p>
-            <a href="guessgame.html" class="action-button primary-button">Play Now</a>
-        </section>
-        <section class="game-card">
-            <img src="https://i.supaimg.com/735a0086-9186-45d4-9982-c54501d5a8c6.jpg" alt="Thumbnail for word scramble">
-            <h2>Word Scramble</h2>
-            <p>Sharpen your brain and expand your vocabulary. This addictive word puzzle game offers hundreds of challenging levels where you'll unscramble letters, discover hidden words, and race against the clock. Collect ECP to unlock powerful hints and stylish themes. Ready to connect the letters and prove your word prowess?</p>
-            <a href="scramble.html" class="action-button primary-button">Play Now</a>
-        </section>
-        <section class="game-card">
-    <img src="https://i.supaimg.com/82fa14bb-d997-4e51-bb3c-84002c4ddc68.jpg" alt="Thumbnail for Roll & Flip Game">
-    <h2>Roll & Flip</h2>
-    <p>Test your luck and intuition! Predict the outcome of a coin flip or a dice roll. Fast, fun, and a great way to earn bonus ECP with every play!</p>
-    <a href="rollgame.html" class="action-button primary-button">Play Now</a>
+    <!-- ============================================================
+    HERO
+    ============================================================ -->
+    <section class="hero-section" id="hero">
+        <div class="hero-ambient" aria-hidden="true">
+            <div class="ambient-ring"></div>
+            <div class="ambient-ring" style="animation-delay: 3s;"></div>
+            <div class="ambient-ring" style="animation-delay: 6s;"></div>
+        </div>
+
+        <div class="container">
+            <div class="hero-content">
+
+                <div class="hero-badge">
+                    <span class="hero-badge-dot"></span>
+                    Next-Gen Gaming
+                </div>
+
+                <h1 class="hero-headline">
+                    <span class="hero-headline-line">EchoPlex</span>
+                    <span class="hero-headline-line hero-headline-accent">Games</span>
+                </h1>
+
+                <p class="hero-sub">
+                    Dive into a world of thrilling adventures and captivating challenges.
+                    Play, earn ECP, and unlock achievements across our growing library.
+                </p>
+
+                <p class="hero-notice">
+                    <i class="fas fa-info-circle"></i> 
+                    Upon official launch, all games will be accessible exclusively through the EchoPlex platform. 
+                    The titles currently featured on this website serve as previews only.
+                </p>
+
+                <div class="hero-stats">
+                    <div class="hero-stat hero-stat--placeholder">
+                        <span class="hero-stat-label">Stats coming soon — games are being built</span>
+                    </div>
+                </div>
+
+                <div class="hero-scroll">
+                    <span>Scroll to explore games</span>
+                    <div class="hero-scroll-chevron"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+    GAME SHOWCASE
+    ============================================================ -->
+    <section class="games-section section" id="games">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-eyebrow">Jump into playable demos while we prepare the full platform.</span>
+            </div>
+
+            <div class="games-grid">
+                <!-- Game 1: Mind Mania -->
+                <div class="game-card reveal-rotate">
+                    <div class="game-card-image">
+                        <img src="https://i.supaimg.com/98e3fbf2-a7ea-435c-8825-65827f2448c5.jpg" alt="Mind Mania" loading="lazy" />
+                        <div class="game-card-overlay">
+                            <span class="game-card-badge">🎯 Logic</span>
+                        </div>
+                    </div>
+                    <div class="game-card-content">
+                        <h3 class="game-card-title">Mind Mania</h3>
+                        <p class="game-card-text">
+                            Sharpen your mind and unravel the hidden digits! Each sentence holds a
+                            numerical secret waiting to be discovered. Analyze, deduce, and pinpoint
+                            the correct number to claim victory.
+                        </p>
+                        <div class="game-card-meta">
+                            <span><i class="fas fa-layer-group"></i> 20 Levels</span>
+                            <span><i class="fas fa-clock"></i> 15s per question</span>
+                            <span><i class="fas fa-coins"></i> Earn ECP</span>
+                        </div>
+                        <a href="guessgame.html" class="btn btn-cta btn-cta--mindmania">
+                            <span>Play Now</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Game 2: Word Scramble -->
+                <div class="game-card reveal-rotate" style="animation-delay: 0.15s;">
+                    <div class="game-card-image">
+                        <img src="https://i.supaimg.com/735a0086-9186-45d4-9982-c54501d5a8c6.jpg" alt="Word Scramble" loading="lazy" />
+                        <div class="game-card-overlay">
+                            <span class="game-card-badge">🧠 Vocabulary</span>
+                        </div>
+                    </div>
+                    <div class="game-card-content">
+                        <h3 class="game-card-title">Word Scramble</h3>
+                        <p class="game-card-text">
+                            Sharpen your brain and expand your vocabulary. Unscramble letters,
+                            discover hidden words, and race against the clock. Collect ECP to
+                            unlock powerful hints and stylish themes.
+                        </p>
+                        <div class="game-card-meta">
+                            <span><i class="fas fa-layer-group"></i> 200 Levels</span>
+                            <span><i class="fas fa-clock"></i> 20-120s timer</span>
+                            <span><i class="fas fa-coins"></i> Earn ECP</span>
+                        </div>
+                        <a href="scramble.html" class="btn btn-cta btn-cta--scramble">
+                            <span>Play Now</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Game 3: Roll & Flip -->
+                <div class="game-card reveal-rotate" style="animation-delay: 0.3s;">
+                    <div class="game-card-image">
+                        <img src="https://i.supaimg.com/82fa14bb-d997-4e51-bb3c-84002c4ddc68.jpg" alt="Roll & Flip" loading="lazy" />
+                        <div class="game-card-overlay">
+                            <span class="game-card-badge">🎲 Chance</span>
+                        </div>
+                    </div>
+                    <div class="game-card-content">
+                        <h3 class="game-card-title">Roll & Flip</h3>
+                        <p class="game-card-text">
+                            Test your luck and intuition! Predict the outcome of a coin flip or a
+                            dice roll. Fast, fun, and a great way to earn bonus ECP with every play.
+                            Choose your leverage and multiply your rewards.
+                        </p>
+                        <div class="game-card-meta">
+                            <span><i class="fas fa-coins"></i> Coin & Dice</span>
+                            <span><i class="fas fa-chart-line"></i> Up to 100x</span>
+                            <span><i class="fas fa-coins"></i> Earn ECP</span>
+                        </div>
+                        <a href="rollgame.html" class="btn btn-cta btn-cta--rollflip">
+                            <span>Play Now</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+ <!-- ============================================================
+COMING SOON CAROUSEL
+============================================================ -->
+<section class="coming-soon-section section reveal" id="coming-soon">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-eyebrow">Get a fingertip feel for our core game mechanics</span>
+        </div>
+
+        <div class="carousel-container">
+            <div class="carousel-track" id="carouselTrack">
+    <!-- Existing 4 Cards -->
+    <div class="carousel-card">
+        <div class="carousel-card-icon">🎮</div>
+        <h3 class="carousel-card-title">Play-to-Earn</h3>
+        <p class="carousel-card-text">Coming soon - earn ECP tokens for playing every game. Build your wealth while having fun.</p>
+        <span class="carousel-card-badge">⏳ In Development</span>
+    </div>
+
+    <div class="carousel-card">
+        <div class="carousel-card-icon">🏆</div>
+        <h3 class="carousel-card-title">Achievements</h3>
+        <p class="carousel-card-text">Unlock achievements, earn rewards, and show off your skills to the community with lots more experiences.</p>
+        <span class="carousel-card-badge">⏳ In Development</span>
+    </div>
+
+    <div class="carousel-card">
+        <div class="carousel-card-icon">🎨</div>
+        <h3 class="carousel-card-title">Custom Themes</h3>
+        <p class="carousel-card-text">Personalize your gaming experience with unique themes — from cyberpunk to ocean.</p>
+        <span class="carousel-card-badge">⏳ In Development</span>
+    </div>
+
+    <div class="carousel-card">
+        <div class="carousel-card-icon">📊</div>
+        <h3 class="carousel-card-title">Track Progress</h3>
+        <p class="carousel-card-text">Your history, stats, and achievements all in one place. See how you stack up.</p>
+        <span class="carousel-card-badge">⏳ In Development</span>
+    </div>
+
+    <!-- NEW ECP Cards -->
+    <div class="carousel-card">
+        <div class="carousel-card-icon">🌐</div>
+        <h3 class="carousel-card-title">UNIFIED ACROSS THE ECOSYSTEM.</h3>
+        <p class="carousel-card-text">Your ECP balance travels with you across EchoPlex And every Echoplex game. One currency, one wallet.</p>
+        <span class="carousel-card-badge">⏳ In Development</span>
+    </div>
+
+    <div class="carousel-card">
+        <div class="carousel-card-icon">⚡</div>
+        <h3 class="carousel-card-title">Many Use Cases</h3>
+        <p class="carousel-card-text">ECP will power game teasers, premium features, and more across the entire EchoPlex platform.</p>
+        <span class="carousel-card-badge">⏳ In Development</span>
+    </div>
+</div>
+
+            <div class="carousel-dots" id="carouselDots">
+    <span class="dot active" data-index="0"></span>
+    <span class="dot" data-index="1"></span>
+    <span class="dot" data-index="2"></span>
+    <span class="dot" data-index="3"></span>
+    <span class="dot" data-index="4"></span>
+    <span class="dot" data-index="5"></span>
+</div>
+        </div>
+    </div>
 </section>
-    </main>
 
+
+    <!-- ============================================================
+    FOOTER
+    ============================================================ -->
     <footer class="main-footer">
-        <p>&copy; 2025 ECHOPLEX GAMES. All rights reserved.</p>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        <img src="https://i.supaimg.com/6713cd75-0639-4244-8031-1a478e4cd6a1.png" alt="EchoPlex" loading="lazy" />
+                        <span style="color: var(--nebula-cyan-bright);">Games</span>
+                    </div>
+                    <p class="footer-tagline">Have fun, Earn Crypto.</p>
+                </div>
+
+                <div class="footer-links">
+                    <div class="footer-links-col">
+                        <h4>Games</h4>
+                        <a href="guessgame.html">Mind Mania</a>
+                        <a href="scramble.html">Word Scramble</a>
+                        <a href="rollgame.html">Roll & Flip</a>
+                    </div>
+                    <div class="footer-links-col">
+                        <h4>Resources</h4>
+                        <a href="index.html">Home</a>
+                        <a href="Nickname.html">Nickname Generator</a>
+                        <a href="privacy.html">Privacy Policy</a>
+                    </div>
+                    <div class="footer-links-col">
+                        <h4>Connect</h4>
+                        <a href="https://t.me/EXHOPLEX" target="_blank">Telegram</a>
+                        <a href="https://x.com/EchoPlexHQ" target="_blank">X</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 EchoPlex Games. All rights reserved.</p>
+            </div>
+        </div>
     </footer>
 
     <script src="gameintro.js"></script>
