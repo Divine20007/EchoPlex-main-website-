@@ -300,17 +300,17 @@
     const typedElement = document.getElementById('heroTyped');
     if (typedElement) {
         const phrases = [
-            'a creative ecosystem',
-            'a gaming hub',
-            'a Web3 community',
-            'a decentralized future',
-            'your creative home'
+            'a unified ecosystem',
+            'A play-and-earn gaming hub',
+            'a unified community',
+            'a decentralized economic future',
+            'your hub for creation and digital finance'
         ];
 
         let phraseIndex = 0;
         let charIndex = 0;
         let isDeleting = false;
-        let typingSpeed = 80;
+        let typingSpeed = 70;
 
         function typeEffect() {
             const currentPhrase = phrases[phraseIndex];
